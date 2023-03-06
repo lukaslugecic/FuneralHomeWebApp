@@ -1,0 +1,81 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "FuneralHomeContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": null,
+   "OutputPath": "Data\/DbModels",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "FuneralHomeWebApi",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Cvijece]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Glazba]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Korisnik]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Lijes]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[NadgrobniZnak]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Oglas]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Osiguranje]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Osmrtnica]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Pogreb]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SmrtniSlucaj]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Urna]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "(localdb)\\Local.FuneralHome",
+   "UncountableWords": null,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false,
+   "UseT4": false
+}
