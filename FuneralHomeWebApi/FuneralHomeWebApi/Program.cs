@@ -1,5 +1,4 @@
-using FuneralHomeWebApi.Data;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

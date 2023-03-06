@@ -6,26 +6,26 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace FuneralHomeWebApi.Data.DbModels
+namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    public partial class Urna
+    public partial class Osmrtnica
     {
-        public Urna()
+        public Osmrtnica()
         {
-            Pogreb = new HashSet<Pogreb>();
+            Oglas = new HashSet<Oglas>();
         }
 
         [Key]
         public int Id { get; set; }
         [Required]
-        [MaxLength(50)]
-        public byte[] Naziv { get; set; }
+        [StringLength(50)]
+        [Unicode(false)]
+        public string Naziv { get; set; }
         public byte[] Slika { get; set; }
-        public int Kolicina { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
 
-        [InverseProperty("Urna")]
-        public virtual ICollection<Pogreb> Pogreb { get; set; }
+        [InverseProperty("Osmrtnica")]
+        public virtual ICollection<Oglas> Oglas { get; set; }
     }
 }

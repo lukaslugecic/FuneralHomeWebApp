@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace FuneralHomeWebApi.Data.DbModels
+namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     public partial class Glazba
     {

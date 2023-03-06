@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DataAccess.SqlServer.Data;
+using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+
 
 namespace FuneralHomeWebApi.Controllers
 {

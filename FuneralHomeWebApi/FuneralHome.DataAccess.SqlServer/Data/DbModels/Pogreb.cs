@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace FuneralHomeWebApi.Data.DbModels
+namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     [Index("SmrtniSlucajId", Name = "IX_Pogreb", IsUnique = true)]
     public partial class Pogreb
