@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\FuneralHome.DataAccess.SqlServer\FuneralHome.DataAccess.SqlServer.csproj" />
+		<ProjectReference Include="..\FuneralHome.Repositories\FuneralHome.Repositories.csproj" />
+	</ItemGroup>
+
+</Project>
