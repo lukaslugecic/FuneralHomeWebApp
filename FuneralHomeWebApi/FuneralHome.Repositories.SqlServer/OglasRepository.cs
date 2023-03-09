@@ -40,10 +40,31 @@ public class OglasRepository : IOglasRepository<int, Oglas>
             : Options.None<Oglas>();
     }
 
+    public Option<Oglas> GetAggregate(int id)
+    {
+        var model = _dbContext.Oglas
+                              .Include(o => o.Osmrtnica)
+                              .AsNoTracking()
+                              .FirstOrDefault(k => k.Id.Equals(id)); // give me the first or null; substitute for .Where()
+                                                                     // single or default throws an exception if more than one element meets the criteria
+
+        return model is not null
+            ? Options.Some(model)
+            : Options.None<Oglas>();
+    }
 
     public IEnumerable<Oglas> GetAll()
     {
         var models = _dbContext.Oglas
+                               .ToList();
+
+        return models;
+    }
+
+    public IEnumerable<Oglas> GetAllAggregates()
+    {
+        var models = _dbContext.Oglas
+                               .Include(o => o.Osmrtnica)
                                .ToList();
 
         return models;
@@ -84,6 +105,22 @@ public class OglasRepository : IOglasRepository<int, Oglas>
     public bool Update(Oglas model)
     {
         // detach
+        if (_dbContext.Oglas.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        {
+            var isSuccess = _dbContext.SaveChanges() > 0;
+
+            // every Update attaches the entity object and EF begins tracking
+            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+            return isSuccess;
+        }
+
+        return false;
+    }
+
+    public bool UpdateAggregate(Oglas model)
+    {
         if (_dbContext.Oglas.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
         {
             var isSuccess = _dbContext.SaveChanges() > 0;

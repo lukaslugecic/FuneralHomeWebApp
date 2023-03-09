@@ -5,6 +5,6 @@
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TModel"></typeparam>
-public interface IOglasRepository<TKey, TModel> : IRepository<TKey, TModel>
+public interface IOglasRepository<TKey, TModel> : IRepository<TKey, TModel>, IAggregateRepository<TKey, TModel>
 {
 }
