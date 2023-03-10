@@ -21,6 +21,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\FuneralHome.DataAccess.SqlServer\FuneralHome.DataAccess.SqlServer.csproj" />
+		<ProjectReference Include="..\FuneralHome.Repositories\FuneralHome.Repositories.csproj" />
+		<ProjectReference Include="..\FuneralHome.Repositories.SqlServer\FuneralHome.Repositories.SqlServer.csproj" />
 	</ItemGroup>
 
 </Project>

@@ -1,109 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
 
-namespace FuneralHomeWebApi.Controllers
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CvijeceController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CvijeceController : ControllerBase
+    private readonly ICvijeceRepository<int, DbModels.Cvijece> _cvijeceRepository;
+
+    public CvijeceController(ICvijeceRepository<int, DbModels.Cvijece> cvijeceRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _cvijeceRepository = cvijeceRepository;
+    }
 
-        public CvijeceController(FuneralHomeContext context)
+    // GET: api/People
+    [HttpGet]
+    public ActionResult<IEnumerable<Cvijece>> GetAllCvijece()
+    {
+        return Ok(_cvijeceRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/People/5
+    [HttpGet("{id}")]
+    public ActionResult<Cvijece> GetCvijece(int id)
+    {
+        var cvijeceOption = _cvijeceRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return cvijeceOption
+            ? Ok(cvijeceOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/People/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditPerson(int id, Cvijece cvijece)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Cvijece
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cvijece>>> GetCvijece()
+        if (id != cvijece.Id)
         {
-            return await _context.Cvijece.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Cvijece/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cvijece>> GetCvijece(int id)
+        if (!_cvijeceRepository.Exists(id))
         {
-            var cvijece = await _context.Cvijece.FindAsync(id);
-
-            if (cvijece == null)
-            {
-                return NotFound();
-            }
-
-            return cvijece;
+            return NotFound();
         }
 
-        // PUT: api/Cvijece/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditCvijece(int id, Cvijece cvijece)
+        return _cvijeceRepository.Update(cvijece.ToDbModel())
+            ? AcceptedAtAction("EditCvijece", cvijece)
+            : StatusCode(500);
+    }
+
+    // POST: api/People
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Cvijece> CreatePerson(Cvijece cvijece)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != cvijece.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(cvijece).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CvijeceExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Cvijece
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Cvijece>> CreateCvijece(Cvijece cvijece)
-        {
-            _context.Cvijece.Add(cvijece);
-            await _context.SaveChangesAsync();
+        return _cvijeceRepository.Insert(cvijece.ToDbModel())
+            ? CreatedAtAction("GetCvijece", new { id = cvijece.Id }, cvijece)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetCvijece", new { id = cvijece.Id }, cvijece);
-        }
+    // DELETE: api/People/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteCvijece(int id)
+    {
+        if (!_cvijeceRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Cvijece/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCvijece(int id)
-        {
-            var cvijece = await _context.Cvijece.FindAsync(id);
-            if (cvijece == null)
-            {
-                return NotFound();
-            }
-
-            _context.Cvijece.Remove(cvijece);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CvijeceExists(int id)
-        {
-            return _context.Cvijece.Any(e => e.Id == id);
-        }
+        return _cvijeceRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }
