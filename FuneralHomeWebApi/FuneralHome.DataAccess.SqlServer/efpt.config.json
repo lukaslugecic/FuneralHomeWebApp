@@ -9,7 +9,7 @@
    "OutputContextPath": null,
    "OutputPath": "Data\/DbModels",
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "FuneralHomeWebApi",
+   "ProjectRootNamespace": "FuneralHome.DataAccess.SqlServer",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,

@@ -18,6 +18,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         //public DateOnly DatumUgovaranja { get; set; }
         public bool PlacanjeNaRate { get; set; }
 
+        [ForeignKey("KorisnikId")]
+        [InverseProperty("Osiguranje")]
         public virtual Korisnik Korisnik { get; set; }
     }
 }

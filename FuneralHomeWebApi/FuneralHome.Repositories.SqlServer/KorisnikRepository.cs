@@ -43,7 +43,7 @@ public class KorisnikRepository : IKorisnikRepository<int, Korisnik>
     public Option<Korisnik> GetAggregate(int id)
     {
         var model = _dbContext.Korisnik
-                               // mozda dovuci i osiguranje ??
+                               .Include(k => k.Osiguranje)
                               .Include(k => k.SmrtniSlucaj)
                               .AsNoTracking()
                               .FirstOrDefault(k => k.Id.Equals(id)); // give me the first or null; substitute for .Where()
@@ -65,6 +65,7 @@ public class KorisnikRepository : IKorisnikRepository<int, Korisnik>
     public IEnumerable<Korisnik> GetAllAggregates()
     {
         var models = _dbContext.Korisnik
+                                .Include(k => k.Osiguranje)
                                .Include(k => k.SmrtniSlucaj)
                                .ToList();
 

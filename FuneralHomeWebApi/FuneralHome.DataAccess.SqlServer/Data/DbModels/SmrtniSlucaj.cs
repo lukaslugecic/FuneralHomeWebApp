@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
+{
     [Index("Oibpok", Name = "IX_PrijavaSmrtnogSlucaja_OIB", IsUnique = true)]
     public partial class SmrtniSlucaj
     {

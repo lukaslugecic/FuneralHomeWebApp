@@ -33,18 +33,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Korisnik>(entity =>
-            {
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.IdNavigation)
-                    .WithOne(p => p.Korisnik)
-                    .HasPrincipalKey<Osiguranje>(p => p.KorisnikId)
-                    .HasForeignKey<Korisnik>(d => d.Id)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Korisnik_Osiguranje");
-            });
-
             modelBuilder.Entity<Oglas>(entity =>
             {
                 entity.HasOne(d => d.Osmrtnica)
@@ -62,7 +50,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
             modelBuilder.Entity<Osiguranje>(entity =>
             {
-                entity.Property(e => e.Id).ValueGeneratedNever();
+                entity.HasOne(d => d.Korisnik)
+                    .WithOne(p => p.Osiguranje)
+                    .HasForeignKey<Osiguranje>(d => d.KorisnikId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Osiguranje_Korisnik");
             });
 
             modelBuilder.Entity<Pogreb>(entity =>

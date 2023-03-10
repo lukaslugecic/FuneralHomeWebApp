@@ -33,8 +33,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [StringLength(50)]
         [Unicode(false)]
         public string Adresa { get; set; }
+        [Required]
         [Column("OIB")]
-        public int Oib { get; set; }
+        [StringLength(11)]
+        [Unicode(false)]
+        public string Oib { get; set; }
         [Required]
         [StringLength(50)]
         [Unicode(false)]
@@ -44,7 +47,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Unicode(false)]
         public string Lozinka { get; set; }
 
-        public virtual Osiguranje IdNavigation { get; set; }
+        [InverseProperty("Korisnik")]
+        public virtual Osiguranje Osiguranje { get; set; }
         [InverseProperty("Korisnik")]
         public virtual ICollection<SmrtniSlucaj> SmrtniSlucaj { get; set; }
     }
