@@ -20,15 +20,15 @@ public class Korisnik
     [Required(ErrorMessage = "Address can't be null")]
     [StringLength(50, ErrorMessage = "Address can't be longer than 50 characters")]
     public string Adresa { get; set; } = string.Empty;
-    
-    public int Oib { get; set; }
+
+    [Required(ErrorMessage = "OIB can't be null")]
+    [StringLength(11, ErrorMessage = "OIB can't be longer than 11 characters")]
+    public string Oib { get; set; } = string.Empty;
     [Required(ErrorMessage = "E-mail address can't be null")]
     [StringLength(50, ErrorMessage = "E-mail address can't be longer than 50 characters")]
-    [Unicode(false)]
     public string Mail { get; set; } = string.Empty;
     [Required(ErrorMessage = "Password can't be null")]
     [StringLength(50, ErrorMessage = "Password can't be longer than 50 characters")]
-    [Unicode(false)]
     public string Lozinka { get; set; } = string.Empty;
 }
 
