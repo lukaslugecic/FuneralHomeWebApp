@@ -18,8 +18,9 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int Id { get; set; }
         [Required]
-        [MaxLength(50)]
-        public byte[] Naziv { get; set; }
+        [StringLength(50)]
+        [Unicode(false)]
+        public string Naziv { get; set; }
         public byte[] Slika { get; set; }
         public int Kolicina { get; set; }
         [Column(TypeName = "numeric(18, 2)")]

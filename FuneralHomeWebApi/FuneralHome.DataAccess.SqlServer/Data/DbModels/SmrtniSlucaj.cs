@@ -22,12 +22,13 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [StringLength(50)]
         [Unicode(false)]
         public string PrezimePok { get; set; }
+        [Required]
         [Column("OIBPok")]
-        public int Oibpok { get; set; }
-        //public DateOnly DatumRodenjaPok { get; set; }
-        //public DateOnly DatumSmrtiPok { get; set; }
-        public DateTime DatumRodenjaPok { get; set; }
-        public DateTime DatumSmrtiPok { get; set; }
+        [StringLength(11)]
+        [Unicode(false)]
+        public string Oibpok { get; set; }
+        public DateOnly DatumRodenjaPok { get; set; }
+        public DateOnly DatumSmrtiPok { get; set; }
 
         [ForeignKey("KorisnikId")]
         [InverseProperty("SmrtniSlucaj")]
