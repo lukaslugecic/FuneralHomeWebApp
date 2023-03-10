@@ -27,8 +27,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [StringLength(11)]
         [Unicode(false)]
         public string Oibpok { get; set; }
-        public DateOnly DatumRodenjaPok { get; set; }
-        public DateOnly DatumSmrtiPok { get; set; }
+        public DateTime DatumRodenjaPok { get; set; }
+        public DateTime DatumSmrtiPok { get; set; }
 
         [ForeignKey("KorisnikId")]
         [InverseProperty("SmrtniSlucaj")]
