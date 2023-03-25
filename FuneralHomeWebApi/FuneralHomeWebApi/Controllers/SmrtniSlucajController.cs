@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class SmrtniSlucajController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class SmrtniSlucajController : ControllerBase
+    private readonly ISmrtniSlucajRepository<int, DbModels.SmrtniSlucaj> _smrtniSlucajRepository;
+
+    public SmrtniSlucajController(ISmrtniSlucajRepository<int, DbModels.SmrtniSlucaj> smrtniSlucajRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _smrtniSlucajRepository = smrtniSlucajRepository;
+    }
 
-        public SmrtniSlucajController(FuneralHomeContext context)
+    // GET: api/SmrtniSlucaj
+    [HttpGet]
+    public ActionResult<IEnumerable<SmrtniSlucaj>> GetAllSmrtniSlucaj()
+    {
+        return Ok(_smrtniSlucajRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/SmrtniSlucaj/5
+    [HttpGet("{id}")]
+    public ActionResult<SmrtniSlucaj> GetSmrtniSlucaj(int id)
+    {
+        var slucajOption = _smrtniSlucajRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return slucajOption
+            ? Ok(slucajOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/SmrtniSlucaj/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditSmrtniSlucaj(int id, SmrtniSlucaj slucaj)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/SmrtniSlucaj
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<SmrtniSlucaj>>> GetSmrtniSlucaj()
+        if (id != slucaj.Id)
         {
-            return await _context.SmrtniSlucaj.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/SmrtniSlucaj/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SmrtniSlucaj>> GetSmrtniSlucaj(int id)
+        if (!_smrtniSlucajRepository.Exists(id))
         {
-            var smrtniSlucaj = await _context.SmrtniSlucaj.FindAsync(id);
-
-            if (smrtniSlucaj == null)
-            {
-                return NotFound();
-            }
-
-            return smrtniSlucaj;
+            return NotFound();
         }
 
-        // PUT: api/SmrtniSlucaj/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditSmrtniSlucaj(int id, SmrtniSlucaj smrtniSlucaj)
+        return _smrtniSlucajRepository.Update(slucaj.ToDbModel())
+            ? AcceptedAtAction("EditSmrtniSlucaj", slucaj)
+            : StatusCode(500);
+    }
+
+    // POST: api/SmrtniSlucaj
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<SmrtniSlucaj> CreateSmrtniSlucaj(SmrtniSlucaj smrtniSlucaj)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != smrtniSlucaj.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(smrtniSlucaj).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!SmrtniSlucajExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/SmrtniSlucaj
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<SmrtniSlucaj>> CreateSmrtniSlucaj(SmrtniSlucaj smrtniSlucaj)
-        {
-            _context.SmrtniSlucaj.Add(smrtniSlucaj);
-            await _context.SaveChangesAsync();
+        return _smrtniSlucajRepository.Insert(smrtniSlucaj.ToDbModel())
+            ? CreatedAtAction("GetSmrtniSlucaj", new { id = smrtniSlucaj.Id }, smrtniSlucaj)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetSmrtniSlucaj", new { id = smrtniSlucaj.Id }, smrtniSlucaj);
-        }
+    // DELETE: api/SmrtniSlucaj/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteSmrtniSlucaj(int id)
+    {
+        if (!_smrtniSlucajRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/SmrtniSlucaj/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSmrtniSlucaj(int id)
-        {
-            var smrtniSlucaj = await _context.SmrtniSlucaj.FindAsync(id);
-            if (smrtniSlucaj == null)
-            {
-                return NotFound();
-            }
-
-            _context.SmrtniSlucaj.Remove(smrtniSlucaj);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool SmrtniSlucajExists(int id)
-        {
-            return _context.SmrtniSlucaj.Any(e => e.Id == id);
-        }
+        return _smrtniSlucajRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

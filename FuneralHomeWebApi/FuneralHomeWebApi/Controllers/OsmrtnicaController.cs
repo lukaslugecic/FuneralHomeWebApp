@@ -1,107 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class OsmrtnicaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OsmrtnicaController : ControllerBase
+    private readonly IOsmrtnicaRepository<int, DbModels.Osmrtnica> _osmrtnicaRepository;
+
+    public OsmrtnicaController(IOsmrtnicaRepository<int, DbModels.Osmrtnica> osmrtnicaRespository)
     {
-        private readonly FuneralHomeContext _context;
+        _osmrtnicaRepository = osmrtnicaRespository;
+    }
 
-        public OsmrtnicaController(FuneralHomeContext context)
+    // GET: api/Osmrtnica
+    [HttpGet]
+    public ActionResult<IEnumerable<Osmrtnica>> GetAllOsmrtnica()
+    {
+        return Ok(_osmrtnicaRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Osmrtnica/5
+    [HttpGet("{id}")]
+    public ActionResult<Osmrtnica> GetOsmrtnica(int id)
+    {
+        var osmrtnicaOption = _osmrtnicaRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return osmrtnicaOption
+            ? Ok(osmrtnicaOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Osmrtnica/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditOsmrtnica(int id, Osmrtnica osmrtnica)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Osmrtnica
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Osmrtnica>>> GetOsmrtnica()
+        if (id != osmrtnica.Id)
         {
-            return await _context.Osmrtnica.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Osmrtnica/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Osmrtnica>> GetOsmrtnica(int id)
+        if (!_osmrtnicaRepository.Exists(id))
         {
-            var osmrtnica = await _context.Osmrtnica.FindAsync(id);
-
-            if (osmrtnica == null)
-            {
-                return NotFound();
-            }
-
-            return osmrtnica;
+            return NotFound();
         }
 
-        // PUT: api/Osmrtnica/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditOsmrtnica(int id, Osmrtnica osmrtnica)
+        return _osmrtnicaRepository.Update(osmrtnica.ToDbModel())
+            ? AcceptedAtAction("EditOsmrtnica", osmrtnica)
+            : StatusCode(500);
+    }
+
+    // POST: api/Osiguranje
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Osmrtnica> CreateOsiguranje(Osmrtnica osmrtnica)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != osmrtnica.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(osmrtnica).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OsmrtnicaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Osmrtnica
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Osmrtnica>> CreateOsmrtnica(Osmrtnica osmrtnica)
-        {
-            _context.Osmrtnica.Add(osmrtnica);
-            await _context.SaveChangesAsync();
+        return _osmrtnicaRepository.Insert(osmrtnica.ToDbModel())
+            ? CreatedAtAction("GetOsmrtnica", new { id = osmrtnica.Id }, osmrtnica)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetOsmrtnica", new { id = osmrtnica.Id }, osmrtnica);
-        }
+    // DELETE: api/Osiguranje/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteOglas(int id)
+    {
+        if (!_osmrtnicaRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Osmrtnicas/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOsmrtnica(int id)
-        {
-            var osmrtnica = await _context.Osmrtnica.FindAsync(id);
-            if (osmrtnica == null)
-            {
-                return NotFound();
-            }
-
-            _context.Osmrtnica.Remove(osmrtnica);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool OsmrtnicaExists(int id)
-        {
-            return _context.Osmrtnica.Any(e => e.Id == id);
-        }
+        return _osmrtnicaRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class UrnaController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UrnaController : ControllerBase
+    private readonly IUrnaRepository<int, DbModels.Urna> _urnaRepository;
+
+    public UrnaController(IUrnaRepository<int, DbModels.Urna> urnaRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _urnaRepository = urnaRepository;
+    }
 
-        public UrnaController(FuneralHomeContext context)
+    // GET: api/Urna
+    [HttpGet]
+    public ActionResult<IEnumerable<Urna>> GetAllUrna()
+    {
+        return Ok(_urnaRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Urna/5
+    [HttpGet("{id}")]
+    public ActionResult<Urna> GetUrna(int id)
+    {
+        var urnaOption = _urnaRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return urnaOption
+            ? Ok(urnaOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Urna/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditUrna(int id, Urna urna)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Urna
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Urna>>> GetUrna()
+        if (id != urna.Id)
         {
-            return await _context.Urna.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Urna/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Urna>> GetUrna(int id)
+        if (!_urnaRepository.Exists(id))
         {
-            var urna = await _context.Urna.FindAsync(id);
-
-            if (urna == null)
-            {
-                return NotFound();
-            }
-
-            return urna;
+            return NotFound();
         }
 
-        // PUT: api/Urna/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditUrna(int id, Urna urna)
+        return _urnaRepository.Update(urna.ToDbModel())
+            ? AcceptedAtAction("EditOglas", urna)
+            : StatusCode(500);
+    }
+
+    // POST: api/Urna
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Urna> CreateUrna(Urna urna)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != urna.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(urna).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UrnaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Urna
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Urna>> CreateUrna(Urna urna)
-        {
-            _context.Urna.Add(urna);
-            await _context.SaveChangesAsync();
+        return _urnaRepository.Insert(urna.ToDbModel())
+            ? CreatedAtAction("GetUrna", new { id = urna.Id }, urna)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetUrna", new { id = urna.Id }, urna);
-        }
+    // DELETE: api/Urna/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteUrna(int id)
+    {
+        if (!_urnaRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Urna/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUrna(int id)
-        {
-            var urna = await _context.Urna.FindAsync(id);
-            if (urna == null)
-            {
-                return NotFound();
-            }
-
-            _context.Urna.Remove(urna);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UrnaExists(int id)
-        {
-            return _context.Urna.Any(e => e.Id == id);
-        }
+        return _urnaRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

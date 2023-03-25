@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class NadgrobniZnakController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class NadgrobniZnakController : ControllerBase
+    private readonly INadgrobniZnakRepository<int, DbModels.NadgrobniZnak> _nadgrobniZnakRepository;
+
+    public NadgrobniZnakController(INadgrobniZnakRepository<int, DbModels.NadgrobniZnak> nadgrobniZnakRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _nadgrobniZnakRepository = nadgrobniZnakRepository;
+    }
 
-        public NadgrobniZnakController(FuneralHomeContext context)
+    // GET: api/NadgrobniZnak
+    [HttpGet]
+    public ActionResult<IEnumerable<NadgrobniZnak>> GetAllNadgrobniZnak()
+    {
+        return Ok(_nadgrobniZnakRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/NadgrobniZnak/5
+    [HttpGet("{id}")]
+    public ActionResult<NadgrobniZnak> GetNadgrobniZnak(int id)
+    {
+        var nadgrobniZnakOption = _nadgrobniZnakRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return nadgrobniZnakOption
+            ? Ok(nadgrobniZnakOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/NadgrobniZnak/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditNadgrobniZnak(int id, NadgrobniZnak nadgrobni)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/NadgrobniZnak
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<NadgrobniZnak>>> GetNadgrobniZnak()
+        if (id != nadgrobni.Id)
         {
-            return await _context.NadgrobniZnak.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/NadgrobniZnak/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<NadgrobniZnak>> GetNadgrobniZnak(int id)
+        if (!_nadgrobniZnakRepository.Exists(id))
         {
-            var nadgrobniZnak = await _context.NadgrobniZnak.FindAsync(id);
-
-            if (nadgrobniZnak == null)
-            {
-                return NotFound();
-            }
-
-            return nadgrobniZnak;
+            return NotFound();
         }
 
-        // PUT: api/NadgrobniZnak/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditNadgrobniZnak(int id, NadgrobniZnak nadgrobniZnak)
+        return _nadgrobniZnakRepository.Update(nadgrobni.ToDbModel())
+            ? AcceptedAtAction("EditNadgrobniZnak", nadgrobni)
+            : StatusCode(500);
+    }
+
+    // POST: api/NadgrobniZnak
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<NadgrobniZnak> CreateNadgrobniZnak(NadgrobniZnak nadgrobni)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != nadgrobniZnak.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(nadgrobniZnak).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!NadgrobniZnakExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/NadgrobniZnak
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<NadgrobniZnak>> CreateNadgrobniZnak(NadgrobniZnak nadgrobniZnak)
-        {
-            _context.NadgrobniZnak.Add(nadgrobniZnak);
-            await _context.SaveChangesAsync();
+        return _nadgrobniZnakRepository.Insert(nadgrobni.ToDbModel())
+            ? CreatedAtAction("GetLijes", new { id = nadgrobni.Id }, nadgrobni)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetNadgrobniZnak", new { id = nadgrobniZnak.Id }, nadgrobniZnak);
-        }
+    // DELETE: api/NadgrobniZnak/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteNadgrobniZnak(int id)
+    {
+        if (!_nadgrobniZnakRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/NadgrobniZnak/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteNadgrobniZnak(int id)
-        {
-            var nadgrobniZnak = await _context.NadgrobniZnak.FindAsync(id);
-            if (nadgrobniZnak == null)
-            {
-                return NotFound();
-            }
-
-            _context.NadgrobniZnak.Remove(nadgrobniZnak);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool NadgrobniZnakExists(int id)
-        {
-            return _context.NadgrobniZnak.Any(e => e.Id == id);
-        }
+        return _nadgrobniZnakRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

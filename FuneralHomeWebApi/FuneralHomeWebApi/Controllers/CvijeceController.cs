@@ -19,14 +19,14 @@ public class CvijeceController : ControllerBase
         _cvijeceRepository = cvijeceRepository;
     }
 
-    // GET: api/People
+    // GET: api/Cvijece
     [HttpGet]
     public ActionResult<IEnumerable<Cvijece>> GetAllCvijece()
     {
         return Ok(_cvijeceRepository.GetAll().Select(DtoMapping.ToDto));
     }
 
-    // GET: api/People/5
+    // GET: api/Cvijece/5
     [HttpGet("{id}")]
     public ActionResult<Cvijece> GetCvijece(int id)
     {
@@ -37,10 +37,10 @@ public class CvijeceController : ControllerBase
             : NotFound();
     }
 
-    // PUT: api/People/5
+    // PUT: api/Cvijece/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public IActionResult EditPerson(int id, Cvijece cvijece)
+    public IActionResult EditCvijece(int id, Cvijece cvijece)
     {
         if (!ModelState.IsValid)
         {
@@ -62,7 +62,7 @@ public class CvijeceController : ControllerBase
             : StatusCode(500);
     }
 
-    // POST: api/People
+    // POST: api/Cvijece
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
     public ActionResult<Cvijece> CreatePerson(Cvijece cvijece)
@@ -77,7 +77,7 @@ public class CvijeceController : ControllerBase
             : StatusCode(500);
     }
 
-    // DELETE: api/People/5
+    // DELETE: api/Cvijece/5
     [HttpDelete("{id}")]
     public IActionResult DeleteCvijece(int id)
     {

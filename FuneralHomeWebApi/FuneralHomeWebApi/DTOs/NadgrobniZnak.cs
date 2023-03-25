@@ -22,7 +22,7 @@ public class NadgrobniZnak
 
 public static partial class DtoMapping
 {
-    public static NadgrobniZnak toDto(this DbModels.NadgrobniZnak znak)
+    public static NadgrobniZnak ToDto(this DbModels.NadgrobniZnak znak)
         => new NadgrobniZnak()
         {
             Id = znak.Id,

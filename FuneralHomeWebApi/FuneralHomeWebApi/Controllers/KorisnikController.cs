@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class KorisnikController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class KorisnikController : ControllerBase
+    private readonly IKorisnikRepository<int, DbModels.Korisnik> _korisnikRepository;
+
+    public KorisnikController(IKorisnikRepository<int, DbModels.Korisnik> korisnikRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _korisnikRepository = korisnikRepository;
+    }
 
-        public KorisnikController(FuneralHomeContext context)
+    // GET: api/Korisnik
+    [HttpGet]
+    public ActionResult<IEnumerable<Korisnik>> GetAllKorisnik()
+    {
+        return Ok(_korisnikRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Korisnik/5
+    [HttpGet("{id}")]
+    public ActionResult<Korisnik> GetKorisnik(int id)
+    {
+        var korisnikOption = _korisnikRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return korisnikOption
+            ? Ok(korisnikOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Korisnik/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditKorisnik(int id, Korisnik korisnik)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Korisnik
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Korisnik>>> GetKorisnik()
+        if (id != korisnik.Id)
         {
-            return await _context.Korisnik.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Korisnik/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Korisnik>> GetKorisnik(int id)
+        if (!_korisnikRepository.Exists(id))
         {
-            var korisnik = await _context.Korisnik.FindAsync(id);
-
-            if (korisnik == null)
-            {
-                return NotFound();
-            }
-
-            return korisnik;
+            return NotFound();
         }
 
-        // PUT: api/Korisnik/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditKorisnik(int id, Korisnik korisnik)
+        return _korisnikRepository.Update(korisnik.ToDbModel())
+            ? AcceptedAtAction("EditKorisnik", korisnik)
+            : StatusCode(500);
+    }
+
+    // POST: api/Korisnik
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Korisnik> CreateKorisnik(Korisnik korisnik)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != korisnik.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(korisnik).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!KorisnikExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Korisnik
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Korisnik>> CreateKorisnik(Korisnik korisnik)
-        {
-            _context.Korisnik.Add(korisnik);
-            await _context.SaveChangesAsync();
+        return _korisnikRepository.Insert(korisnik.ToDbModel())
+            ? CreatedAtAction("GetKorisnik", new { id = korisnik.Id }, korisnik)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetKorisnik", new { id = korisnik.Id }, korisnik);
-        }
+    // DELETE: api/Korisnik/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteKorisnik(int id)
+    {
+        if (!_korisnikRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Korisnik/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteKorisnik(int id)
-        {
-            var korisnik = await _context.Korisnik.FindAsync(id);
-            if (korisnik == null)
-            {
-                return NotFound();
-            }
-
-            _context.Korisnik.Remove(korisnik);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool KorisnikExists(int id)
-        {
-            return _context.Korisnik.Any(e => e.Id == id);
-        }
+        return _korisnikRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

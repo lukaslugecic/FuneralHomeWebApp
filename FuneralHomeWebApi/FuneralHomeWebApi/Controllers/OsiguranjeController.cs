@@ -1,121 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class OsiguranjeController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class OsiguranjeController : ControllerBase
+    private readonly IOsiguranjeRepository<int, DbModels.Osiguranje> _osiguranjeRepository;
+
+    public OsiguranjeController(IOsiguranjeRepository<int, DbModels.Osiguranje> osiguranjeRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _osiguranjeRepository = osiguranjeRepository;
+    }
 
-        public OsiguranjeController(FuneralHomeContext context)
+    // GET: api/Osiguranje
+    [HttpGet]
+    public ActionResult<IEnumerable<Osiguranje>> GetAllOsiguranje()
+    {
+        return Ok(_osiguranjeRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Osiguranje/5
+    [HttpGet("{id}")]
+    public ActionResult<Osiguranje> GetOsiguranje(int id)
+    {
+        var osiguranjeOption = _osiguranjeRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return osiguranjeOption
+            ? Ok(osiguranjeOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Osiguranje/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditOsiguranje(int id, Osiguranje osiguranje)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Osiguranje
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Osiguranje>>> GetOsiguranje()
+        if (id != osiguranje.Id)
         {
-            return await _context.Osiguranje.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Osiguranje/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Osiguranje>> GetOsiguranje(int id)
+        if (!_osiguranjeRepository.Exists(id))
         {
-            var osiguranje = await _context.Osiguranje.FindAsync(id);
-
-            if (osiguranje == null)
-            {
-                return NotFound();
-            }
-
-            return osiguranje;
+            return NotFound();
         }
 
-        // PUT: api/Osiguranje/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditOsiguranje(int id, Osiguranje osiguranje)
+        return _osiguranjeRepository.Update(osiguranje.ToDbModel())
+            ? AcceptedAtAction("EditOglas", osiguranje)
+            : StatusCode(500);
+    }
+
+    // POST: api/Osiguranje
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Oglas> CreateOsiguranje(Osiguranje osiguranje)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != osiguranje.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(osiguranje).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!OsiguranjeExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Osiguranje
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Osiguranje>> CreateOsiguranje(Osiguranje osiguranje)
-        {
-            _context.Osiguranje.Add(osiguranje);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (OsiguranjeExists(osiguranje.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        return _osiguranjeRepository.Insert(osiguranje.ToDbModel())
+            ? CreatedAtAction("GetOglas", new { id = osiguranje.Id }, osiguranje)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetOsiguranje", new { id = osiguranje.Id }, osiguranje);
-        }
+    // DELETE: api/Osiguranje/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteOglas(int id)
+    {
+        if (!_osiguranjeRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Osiguranje/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOsiguranje(int id)
-        {
-            var osiguranje = await _context.Osiguranje.FindAsync(id);
-            if (osiguranje == null)
-            {
-                return NotFound();
-            }
-
-            _context.Osiguranje.Remove(osiguranje);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool OsiguranjeExists(int id)
-        {
-            return _context.Osiguranje.Any(e => e.Id == id);
-        }
+        return _osiguranjeRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

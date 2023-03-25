@@ -5,6 +5,6 @@
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TModel"></typeparam>
-public interface IUrnaRepository<TKey, TModel>
+public interface IUrnaRepository<TKey, TModel> : IRepository<TKey,TModel>
 {
 }

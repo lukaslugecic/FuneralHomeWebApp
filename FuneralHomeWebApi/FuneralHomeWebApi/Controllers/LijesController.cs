@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class LijesController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class LijesController : ControllerBase
+    private readonly ILijesRepository<int, DbModels.Lijes> _lijesRepository;
+
+    public LijesController(ILijesRepository<int, DbModels.Lijes> lijesRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _lijesRepository = lijesRepository;
+    }
 
-        public LijesController(FuneralHomeContext context)
+    // GET: api/Lijes
+    [HttpGet]
+    public ActionResult<IEnumerable<Lijes>> GetAllLijes()
+    {
+        return Ok(_lijesRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Lijes/5
+    [HttpGet("{id}")]
+    public ActionResult<Lijes> GetLijes(int id)
+    {
+        var lijesOption = _lijesRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return lijesOption
+            ? Ok(lijesOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Lijes/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditLijes(int id, Lijes lijes)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Lijes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Lijes>>> GetLijes()
+        if (id != lijes.Id)
         {
-            return await _context.Lijes.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Lijes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Lijes>> GetLijes(int id)
+        if (!_lijesRepository.Exists(id))
         {
-            var lijes = await _context.Lijes.FindAsync(id);
-
-            if (lijes == null)
-            {
-                return NotFound();
-            }
-
-            return lijes;
+            return NotFound();
         }
 
-        // PUT: api/Lijes/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditLijes(int id, Lijes lijes)
+        return _lijesRepository.Update(lijes.ToDbModel())
+            ? AcceptedAtAction("EditLijes", lijes)
+            : StatusCode(500);
+    }
+
+    // POST: api/Lijes
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Lijes> CreateLijes(Lijes lijes)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != lijes.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(lijes).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LijesExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Lijes
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Lijes>> CreateLijes(Lijes lijes)
-        {
-            _context.Lijes.Add(lijes);
-            await _context.SaveChangesAsync();
+        return _lijesRepository.Insert(lijes.ToDbModel())
+            ? CreatedAtAction("GetLijes", new { id = lijes.Id }, lijes)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetLijes", new { id = lijes.Id }, lijes);
-        }
+    // DELETE: api/Lijes/5
+    [HttpDelete("{id}")]
+    public IActionResult DeleteLijes(int id)
+    {
+        if (!_lijesRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Lijes/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteLijes(int id)
-        {
-            var lijes = await _context.Lijes.FindAsync(id);
-            if (lijes == null)
-            {
-                return NotFound();
-            }
-
-            _context.Lijes.Remove(lijes);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool LijesExists(int id)
-        {
-            return _context.Lijes.Any(e => e.Id == id);
-        }
+        return _lijesRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

@@ -1,107 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using FuneralHomeWebApi.Data.DbModels;
+using FuneralHome.DTOs;
+using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using FuneralHome.Commons;
+using System;
 
-namespace FuneralHomeWebApi.Controllers
+
+namespace FuneralHomeWebApi.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class PogrebController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PogrebController : ControllerBase
+    private readonly IPogrebRepository<int, DbModels.Pogreb> _pogrebRepository;
+
+    public PogrebController(IPogrebRepository<int, DbModels.Pogreb> pogrebRepository)
     {
-        private readonly FuneralHomeContext _context;
+        _pogrebRepository = pogrebRepository;
+    }
 
-        public PogrebController(FuneralHomeContext context)
+    // GET: api/Pogreb
+    [HttpGet]
+    public ActionResult<IEnumerable<Pogreb>> GetAllPogreb()
+    {
+        return Ok(_pogrebRepository.GetAll().Select(DtoMapping.ToDto));
+    }
+
+    // GET: api/Pogreb/5
+    [HttpGet("{id}")]
+    public ActionResult<Pogreb> GetPogreb(int id)
+    {
+        var pogrebOption = _pogrebRepository.Get(id).Map(DtoMapping.ToDto);
+
+        return pogrebOption
+            ? Ok(pogrebOption.Data)
+            : NotFound();
+    }
+
+    // PUT: api/Pogreb/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("{id}")]
+    public IActionResult EditPogreb(int id, Pogreb pogreb)
+    {
+        if (!ModelState.IsValid)
         {
-            _context = context;
+            return BadRequest(ModelState);
         }
 
-        // GET: api/Pogreb
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pogreb>>> GetPogreb()
+        if (id != pogreb.Id)
         {
-            return await _context.Pogreb.ToListAsync();
+            return BadRequest();
         }
 
-        // GET: api/Pogreb/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Pogreb>> GetPogreb(int id)
+        if (!_pogrebRepository.Exists(id))
         {
-            var pogreb = await _context.Pogreb.FindAsync(id);
-
-            if (pogreb == null)
-            {
-                return NotFound();
-            }
-
-            return pogreb;
+            return NotFound();
         }
 
-        // PUT: api/Pogreb/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditPogreb(int id, Pogreb pogreb)
+        return _pogrebRepository.Update(pogreb.ToDbModel())
+            ? AcceptedAtAction("EditPogreb", pogreb)
+            : StatusCode(500);
+    }
+
+    // POST: api/Pogreb
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost]
+    public ActionResult<Oglas> CreatePogreb(Pogreb pogreb)
+    {
+        if (!ModelState.IsValid)
         {
-            if (id != pogreb.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(pogreb).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PogrebExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return BadRequest(ModelState);
         }
 
-        // POST: api/Pogreb
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Pogreb>> CreatePogreb(Pogreb pogreb)
-        {
-            _context.Pogreb.Add(pogreb);
-            await _context.SaveChangesAsync();
+        return _pogrebRepository.Insert(pogreb.ToDbModel())
+            ? CreatedAtAction("GetPogreb", new { id = pogreb.Id }, pogreb)
+            : StatusCode(500);
+    }
 
-            return CreatedAtAction("GetPogreb", new { id = pogreb.Id }, pogreb);
-        }
+    // DELETE: api/Pogreb/5
+    [HttpDelete("{id}")]
+    public IActionResult DeletePogreb(int id)
+    {
+        if (!_pogrebRepository.Exists(id))
+            return NotFound();
 
-        // DELETE: api/Pogreb/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePogreb(int id)
-        {
-            var pogreb = await _context.Pogreb.FindAsync(id);
-            if (pogreb == null)
-            {
-                return NotFound();
-            }
-
-            _context.Pogreb.Remove(pogreb);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PogrebExists(int id)
-        {
-            return _context.Pogreb.Any(e => e.Id == id);
-        }
+        return _pogrebRepository.Remove(id)
+            ? NoContent()
+            : StatusCode(500);
     }
 }

@@ -6,7 +6,7 @@ using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
 
 namespace FuneralHome.DTOs;
 
-public class Urna
+public class Osmrtnica
 {
     public int Id { get; set; }
 
@@ -15,30 +15,27 @@ public class Urna
     public string Naziv { get; set; } = string.Empty;
 
     public byte[]? Slika { get; set; }
-    public int Kolicina { get; set; }
     public decimal Cijena { get; set; }
 }
 
 
 public static partial class DtoMapping
 {
-    public static Urna ToDto(this DbModels.Urna urna)
-        => new Urna()
+    public static Osmrtnica ToDto(this DbModels.Osmrtnica osmrtnica)
+        => new Osmrtnica()
         {
-            Id = urna.Id,
-            Naziv = urna.Naziv,
-            Slika = urna.Slika,
-            Kolicina = urna.Kolicina,
-            Cijena = urna.Cijena
+            Id = osmrtnica.Id,
+            Naziv = osmrtnica.Naziv,
+            Slika = osmrtnica.Slika,
+            Cijena = osmrtnica.Cijena
         };
 
-    public static DbModels.Urna ToDbModel(this Urna urna)
-        => new DbModels.Urna()
+    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
+        => new DbModels.Osmrtnica()
         {
-            Id = urna.Id,
-            Naziv = urna.Naziv,
-            Slika = urna.Slika,
-            Kolicina = urna.Kolicina,
-            Cijena = urna.Cijena
+            Id = osmrtnica.Id,
+            Naziv = osmrtnica.Naziv,
+            Slika = osmrtnica.Slika,
+            Cijena = osmrtnica.Cijena
         };
 }
