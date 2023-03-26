@@ -1,0 +1,16 @@
+<mat-toolbar>
+    <h1 routerLink="/">Aplikacija za pogrebna poduzeća</h1>
+  
+    <div>
+      
+        <button
+          *ngFor="let link of links.admin"
+          mat-button
+          [routerLink]="link.path"
+        >
+          {{ link.title }}
+        </button>
+      
+      <button mat-button >Odjavite se</button>
+    </div>
+  </mat-toolbar>

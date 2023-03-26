@@ -1,0 +1,10 @@
+@import '../../../assets/styles/variables.scss';
+
+.footer{
+   color: $gray-color;
+   text-align: center;
+   text-shadow: 50;
+   position:fixed;
+   bottom:0px;
+   width:100%;
+}

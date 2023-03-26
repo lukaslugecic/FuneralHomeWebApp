@@ -1,0 +1,36 @@
+@import '../../../assets/styles/variables.scss';
+
+mat-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: $gray-color;
+    color: $secondary-color;
+}
+
+.doctor {
+    background-color: $doctor-main-color;
+}
+
+.patient {
+    background-color: $patient-main-color;
+}
+
+.nurse {
+    background-color: $nurse-main-color;
+}
+
+.admin {
+    background-color: $admin-main-color;
+}
+
+button {
+    background-color: transparent;
+    color: $secondary-color;
+}
+
+h1 {
+    &:hover {
+        cursor: pointer;
+    }
+}
