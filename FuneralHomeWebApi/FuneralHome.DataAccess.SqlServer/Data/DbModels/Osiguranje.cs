@@ -8,14 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    [Index("KorisnikId", Name = "IX_Osiguranje", IsUnique = true)]
+    [Index("KorisnikId", Name = "IX_Osiguranje_1", IsUnique = true)]
     public partial class Osiguranje
     {
         [Key]
         public int Id { get; set; }
         public int KorisnikId { get; set; }
         public DateTime DatumUgovaranja { get; set; }
-        //public DateOnly DatumUgovaranja { get; set; }
         public bool PlacanjeNaRate { get; set; }
 
         [ForeignKey("KorisnikId")]

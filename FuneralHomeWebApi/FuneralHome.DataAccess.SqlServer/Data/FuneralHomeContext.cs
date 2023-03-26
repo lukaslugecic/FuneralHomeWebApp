@@ -4,9 +4,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
 
-namespace FuneralHome.DataAccess.SqlServer.Data
+namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     public partial class FuneralHomeContext : DbContext
     {
@@ -96,6 +95,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.Korisnik)
                     .WithMany(p => p.SmrtniSlucaj)
                     .HasForeignKey(d => d.KorisnikId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_SmrtniSlucaj_Korisnik");
             });
 

@@ -44,6 +44,10 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [StringLength(50)]
         [Unicode(false)]
         public string Lozinka { get; set; }
+        [Required]
+        [StringLength(50)]
+        [Unicode(false)]
+        public string VrstaKorisnika { get; set; }
 
         [InverseProperty("Korisnik")]
         public virtual Osiguranje Osiguranje { get; set; }

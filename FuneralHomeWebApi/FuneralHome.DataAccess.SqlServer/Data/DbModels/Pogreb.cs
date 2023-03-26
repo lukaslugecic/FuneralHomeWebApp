@@ -14,7 +14,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int Id { get; set; }
         public int SmrtniSlucajId { get; set; }
-        //public DateOnly DatumPogreba { get; set; }
         public DateTime DatumPogreba { get; set; }
         public bool Kremacija { get; set; }
         public int? UrnaId { get; set; }
