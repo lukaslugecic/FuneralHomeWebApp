@@ -32,6 +32,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Korisnik>(entity =>
+            {
+                entity.Property(e => e.VrstaKorisnika).IsFixedLength();
+            });
+
             modelBuilder.Entity<Oglas>(entity =>
             {
                 entity.HasOne(d => d.Osmrtnica)
