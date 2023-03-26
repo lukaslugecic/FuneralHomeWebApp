@@ -1,0 +1,94 @@
+<app-auth-navigation></app-auth-navigation>
+
+<div class="container">
+  <h1>Registriraj se</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        placeholder="Email"
+        formControlName="email"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Lozinka</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="Lozinka"
+        formControlName="password"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ponovi lozinku</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="Ponovi lozinku"
+        formControlName="repeatedPassword"
+      />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Ime</mat-label>
+      <input matInput type="text" placeholder="Ime" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Prezime</mat-label>
+      <input
+        matInput
+        type="text"
+        placeholder="Prezime"
+        formControlName="surname"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="toggle">
+      <mat-label>Datum rođenja</mat-label>
+      <input
+        formControlName="dateOfBirth"
+        placeholder="MM/DD/YYYY"
+        matInput
+        [matDatepicker]="dateOfBirth"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="dateOfBirth"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #dateOfBirth></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>OIB</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="OIB"
+          formControlName="oib"
+        />
+      </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Adresa</mat-label>
+        <input
+          matInput
+          type="text"
+          placeholder="Adresa"
+          formControlName="address"
+        />
+    </mat-form-field>
+
+
+    <button type="submit" mat-raised-button>Potvrdi</button>
+
+    <div class="info">
+      <a routerLink="/login">Već imaš račun? Prijavi se!</a>
+    </div>
+  </form>
+</div>
