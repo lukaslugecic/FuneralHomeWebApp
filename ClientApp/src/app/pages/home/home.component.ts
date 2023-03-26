@@ -7,8 +7,8 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent{
-  public user$ = this.authService.user$;
+  //public user$ = this.authService.user$;
 
-  constructor(private readonly authService: AuthService) {}
+  //constructor(private readonly authService: AuthService) {}
 
 }

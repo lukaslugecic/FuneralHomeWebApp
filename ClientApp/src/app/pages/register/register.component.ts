@@ -17,9 +17,9 @@ export class RegisterComponent implements OnDestroy {
   private readonly trigger$ = new BehaviorSubject<any>(null);
 
   constructor(
-    private readonly authService: AuthService,
+   // private readonly authService: AuthService,
     private readonly snackBar: MatSnackBar,
-    private readonly router: Router,
+   // private readonly router: Router,
   ) {
     this.trigger$.next(null);
   }
@@ -46,6 +46,7 @@ export class RegisterComponent implements OnDestroy {
   });
 
   public onFormSubmit(): void {
+    
     if (
       this.form.get('password')?.value !==
       this.form.get('repeatedPassword')?.value
@@ -73,6 +74,9 @@ export class RegisterComponent implements OnDestroy {
       oib: this.form.get('oib')?.value
     };
 
+    console.log(data);
+
+    /*
     const registerSubscription = this.authService
       .register(data)
       .pipe(
@@ -87,13 +91,17 @@ export class RegisterComponent implements OnDestroy {
         this.router.navigate(['/']);
       });
     this.subscription.add(registerSubscription);
+
+    */
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+  
 
   public test() {
     console.log(this.form.value);
   }
+  
 }
