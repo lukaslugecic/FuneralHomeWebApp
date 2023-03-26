@@ -8,6 +8,7 @@ namespace FuneralHome.DTOs;
 
 public class Cvijece
 {
+
     public int Id { get; set; }
     
     [Required(ErrorMessage = "Name can't be null")]
