@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class GlazbaRepository : IGlazbaRepository<int, Glazba>
+public class GlazbaRepository : IGlazbaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,86 +15,143 @@ public class GlazbaRepository : IGlazbaRepository<int, Glazba>
 
     public bool Exists(Glazba model)
     {
-        return _dbContext.Glazba
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.Glazba
+                             .AsNoTracking()
+                             .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.Glazba
-                              .AsNoTracking()
-                              .FirstOrDefault(g => g.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<Glazba> Get(int id)
-    {
-        var model = _dbContext.Glazba
-                              .AsNoTracking()
-                              .FirstOrDefault(g => g.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Glazba>();
-    }
-
-
-    public IEnumerable<Glazba> GetAll()
-    {
-        var models = _dbContext.Glazba
-                               .ToList();
-
-        return models;
-    }
-
-
-    public bool Insert(Glazba model)
-    {
-        if (_dbContext.Glazba.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return _dbContext.Glazba
+                             .AsNoTracking()
+                             .FirstOrDefault(gl => gl.Id.Equals(id)) != null;
+        }
+        catch (Exception)
+        {
+            return false;
         }
 
-        return false;
     }
 
-    public bool Remove(int id)
+    public Result<Glazba> Get(int id)
     {
-        var model = _dbContext.Glazba
-                              .AsNoTracking()
-                              .FirstOrDefault(g => g.Id.Equals(id));
-
-        if (model is not null)
+        try
         {
-            _dbContext.Glazba.Remove(model);
+            var glazba = _dbContext.Glazba
+                                 .AsNoTracking()
+                                 .FirstOrDefault(gl => gl.Id.Equals(id))?
+                                 .ToDomain();
 
-            return _dbContext.SaveChanges() > 0;
+            return glazba is not null
+            ? Results.OnSuccess(glazba)
+                : Results.OnFailure<Glazba>($"No music with such id {id}");
         }
-        return false;
-    }
-
-    public bool Update(Glazba model)
-    {
-        // detach
-        if (_dbContext.Glazba.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        catch (Exception e)
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return Results.OnException<Glazba>(e);
         }
 
-        return false;
     }
 
+    public Result<IEnumerable<Glazba>> GetAll()
+    {
+        try
+        {
+            var glazba =
+                _dbContext.Glazba
+                          .AsNoTracking()
+                          .Select(Mapping.ToDomain);
+            return Results.OnSuccess(glazba);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Glazba>>(e);
+        }
+    }
+
+
+    public Result Insert(Glazba model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Glazba.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.Glazba
+                          .AsNoTracking()
+                          .FirstOrDefault(gl => gl.Id.Equals(id));
+            if (model is not null)
+            {
+                _dbContext.Glazba.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(Glazba model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Glazba.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
 }

@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class OsiguranjeRepository : IOsiguranjeRepository<int, Osiguranje>
+public class OsiguranjeRepository : IOsiguranjeRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,86 +15,143 @@ public class OsiguranjeRepository : IOsiguranjeRepository<int, Osiguranje>
 
     public bool Exists(Osiguranje model)
     {
-        return _dbContext.Osiguranje
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.Osiguranje
+                             .AsNoTracking()
+                             .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.Osiguranje
-                              .AsNoTracking()
-                              .FirstOrDefault(o => o.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<Osiguranje> Get(int id)
-    {
-        var model = _dbContext.Osiguranje
-                              .AsNoTracking()
-                              .FirstOrDefault(o => o.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Osiguranje>();
-    }
-
-
-    public IEnumerable<Osiguranje> GetAll()
-    {
-        var models = _dbContext.Osiguranje
-                               .ToList();
-
-        return models;
-    }
-
-
-    public bool Insert(Osiguranje model)
-    {
-        if (_dbContext.Osiguranje.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return _dbContext.Osiguranje
+                             .AsNoTracking()
+                             .FirstOrDefault(o => o.Id.Equals(id)) != null;
+        }
+        catch (Exception)
+        {
+            return false;
         }
 
-        return false;
     }
 
-    public bool Remove(int id)
+    public Result<Osiguranje> Get(int id)
     {
-        var model = _dbContext.Osiguranje
-                              .AsNoTracking()
-                              .FirstOrDefault(o => o.Id.Equals(id));
-
-        if (model is not null)
+        try
         {
-            _dbContext.Osiguranje.Remove(model);
+            var model = _dbContext.Osiguranje
+                                 .AsNoTracking()
+                                 .FirstOrDefault(o => o.Id.Equals(id))?
+                                 .ToDomain();
 
-            return _dbContext.SaveChanges() > 0;
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<Osiguranje>($"No insurances with such id {id}");
         }
-        return false;
-    }
-
-    public bool Update(Osiguranje model)
-    {
-        // detach
-        if (_dbContext.Osiguranje.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        catch (Exception e)
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return Results.OnException<Osiguranje>(e);
         }
 
-        return false;
     }
 
+    public Result<IEnumerable<Osiguranje>> GetAll()
+    {
+        try
+        {
+            var models =
+                _dbContext.Osiguranje
+                          .AsNoTracking()
+                          .Select(Mapping.ToDomain);
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Osiguranje>>(e);
+        }
+    }
+
+
+    public Result Insert(Osiguranje model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Osiguranje.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.Osiguranje
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.Id.Equals(id));
+            if (model is not null)
+            {
+                _dbContext.Osiguranje.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(Osiguranje model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Osiguranje.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
 }

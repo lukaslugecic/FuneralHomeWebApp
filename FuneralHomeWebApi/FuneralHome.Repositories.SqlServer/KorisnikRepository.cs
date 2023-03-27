@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class KorisnikRepository : IKorisnikRepository<int, Korisnik>
+public class KorisnikRepository : IKorisnikRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,123 +15,187 @@ public class KorisnikRepository : IKorisnikRepository<int, Korisnik>
 
     public bool Exists(Korisnik model)
     {
-        return _dbContext.Korisnik
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.Korisnik
+                     .AsNoTracking()
+                     .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.Korisnik
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<Korisnik> Get(int id)
-    {
-        var model = _dbContext.Korisnik
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Korisnik>();
-    }
-
-    public Option<Korisnik> GetAggregate(int id)
-    {
-        var model = _dbContext.Korisnik
-                               .Include(k => k.Osiguranje)
-                              .Include(k => k.SmrtniSlucaj)
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id)); // give me the first or null; substitute for .Where()
-                                                                               // single or default throws an exception if more than one element meets the criteria
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Korisnik>();
-    }
-
-    public IEnumerable<Korisnik> GetAll()
-    {
-        var models = _dbContext.Korisnik
-                               .ToList();
-
-        return models;
-    }
-
-    public IEnumerable<Korisnik> GetAllAggregates()
-    {
-        var models = _dbContext.Korisnik
-                                .Include(k => k.Osiguranje)
-                               .Include(k => k.SmrtniSlucaj)
-                               .ToList();
-
-        return models;
-    }
-
-    public bool Insert(Korisnik model)
-    {
-        if (_dbContext.Korisnik.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            var model = _dbContext.Korisnik
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Id.Equals(id));
+            return model is not null;
         }
-
-        return false;
-    }
-
-    public bool Remove(int id)
-    {
-        var model = _dbContext.Korisnik
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id));
-
-        if (model is not null)
+        catch (Exception)
         {
-            _dbContext.Korisnik.Remove(model);
-
-            return _dbContext.SaveChanges() > 0;
+            return false;
         }
-        return false;
     }
 
-    public bool Update(Korisnik model)
+    public Result<Korisnik> Get(int id)
     {
-        // detach
-        if (_dbContext.Korisnik.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.Korisnik
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Id.Equals(id))?
+                          .ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<Korisnik>($"No user with id {id} found");
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<Korisnik>(e);
+        }
     }
 
-    public bool UpdateAggregate(Korisnik model)
+    public Result<Korisnik> GetAggregate(int id)
     {
-        if (_dbContext.Korisnik.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.Korisnik
+                          .Include(k => k.Osiguranje)
+                          .Include(k => k.SmrtniSlucaj)
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          ?.ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
-            return isSuccess;
+            return model is not null
+                ? Results.OnSuccess(model)
+                : Results.OnFailure<Korisnik>();
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<Korisnik>(e);
+        }
     }
+
+    public Result<IEnumerable<Korisnik>> GetAll()
+    {
+        try
+        {
+            var models = _dbContext.Korisnik
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Korisnik>>(e);
+        }
+    }
+
+    public Result<IEnumerable<Korisnik>> GetAllAggregates()
+    {
+        try
+        {
+            var models = _dbContext.Korisnik
+                           .Include(K => K.Osiguranje)
+                           .Include(K => K.SmrtniSlucaj)
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Korisnik>>(e);
+        }
+    }
+
+    public Result Insert(Korisnik model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Korisnik.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.Korisnik
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Id.Equals(id));
+
+            if (model is not null)
+            {
+                _dbContext.Korisnik.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(Korisnik model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            // detach
+            if (_dbContext.Korisnik.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+
+    /*
+    public Result UpdateAggregate(Korisnik model)
+    {}
+    */
 }

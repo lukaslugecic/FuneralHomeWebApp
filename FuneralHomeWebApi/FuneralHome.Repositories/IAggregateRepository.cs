@@ -28,6 +28,6 @@ namespace FuneralHome.Repositories
         /// </summary>
         /// <param name="model">Aggregate object</param>
         /// <returns><c>true</c> on success, <c>false</c> on failure</returns>
-        Result UpdateAggregate(TAggregate model);
+     //   Result UpdateAggregate(TAggregate model);
     }
 }

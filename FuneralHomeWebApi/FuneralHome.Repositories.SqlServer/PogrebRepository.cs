@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class PogrebRepository : IPogrebRepository<int, Pogreb>
+public class PogrebRepository : IPogrebRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,131 +15,195 @@ public class PogrebRepository : IPogrebRepository<int, Pogreb>
 
     public bool Exists(Pogreb model)
     {
-        return _dbContext.Pogreb
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.Pogreb
+                     .AsNoTracking()
+                     .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.Pogreb
-                              .AsNoTracking()
-                              .FirstOrDefault(p => p.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<Pogreb> Get(int id)
-    {
-        var model = _dbContext.Pogreb
-                              .AsNoTracking()
-                              .FirstOrDefault(p => p.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Pogreb>();
-    }
-
-    public Option<Pogreb> GetAggregate(int id)
-    {
-        var model = _dbContext.Pogreb
-                              .Include(p => p.SmrtniSlucaj)
-                              .Include(p => p.Urna)
-                              .Include(p => p.Lijes)
-                              .Include(p => p.Cvijece)
-                              .Include(p => p.NadgrobniZnak)
-                              .Include(p => p.Glazba)
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id)); // give me the first or null; substitute for .Where()
-                                                                     // single or default throws an exception if more than one element meets the criteria
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Pogreb>();
-    }
-
-    public IEnumerable<Pogreb> GetAll()
-    {
-        var models = _dbContext.Pogreb
-                               .ToList();
-
-        return models;
-    }
-
-    public IEnumerable<Pogreb> GetAllAggregates()
-    {
-        var models = _dbContext.Pogreb
-                                .Include(p => p.SmrtniSlucaj)
-                              .Include(p => p.Urna)
-                              .Include(p => p.Lijes)
-                              .Include(p => p.Cvijece)
-                              .Include(p => p.NadgrobniZnak)
-                              .Include(p => p.Glazba)
-                               .ToList();
-
-        return models;
-    }
-
-    public bool Insert(Pogreb model)
-    {
-        if (_dbContext.Pogreb.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            var model = _dbContext.Pogreb
+                          .AsNoTracking()
+                          .FirstOrDefault(p => p.Id.Equals(id));
+            return model is not null;
         }
-
-        return false;
-    }
-
-    public bool Remove(int id)
-    {
-        var model = _dbContext.Pogreb
-                              .AsNoTracking()
-                              .FirstOrDefault(p => p.Id.Equals(id));
-
-        if (model is not null)
+        catch (Exception)
         {
-            _dbContext.Pogreb.Remove(model);
-
-            return _dbContext.SaveChanges() > 0;
+            return false;
         }
-        return false;
     }
 
-    public bool Update(Pogreb model)
+    public Result<Pogreb> Get(int id)
     {
-        // detach
-        if (_dbContext.Pogreb.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.Pogreb
+                          .AsNoTracking()
+                          .FirstOrDefault(p => p.Id.Equals(id))?
+                          .ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<Pogreb>($"No funeral with id {id} found");
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<Pogreb>(e);
+        }
     }
 
-    public bool UpdateAggregate(Pogreb model)
+    public Result<Pogreb> GetAggregate(int id)
     {
-        if (_dbContext.Pogreb.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.Pogreb
+                          .Include(p => p.SmrtniSlucaj)
+                          .Include(p => p.Urna)
+                          .Include(p => p.Lijes)
+                          .Include(p => p.Cvijece)
+                          .Include(p => p.NadgrobniZnak)
+                          .Include(p => p.Glazba)
+                          .AsNoTracking()
+                          .FirstOrDefault(p => p.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          ?.ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
-            return isSuccess;
+            return model is not null
+                ? Results.OnSuccess(model)
+                : Results.OnFailure<Pogreb>();
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<Pogreb>(e);
+        }
     }
+
+    public Result<IEnumerable<Pogreb>> GetAll()
+    {
+        try
+        {
+            var models = _dbContext.Pogreb
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Pogreb>>(e);
+        }
+    }
+
+    public Result<IEnumerable<Pogreb>> GetAllAggregates()
+    {
+        try
+        {
+            var models = _dbContext.Pogreb
+                            .Include(p => p.SmrtniSlucaj)
+                            .Include(p => p.Urna)
+                            .Include(p => p.Lijes)
+                            .Include(p => p.Cvijece)
+                            .Include(p => p.NadgrobniZnak)
+                            .Include(p => p.Glazba)
+                            .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Pogreb>>(e);
+        }
+    }
+
+    public Result Insert(Pogreb model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Pogreb.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.Pogreb
+                          .AsNoTracking()
+                          .FirstOrDefault(p => p.Id.Equals(id));
+
+            if (model is not null)
+            {
+                _dbContext.Pogreb.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(Pogreb model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            // detach
+            if (_dbContext.Pogreb.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+
+    /*
+    public Result UpdateAggregate(Korisnik model)
+    {}
+    */
 }

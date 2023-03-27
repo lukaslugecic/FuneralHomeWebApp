@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class UrnaRepository : IUrnaRepository<int, Urna>
+public class UrnaRepository : IUrnaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,85 +15,143 @@ public class UrnaRepository : IUrnaRepository<int, Urna>
 
     public bool Exists(Urna model)
     {
-        return _dbContext.Urna
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.Urna
+                             .AsNoTracking()
+                             .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.Urna
-                              .AsNoTracking()
-                              .FirstOrDefault(u => u.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<Urna> Get(int id)
-    {
-        var model = _dbContext.Urna
-                              .AsNoTracking()
-                              .FirstOrDefault(u => u.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<Urna>();
-    }
-
-
-    public IEnumerable<Urna> GetAll()
-    {
-        var models = _dbContext.Urna
-                               .ToList();
-
-        return models;
-    }
-
-
-    public bool Insert(Urna model)
-    {
-        if (_dbContext.Urna.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return _dbContext.Urna
+                             .AsNoTracking()
+                             .FirstOrDefault(u => u.Id.Equals(id)) != null;
+        }
+        catch (Exception)
+        {
+            return false;
         }
 
-        return false;
     }
 
-    public bool Remove(int id)
+    public Result<Urna> Get(int id)
     {
-        var model = _dbContext.Urna
-                              .AsNoTracking()
-                              .FirstOrDefault(u => u.Id.Equals(id));
-
-        if (model is not null)
+        try
         {
-            _dbContext.Urna.Remove(model);
+            var model = _dbContext.Urna
+                                 .AsNoTracking()
+                                 .FirstOrDefault(u => u.Id.Equals(id))?
+                                 .ToDomain();
 
-            return _dbContext.SaveChanges() > 0;
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<Urna>($"No urn with such id {id}");
         }
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<Urna>(e);
+        }
+
     }
 
-    public bool Update(Urna model)
+    public Result<IEnumerable<Urna>> GetAll()
     {
-        // detach
-        if (_dbContext.Urna.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            var models =
+                _dbContext.Urna
+                          .AsNoTracking()
+                          .Select(Mapping.ToDomain);
+            return Results.OnSuccess(models);
         }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Urna>>(e);
+        }
+    }
 
-        return false;
+
+    public Result Insert(Urna model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Urna.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.Urna
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.Id.Equals(id));
+            if (model is not null)
+            {
+                _dbContext.Urna.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(Urna model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Urna.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
     }
 }

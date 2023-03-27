@@ -1,11 +1,10 @@
-﻿using FuneralHome.Commons;
-using FuneralHome.DataAccess.SqlServer.Data;
-using FuneralHome.DataAccess.SqlServer.Data.DbModels;
+﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
+using FuneralHome.Domain.Models;
+using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class SmrtniSlucajRepository : ISmrtniSlucajRepository<int, SmrtniSlucaj>
+public class SmrtniSlucajRepository : ISmrtniSlucajRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
@@ -16,121 +15,187 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository<int, SmrtniSlucaj>
 
     public bool Exists(SmrtniSlucaj model)
     {
-        return _dbContext.SmrtniSlucaj
-                         .AsNoTracking()
-                         .Contains(model);
+        try
+        {
+            return _dbContext.SmrtniSlucaj
+                     .AsNoTracking()
+                     .Contains(model.ToDbModel());
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     public bool Exists(int id)
     {
-        var model = _dbContext.SmrtniSlucaj
-                              .AsNoTracking()
-                              .FirstOrDefault(ss => ss.Id.Equals(id));
-        return model is not null;
-    }
-
-    public Option<SmrtniSlucaj> Get(int id)
-    {
-        var model = _dbContext.SmrtniSlucaj
-                              .AsNoTracking()
-                              .FirstOrDefault(ss => ss.Id.Equals(id));
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<SmrtniSlucaj>();
-    }
-
-    public Option<SmrtniSlucaj> GetAggregate(int id)
-    {
-        var model = _dbContext.SmrtniSlucaj
-                              .Include(ss => ss.Oglas)
-                              .AsNoTracking()
-                              .FirstOrDefault(k => k.Id.Equals(id)); // give me the first or null; substitute for .Where()
-                                                                     // single or default throws an exception if more than one element meets the criteria
-
-        return model is not null
-            ? Options.Some(model)
-            : Options.None<SmrtniSlucaj>();
-    }
-
-    public IEnumerable<SmrtniSlucaj> GetAll()
-    {
-        var models = _dbContext.SmrtniSlucaj
-                               .ToList();
-
-        return models;
-    }
-
-    public IEnumerable<SmrtniSlucaj> GetAllAggregates()
-    {
-        var models = _dbContext.SmrtniSlucaj
-                               .Include(ss => ss.Oglas)
-                               .ToList();
-
-        return models;
-    }
-
-    public bool Insert(SmrtniSlucaj model)
-    {
-        if (_dbContext.SmrtniSlucaj.Add(model).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
-
-            // every Add attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            var model = _dbContext.SmrtniSlucaj
+                          .AsNoTracking()
+                          .FirstOrDefault(ss => ss.Id.Equals(id));
+            return model is not null;
         }
-
-        return false;
-    }
-
-    public bool Remove(int id)
-    {
-        var model = _dbContext.SmrtniSlucaj
-                              .AsNoTracking()
-                              .FirstOrDefault(ss => ss.Id.Equals(id));
-
-        if (model is not null)
+        catch (Exception)
         {
-            _dbContext.SmrtniSlucaj.Remove(model);
-
-            return _dbContext.SaveChanges() > 0;
+            return false;
         }
-        return false;
     }
 
-    public bool Update(SmrtniSlucaj model)
+    public Result<SmrtniSlucaj> Get(int id)
     {
-        // detach
-        if (_dbContext.SmrtniSlucaj.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.SmrtniSlucaj
+                          .AsNoTracking()
+                          .FirstOrDefault(ss => ss.Id.Equals(id))?
+                          .ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-
-            return isSuccess;
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<SmrtniSlucaj>($"No death case with id {id} found");
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<SmrtniSlucaj>(e);
+        }
     }
 
-    public bool UpdateAggregate(SmrtniSlucaj model)
+    public Result<SmrtniSlucaj> GetAggregate(int id)
     {
-        if (_dbContext.SmrtniSlucaj.Update(model).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+        try
         {
-            var isSuccess = _dbContext.SaveChanges() > 0;
+            var model = _dbContext.SmrtniSlucaj
+                          .Include(ss => ss.Korisnik)
+                          .Include(ss => ss.Oglas)
+                          .AsNoTracking()
+                          .FirstOrDefault(ss => ss.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          ?.ToDomain();
 
-            // every Update attaches the entity object and EF begins tracking
-            // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-            _dbContext.Entry(model).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 
-            return isSuccess;
+            return model is not null
+                ? Results.OnSuccess(model)
+                : Results.OnFailure<SmrtniSlucaj>();
         }
-
-        return false;
+        catch (Exception e)
+        {
+            return Results.OnException<SmrtniSlucaj>(e);
+        }
     }
+
+    public Result<IEnumerable<SmrtniSlucaj>> GetAll()
+    {
+        try
+        {
+            var models = _dbContext.SmrtniSlucaj
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<SmrtniSlucaj>>(e);
+        }
+    }
+
+    public Result<IEnumerable<SmrtniSlucaj>> GetAllAggregates()
+    {
+        try
+        {
+            var models = _dbContext.SmrtniSlucaj
+                            .Include(ss => ss.Korisnik)
+                            .Include(ss => ss.Oglas)
+                            .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<SmrtniSlucaj>>(e);
+        }
+    }
+
+    public Result Insert(SmrtniSlucaj model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.SmrtniSlucaj.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Remove(int id)
+    {
+        try
+        {
+            var model = _dbContext.SmrtniSlucaj
+                          .AsNoTracking()
+                          .FirstOrDefault(ss => ss.Id.Equals(id));
+
+            if (model is not null)
+            {
+                _dbContext.SmrtniSlucaj.Remove(model);
+
+                return _dbContext.SaveChanges() > 0
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+    public Result Update(SmrtniSlucaj model)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            // detach
+            if (_dbContext.SmrtniSlucaj.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+
+    /*
+    public Result UpdateAggregate(Korisnik model)
+    {}
+    */
 }
