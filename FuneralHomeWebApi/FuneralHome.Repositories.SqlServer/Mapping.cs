@@ -155,6 +155,7 @@ public static class Mapping
            pogreb.CvijeceId,
            pogreb.NadgrobniZnakId,
            pogreb.GlazbaId,
+           pogreb.Snimanje,
            pogreb.Branitelj,
            pogreb.Golubica,
            pogreb.UkupnaCijena
