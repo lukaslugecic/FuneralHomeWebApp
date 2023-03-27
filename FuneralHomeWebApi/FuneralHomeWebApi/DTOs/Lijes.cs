@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
+
 
 namespace FuneralHome.DTOs;
 
@@ -26,23 +27,24 @@ public class Lijes
 
 public static partial class DtoMapping
 {
-    public static Lijes ToDto(this DbModels.Lijes lijes)
+    public static Lijes ToDto(this DomainModels.Lijes lijes)
         => new Lijes()
         {
             Id = lijes.Id,
             Naziv = lijes.Naziv,
             Velicina = lijes.Velicina,
             Slika = lijes.Slika,
+            Kolicina = lijes.Kolicina,
             Cijena = lijes.Cijena
         };
 
-    public static DbModels.Lijes ToDbModel(this Lijes lijes)
-        => new DbModels.Lijes()
-        {
-            Id = lijes.Id,
-            Naziv = lijes.Naziv,
-            Velicina = lijes.Velicina,
-            Slika = lijes.Slika,
-            Cijena = lijes.Cijena
-        };
+    public static DomainModels.Lijes ToDbModel(this Lijes lijes)
+        => new DomainModels.Lijes(
+            lijes.Id,
+            lijes.Naziv,
+            lijes.Velicina,
+            lijes.Slika,
+            lijes.Kolicina,
+            lijes.Cijena
+        );
 }

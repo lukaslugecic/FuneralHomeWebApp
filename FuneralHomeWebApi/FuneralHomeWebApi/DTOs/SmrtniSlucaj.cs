@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
@@ -29,7 +29,7 @@ public class SmrtniSlucaj
 
 public static partial class DtoMapping
 {
-    public static SmrtniSlucaj ToDto(this DbModels.SmrtniSlucaj smrtniSlucaj)
+    public static SmrtniSlucaj ToDto(this DomainModels.SmrtniSlucaj smrtniSlucaj)
         => new SmrtniSlucaj()
         {
             Id = smrtniSlucaj.Id,
@@ -41,15 +41,14 @@ public static partial class DtoMapping
             DatumSmrtiPok = smrtniSlucaj.DatumSmrtiPok
         };
 
-    public static DbModels.SmrtniSlucaj ToDbModel(this SmrtniSlucaj smrtniSlucaj)
-        => new DbModels.SmrtniSlucaj()
-        {
-            Id = smrtniSlucaj.Id,
-            KorisnikId = smrtniSlucaj.KorisnikId,
-            ImePok = smrtniSlucaj.ImePok,
-            PrezimePok = smrtniSlucaj.PrezimePok,
-            Oibpok = smrtniSlucaj.Oibpok,
-            DatumRodenjaPok = smrtniSlucaj.DatumRodenjaPok,
-            DatumSmrtiPok = smrtniSlucaj.DatumSmrtiPok
-        };
+    public static DomainModels.SmrtniSlucaj ToDbModel(this SmrtniSlucaj smrtniSlucaj)
+        => new DomainModels.SmrtniSlucaj(
+            smrtniSlucaj.Id,
+            smrtniSlucaj.KorisnikId,
+            smrtniSlucaj.ImePok,
+            smrtniSlucaj.PrezimePok,
+            smrtniSlucaj.DatumRodenjaPok,
+            smrtniSlucaj.DatumSmrtiPok,
+            smrtniSlucaj.Oibpok
+        );
 }

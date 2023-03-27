@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
@@ -23,7 +23,7 @@ public class Cvijece
 
 public static partial class DtoMapping
 {
-    public static Cvijece ToDto(this DbModels.Cvijece cvijece)
+    public static Cvijece ToDto(this DomainModels.Cvijece cvijece)
         => new Cvijece()
         {
             Id = cvijece.Id,
@@ -33,13 +33,12 @@ public static partial class DtoMapping
             Cijena = cvijece.Cijena
         };
 
-    public static DbModels.Cvijece ToDbModel(this Cvijece cvijece)
-        => new DbModels.Cvijece()
-        {
-            Id = cvijece.Id,
-            Naziv = cvijece.Naziv,
-            Slika = cvijece.Slika,
-            Kolicina = cvijece.Kolicina,
-            Cijena = cvijece.Cijena
-        };
+    public static DomainModels.Cvijece ToDbModel(this Cvijece cvijece)
+        => new DomainModels.Cvijece(
+            cvijece.Id,
+            cvijece.Naziv,
+            cvijece.Slika,
+            cvijece.Kolicina,
+            cvijece.Cijena
+        );
 }

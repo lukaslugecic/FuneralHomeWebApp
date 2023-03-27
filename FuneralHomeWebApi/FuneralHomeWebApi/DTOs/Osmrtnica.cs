@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
@@ -21,7 +21,7 @@ public class Osmrtnica
 
 public static partial class DtoMapping
 {
-    public static Osmrtnica ToDto(this DbModels.Osmrtnica osmrtnica)
+    public static Osmrtnica ToDto(this DomainModels.Osmrtnica osmrtnica)
         => new Osmrtnica()
         {
             Id = osmrtnica.Id,
@@ -30,12 +30,11 @@ public static partial class DtoMapping
             Cijena = osmrtnica.Cijena
         };
 
-    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
-        => new DbModels.Osmrtnica()
-        {
-            Id = osmrtnica.Id,
-            Naziv = osmrtnica.Naziv,
-            Slika = osmrtnica.Slika,
-            Cijena = osmrtnica.Cijena
-        };
+    public static DomainModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
+        => new DomainModels.Osmrtnica(
+            osmrtnica.Id,
+            osmrtnica.Naziv,
+            osmrtnica.Slika,
+            osmrtnica.Cijena
+        );
 }

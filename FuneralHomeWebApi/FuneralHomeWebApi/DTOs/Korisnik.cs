@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
@@ -39,7 +39,7 @@ public class Korisnik
 
 public static partial class DtoMapping
 {
-    public static Korisnik ToDto(this DbModels.Korisnik korisnik)
+    public static Korisnik ToDto(this DomainModels.Korisnik korisnik)
         => new Korisnik()
         {
             Id = korisnik.Id,
@@ -53,17 +53,16 @@ public static partial class DtoMapping
             VrstaKorisnika = korisnik.VrstaKorisnika
         };
 
-    public static DbModels.Korisnik ToDbModel(this Korisnik korisnik)
-        => new DbModels.Korisnik()
-        {
-            Id = korisnik.Id,
-            Ime = korisnik.Ime,
-            Prezime = korisnik.Prezime,
-            DatumRodenja = korisnik.DatumRodenja,
-            Adresa = korisnik.Adresa,
-            Oib = korisnik.Oib,
-            Mail = korisnik.Mail,
-            Lozinka = korisnik.Lozinka,
-            VrstaKorisnika = korisnik.VrstaKorisnika
-        };
+    public static DomainModels.Korisnik ToDbModel(this Korisnik korisnik)
+        => new DomainModels.Korisnik(
+            korisnik.Id,
+            korisnik.Ime,
+            korisnik.Prezime,
+            korisnik.DatumRodenja,
+            korisnik.Adresa,
+            korisnik.Oib,
+            korisnik.Mail,
+            korisnik.Lozinka,
+            korisnik.VrstaKorisnika
+        );
 }

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
@@ -28,7 +28,7 @@ public class Pogreb
 
 public static partial class DtoMapping
 {
-    public static Pogreb ToDto(this DbModels.Pogreb pogreb)
+    public static Pogreb ToDto(this DomainModels.Pogreb pogreb)
         => new Pogreb()
         {
             Id = pogreb.Id,
@@ -37,7 +37,7 @@ public static partial class DtoMapping
             Kremacija = pogreb.Kremacija,
             UrnaId = pogreb.UrnaId,
             LijesId = pogreb.LijesId,
-            CvijeceId = pogreb.LijesId,
+            CvijeceId = pogreb.CvijeceId,
             NadgrobniZnakId = pogreb.NadgrobniZnakId,
             GlazbaId = pogreb.GlazbaId,
             Snimanje = pogreb.Snimanje,
@@ -46,21 +46,20 @@ public static partial class DtoMapping
             UkupnaCijena = pogreb.UkupnaCijena
         };
 
-    public static DbModels.Pogreb ToDbModel(this Pogreb pogreb)
-        => new DbModels.Pogreb()
-        {
-            Id = pogreb.Id,
-            SmrtniSlucajId = pogreb.SmrtniSlucajId,
-            DatumPogreba = pogreb.DatumPogreba,
-            Kremacija = pogreb.Kremacija,
-            UrnaId = pogreb.UrnaId,
-            LijesId = pogreb.LijesId,
-            CvijeceId = pogreb.LijesId,
-            NadgrobniZnakId = pogreb.NadgrobniZnakId,
-            GlazbaId = pogreb.GlazbaId,
-            Snimanje = pogreb.Snimanje,
-            Branitelj = pogreb.Branitelj,
-            Golubica = pogreb.Golubica,
-            UkupnaCijena = pogreb.UkupnaCijena
-        };
+    public static DomainModels.Pogreb ToDbModel(this Pogreb pogreb)
+        => new DomainModels.Pogreb(
+            pogreb.Id,
+            pogreb.SmrtniSlucajId,
+            pogreb.DatumPogreba,
+            pogreb.Kremacija,
+            pogreb.UrnaId,
+            pogreb.LijesId,
+            pogreb.CvijeceId,
+            pogreb.NadgrobniZnakId,
+            pogreb.GlazbaId,
+            pogreb.Snimanje,
+            pogreb.Branitelj,
+            pogreb.Golubica,
+            pogreb.UkupnaCijena
+        );
 }

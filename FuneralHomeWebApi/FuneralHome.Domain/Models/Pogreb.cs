@@ -13,6 +13,7 @@ public class Pogreb : AggregateRoot<int>
     private int? _cvijeceId;
     private int? _nadgrobniZnakId;
     private int? _glazbaId;
+    private bool _snimanje;
     private bool _branitelj;
     private bool _golubica;
     private decimal _ukupnaCijena;
@@ -25,13 +26,14 @@ public class Pogreb : AggregateRoot<int>
     public int? CvijeceId { get => _cvijeceId; set => _cvijeceId = value; }
     public int? NadgrobniZnakId { get => _nadgrobniZnakId; set => _nadgrobniZnakId = value; }
     public int? GlazbaId { get => _glazbaId; set => _glazbaId = value; }
+    public bool Snimanje { get => _snimanje; set => _snimanje = value; }
     public bool Branitelj { get => _branitelj; set => _branitelj = value; }
     public bool Golubica { get => _golubica; set => _golubica = value; }
     public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
 
 
     public Pogreb(int id, int smrtnislucajId, DateTime datumPogreba, bool kremacija,
-        int? urnaId, int? lijesId, int? cvijeceId, int? nadgrobniZnakId, int? glazbaId,
+        int? urnaId, int? lijesId, int? cvijeceId, int? nadgrobniZnakId, int? glazbaId, bool snimanje,
         bool branitelj, bool golubica, decimal ukupnaCijena) : base(id)
     {
 
@@ -44,6 +46,7 @@ public class Pogreb : AggregateRoot<int>
         _cvijeceId = cvijeceId;
         _nadgrobniZnakId = nadgrobniZnakId;
         _glazbaId = glazbaId;
+        _snimanje = snimanje;
         _branitelj = branitelj;
         _golubica = golubica;
         _ukupnaCijena = ukupnaCijena;
