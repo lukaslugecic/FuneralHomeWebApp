@@ -30,7 +30,7 @@ public static partial class DtoMapping
             Cijena = osmrtnica.Cijena
         };
 
-    public static DomainModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
+    public static DomainModels.Osmrtnica ToDomain(this Osmrtnica osmrtnica)
         => new DomainModels.Osmrtnica(
             osmrtnica.Id,
             osmrtnica.Naziv,

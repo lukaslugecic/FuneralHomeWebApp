@@ -24,7 +24,7 @@ public static partial class DtoMapping
             PlacanjeNaRate = osiguranje.PlacanjeNaRate
         };
 
-    public static DomainModels.Osiguranje ToDbModel(this Osiguranje osiguranje)
+    public static DomainModels.Osiguranje ToDomain(this Osiguranje osiguranje)
         => new DomainModels.Osiguranje(
             osiguranje.Id,
             osiguranje.DatumUgovaranja,

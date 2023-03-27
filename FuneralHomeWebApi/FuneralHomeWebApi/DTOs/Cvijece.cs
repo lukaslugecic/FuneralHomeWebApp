@@ -33,7 +33,7 @@ public static partial class DtoMapping
             Cijena = cvijece.Cijena
         };
 
-    public static DomainModels.Cvijece ToDbModel(this Cvijece cvijece)
+    public static DomainModels.Cvijece ToDomain(this Cvijece cvijece)
         => new DomainModels.Cvijece(
             cvijece.Id,
             cvijece.Naziv,

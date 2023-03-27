@@ -53,7 +53,7 @@ public static partial class DtoMapping
             VrstaKorisnika = korisnik.VrstaKorisnika
         };
 
-    public static DomainModels.Korisnik ToDbModel(this Korisnik korisnik)
+    public static DomainModels.Korisnik ToDomain(this Korisnik korisnik)
         => new DomainModels.Korisnik(
             korisnik.Id,
             korisnik.Ime,

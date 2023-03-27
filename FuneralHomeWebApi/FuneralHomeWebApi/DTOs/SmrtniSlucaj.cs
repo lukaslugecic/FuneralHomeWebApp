@@ -41,7 +41,7 @@ public static partial class DtoMapping
             DatumSmrtiPok = smrtniSlucaj.DatumSmrtiPok
         };
 
-    public static DomainModels.SmrtniSlucaj ToDbModel(this SmrtniSlucaj smrtniSlucaj)
+    public static DomainModels.SmrtniSlucaj ToDomain(this SmrtniSlucaj smrtniSlucaj)
         => new DomainModels.SmrtniSlucaj(
             smrtniSlucaj.Id,
             smrtniSlucaj.KorisnikId,

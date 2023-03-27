@@ -30,7 +30,7 @@ public static partial class DtoMapping
             ObjavaNaStranici = oglas.ObjavaNaStranici
         };
 
-    public static DomainModels.Oglas ToDbModel(this Oglas oglas)
+    public static DomainModels.Oglas ToDomain(this Oglas oglas)
         => new DomainModels.Oglas(
             oglas.Id,
             oglas.SlikaPok,

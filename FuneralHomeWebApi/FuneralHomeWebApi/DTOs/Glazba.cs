@@ -38,7 +38,7 @@ public static partial class DtoMapping
             Cijena = glazba.Cijena
         };
 
-    public static DomainModels.Glazba ToDbModel(this Glazba glazba)
+    public static DomainModels.Glazba ToDomain(this Glazba glazba)
         => new DomainModels.Glazba(
             glazba.Id,
             glazba.Naziv,

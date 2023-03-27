@@ -32,7 +32,7 @@ public static partial class DtoMapping
             Cijena = znak.Cijena
         };
 
-    public static DomainModels.NadgrobniZnak ToDbModel(this NadgrobniZnak znak)
+    public static DomainModels.NadgrobniZnak ToDomain(this NadgrobniZnak znak)
         => new DomainModels.NadgrobniZnak(
             znak.Id,
             znak.Naziv,

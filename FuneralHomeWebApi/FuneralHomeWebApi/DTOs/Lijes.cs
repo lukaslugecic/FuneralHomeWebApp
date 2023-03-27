@@ -38,7 +38,7 @@ public static partial class DtoMapping
             Cijena = lijes.Cijena
         };
 
-    public static DomainModels.Lijes ToDbModel(this Lijes lijes)
+    public static DomainModels.Lijes ToDomain(this Lijes lijes)
         => new DomainModels.Lijes(
             lijes.Id,
             lijes.Naziv,

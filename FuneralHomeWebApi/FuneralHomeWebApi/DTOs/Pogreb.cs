@@ -46,7 +46,7 @@ public static partial class DtoMapping
             UkupnaCijena = pogreb.UkupnaCijena
         };
 
-    public static DomainModels.Pogreb ToDbModel(this Pogreb pogreb)
+    public static DomainModels.Pogreb ToDomain(this Pogreb pogreb)
         => new DomainModels.Pogreb(
             pogreb.Id,
             pogreb.SmrtniSlucajId,

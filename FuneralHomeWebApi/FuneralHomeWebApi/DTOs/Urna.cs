@@ -32,7 +32,7 @@ public static partial class DtoMapping
             Cijena = urna.Cijena
         };
 
-    public static DomainModels.Urna ToDbModel(this Urna urna)
+    public static DomainModels.Urna ToDomain(this Urna urna)
         => new DomainModels.Urna(
             urna.Id,
             urna.Naziv,
