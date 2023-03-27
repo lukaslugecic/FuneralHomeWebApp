@@ -17,9 +17,9 @@ export class RegisterComponent implements OnDestroy {
   private readonly trigger$ = new BehaviorSubject<any>(null);
 
   constructor(
-   // private readonly authService: AuthService,
+    private readonly authService: AuthService,
     private readonly snackBar: MatSnackBar,
-   // private readonly router: Router,
+    private readonly router: Router,
   ) {
     this.trigger$.next(null);
   }
@@ -65,18 +65,18 @@ export class RegisterComponent implements OnDestroy {
     }
 
     const data: IRegisterData = {
-      mail: this.form.get('email')?.value,
-      lozinka: this.form.get('password')?.value,
-      ime: this.form.get('name')?.value,
-      prezime: this.form.get('surname')?.value,
-      datumRodenja: this.form.get('dateOfBirth')?.value,
-      adresa: this.form.get('dateOfBirth')?.value,
-      oib: this.form.get('oib')?.value
+      Mail: this.form.get('email')?.value,
+      Lozinka: this.form.get('password')?.value,
+      Ime: this.form.get('name')?.value,
+      Prezime: this.form.get('surname')?.value,
+      DatumRodenja: this.form.get('dateOfBirth')?.value,
+      Adresa: this.form.get('dateOfBirth')?.value,
+      Oib: this.form.get('oib')?.value
     };
 
     console.log(data);
 
-    /*
+    
     const registerSubscription = this.authService
       .register(data)
       .pipe(
@@ -92,7 +92,7 @@ export class RegisterComponent implements OnDestroy {
       });
     this.subscription.add(registerSubscription);
 
-    */
+    
   }
 
   ngOnDestroy(): void {

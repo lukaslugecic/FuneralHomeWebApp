@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   public register(data: IRegisterData) {
-    return this.http.post<IKorisnik>('/api/register', data).pipe(
+    return this.http.post<IKorisnik>('/api/Korisnik', data).pipe(
       tap((resp) => {
         this._user$.next(resp);
       })
