@@ -1,11 +1,15 @@
-﻿namespace FuneralHome.Repositories;
+﻿using FuneralHome.Domain.Models;
+using System;
 
+namespace FuneralHome.Repositories;
 
 /// <summary>
-/// Facade interface for a Role repository
+/// Facade interface for a Person repository
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
-/// <typeparam name="TModel"></typeparam>
-public interface IKorisnikRepository<TKey, TModel> : IRepository<TKey, TModel>, IAggregateRepository<TKey, TModel>
+/// <typeparam name="TDomainModel"></typeparam>
+public interface IKorisnikRepository
+    : IRepository<int, Korisnik>,
+      IAggregateRepository<int, Korisnik>
 {
 }

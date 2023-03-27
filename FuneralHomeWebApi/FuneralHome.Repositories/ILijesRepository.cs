@@ -1,10 +1,16 @@
-﻿namespace FuneralHome.Repositories;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
+using System.Data;
+
+namespace FuneralHome.Repositories;
 
 /// <summary>
-/// Facade interface for a Person repository
+/// Facade interface for a Role repository
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
-/// <typeparam name="TModel"></typeparam>
-public interface ILijesRepository<TKey, TModel> : IRepository<TKey, TModel>
+/// <typeparam name="TDomainModel"></typeparam>
+public interface ILijesRepository
+    : IRepository<int, Lijes>
 {
+
 }

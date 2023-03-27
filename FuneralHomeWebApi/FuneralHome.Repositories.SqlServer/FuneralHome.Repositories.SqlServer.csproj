@@ -7,6 +7,10 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BaseLibrary" Version="1.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\FuneralHome.DataAccess.SqlServer\FuneralHome.DataAccess.SqlServer.csproj" />
 		<ProjectReference Include="..\FuneralHome.Repositories\FuneralHome.Repositories.csproj" />
 	</ItemGroup>

@@ -8,11 +8,11 @@ public class Pogreb : AggregateRoot<int>
     private int _smrtniSlucajId;
     private DateTime _datumPogreba;
     private bool _kremacija;
-    private int _urnaId;
-    private int _lijesId;
-    private int _cvijeceId;
-    private int _nadgrobniZnakId;
-    private int _glazbaId;
+    private int? _urnaId;
+    private int? _lijesId;
+    private int? _cvijeceId;
+    private int? _nadgrobniZnakId;
+    private int? _glazbaId;
     private bool _branitelj;
     private bool _golubica;
     private decimal _ukupnaCijena;
@@ -20,18 +20,18 @@ public class Pogreb : AggregateRoot<int>
     public int SmrtniSlucajId { get => _smrtniSlucajId; set => _smrtniSlucajId = value; }
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
-    public int UrnaId { get => _urnaId; set => _urnaId = value; }
-    public int LijesId { get => _lijesId; set => _lijesId = value; }
-    public int CvijeceId { get => _cvijeceId; set => _cvijeceId = value; }
-    public int NadgrobniZnakId { get => _nadgrobniZnakId; set => _nadgrobniZnakId = value; }
-    public int GlazbaId { get => _glazbaId; set => _glazbaId = value; }
+    public int? UrnaId { get => _urnaId; set => _urnaId = value; }
+    public int? LijesId { get => _lijesId; set => _lijesId = value; }
+    public int? CvijeceId { get => _cvijeceId; set => _cvijeceId = value; }
+    public int? NadgrobniZnakId { get => _nadgrobniZnakId; set => _nadgrobniZnakId = value; }
+    public int? GlazbaId { get => _glazbaId; set => _glazbaId = value; }
     public bool Branitelj { get => _branitelj; set => _branitelj = value; }
     public bool Golubica { get => _golubica; set => _golubica = value; }
     public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
 
 
     public Pogreb(int id, int smrtnislucajId, DateTime datumPogreba, bool kremacija,
-        int urnaId, int lijesId, int cvijeceId, int nadgrobniZnakId, int glazbaId,
+        int? urnaId, int? lijesId, int? cvijeceId, int? nadgrobniZnakId, int? glazbaId,
         bool branitelj, bool golubica, decimal ukupnaCijena) : base(id)
     {
 

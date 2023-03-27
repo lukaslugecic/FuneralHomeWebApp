@@ -8,6 +8,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\FuneralHome.Commons\FuneralHome.Commons.csproj" />
+		<ProjectReference Include="..\FuneralHome.Domain\FuneralHome.Domain.csproj" />
 	</ItemGroup>
 
 </Project>
