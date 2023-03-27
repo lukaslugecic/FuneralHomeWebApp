@@ -1,53 +1,76 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-
-namespace FuneralHomeWebApi.Controllers;
-
+namespace FuneralHome.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class SmrtniSlucajController : ControllerBase
 {
-    private readonly ISmrtniSlucajRepository<int, DbModels.SmrtniSlucaj> _smrtniSlucajRepository;
+    private readonly ISmrtniSlucajRepository _smrtniSlucajRepository;
 
-    public SmrtniSlucajController(ISmrtniSlucajRepository<int, DbModels.SmrtniSlucaj> smrtniSlucajRepository)
+    public SmrtniSlucajController(ISmrtniSlucajRepository repository)
     {
-        _smrtniSlucajRepository = smrtniSlucajRepository;
+        _smrtniSlucajRepository = repository;
     }
 
     // GET: api/SmrtniSlucaj
     [HttpGet]
     public ActionResult<IEnumerable<SmrtniSlucaj>> GetAllSmrtniSlucaj()
     {
-        return Ok(_smrtniSlucajRepository.GetAll().Select(DtoMapping.ToDto));
+        var slucajResults = _smrtniSlucajRepository.GetAll()
+            .Map(ss => ss.Select(DtoMapping.ToDto));
+
+        return slucajResults
+            ? Ok(slucajResults.Data)
+            : Problem(slucajResults.Message, statusCode: 500);
     }
 
     // GET: api/SmrtniSlucaj/5
     [HttpGet("{id}")]
     public ActionResult<SmrtniSlucaj> GetSmrtniSlucaj(int id)
     {
-        var slucajOption = _smrtniSlucajRepository.Get(id).Map(DtoMapping.ToDto);
+        var slucajResult = _smrtniSlucajRepository.Get(id).Map(DtoMapping.ToDto);
 
-        return slucajOption
-            ? Ok(slucajOption.Data)
-            : NotFound();
+        return slucajResult switch
+        {
+            { IsSuccess: true } => Ok(slucajResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(slucajResult.Message, statusCode: 500)
+        };
     }
+
+    /*
+    [HttpGet("/Aggregate/{id}")]
+    public ActionResult<PersonAggregate> GetPersonAggregate(int id)
+    {
+        var personResult = _personRepository.GetAggregate(id).Map(DtoMapping.ToAggregateDto);
+
+        return personResult switch
+        {
+            { IsSuccess: true } => Ok(personResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(personResult.Message, statusCode: 500)
+        };
+    }
+    */
+
+
 
     // PUT: api/SmrtniSlucaj/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id}")]
-    public IActionResult EditSmrtniSlucaj(int id, SmrtniSlucaj slucaj)
+    public IActionResult EditSmrtniSlucaj(int id, SmrtniSlucaj smrtni)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        if (id != slucaj.Id)
+        if (id != smrtni.Id)
         {
             return BadRequest();
         }
@@ -57,24 +80,42 @@ public class SmrtniSlucajController : ControllerBase
             return NotFound();
         }
 
-        return _smrtniSlucajRepository.Update(slucaj.ToDbModel())
-            ? AcceptedAtAction("EditSmrtniSlucaj", slucaj)
-            : StatusCode(500);
+        var domainSmrtni = smrtni.ToDomain();
+
+        var result =
+            domainSmrtni.IsValid()
+            .Bind(() => _smrtniSlucajRepository.Update(domainSmrtni));
+
+        return result
+            ? AcceptedAtAction("EditSmrtniSlucaj", smrtni)
+            : Problem(result.Message, statusCode: 500);
     }
 
     // POST: api/SmrtniSlucaj
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public ActionResult<SmrtniSlucaj> CreateSmrtniSlucaj(SmrtniSlucaj smrtniSlucaj)
+    public ActionResult<SmrtniSlucaj> CreateSmrtniSlucaj(SmrtniSlucaj slucaj)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        return _smrtniSlucajRepository.Insert(smrtniSlucaj.ToDbModel())
-            ? CreatedAtAction("GetSmrtniSlucaj", new { id = smrtniSlucaj.Id }, smrtniSlucaj)
-            : StatusCode(500);
+        var domainSlucaj = slucaj.ToDomain();
+
+        var validationResult = domainSlucaj.IsValid();
+        if (!validationResult)
+        {
+            return Problem(validationResult.Message, statusCode: 500);
+        }
+
+        var result =
+            domainSlucaj.IsValid()
+            .Bind(() => _smrtniSlucajRepository.Insert(domainSlucaj));
+
+        return result
+            ? CreatedAtAction("GetSmrtniSlucaj", new { id = slucaj.Id }, slucaj)
+            : Problem(result.Message, statusCode: 500);
     }
 
     // DELETE: api/SmrtniSlucaj/5
@@ -84,8 +125,9 @@ public class SmrtniSlucajController : ControllerBase
         if (!_smrtniSlucajRepository.Exists(id))
             return NotFound();
 
-        return _smrtniSlucajRepository.Remove(id)
+        var deleteResult = _smrtniSlucajRepository.Remove(id);
+        return deleteResult
             ? NoContent()
-            : StatusCode(500);
+            : Problem(deleteResult.Message, statusCode: 500);
     }
 }

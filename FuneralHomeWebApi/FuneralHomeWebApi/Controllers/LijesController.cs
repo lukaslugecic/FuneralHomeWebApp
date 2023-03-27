@@ -1,91 +1,110 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
 
-
-namespace FuneralHomeWebApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class LijesController : ControllerBase
+namespace FuneralHome.Controllers
 {
-    private readonly ILijesRepository<int, DbModels.Lijes> _lijesRepository;
-
-    public LijesController(ILijesRepository<int, DbModels.Lijes> lijesRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class LijesController : ControllerBase
     {
-        _lijesRepository = lijesRepository;
-    }
+        private readonly ILijesRepository _lijesRepository;
 
-    // GET: api/Lijes
-    [HttpGet]
-    public ActionResult<IEnumerable<Lijes>> GetAllLijes()
-    {
-        return Ok(_lijesRepository.GetAll().Select(DtoMapping.ToDto));
-    }
-
-    // GET: api/Lijes/5
-    [HttpGet("{id}")]
-    public ActionResult<Lijes> GetLijes(int id)
-    {
-        var lijesOption = _lijesRepository.Get(id).Map(DtoMapping.ToDto);
-
-        return lijesOption
-            ? Ok(lijesOption.Data)
-            : NotFound();
-    }
-
-    // PUT: api/Lijes/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public IActionResult EditLijes(int id, Lijes lijes)
-    {
-        if (!ModelState.IsValid)
+        public LijesController(ILijesRepository repository)
         {
-            return BadRequest(ModelState);
+            _lijesRepository = repository;
         }
 
-        if (id != lijes.Id)
+        // GET: api/Lijes
+        [HttpGet]
+        public ActionResult<IEnumerable<Lijes>> GetAllLijes()
         {
-            return BadRequest();
+            var lijesResult = _lijesRepository.GetAll()
+                .Map(l => l.Select(DtoMapping.ToDto));
+
+            return lijesResult
+                ? Ok(lijesResult.Data)
+                : Problem(lijesResult.Message, statusCode: 500);
         }
 
-        if (!_lijesRepository.Exists(id))
+        // GET: api/Lijes/5
+        [HttpGet("{id}")]
+        public ActionResult<Lijes> GetLijes(int id)
         {
-            return NotFound();
+            var lijesResult = _lijesRepository.Get(id).Map(DtoMapping.ToDto);
+
+            return lijesResult switch
+            {
+                { IsSuccess: true } => Ok(lijesResult.Data),
+                { IsFailure: true } => NotFound(),
+                { IsException: true } or _ => Problem(lijesResult.Message, statusCode: 500)
+            };
         }
 
-        return _lijesRepository.Update(lijes.ToDbModel())
-            ? AcceptedAtAction("EditLijes", lijes)
-            : StatusCode(500);
-    }
-
-    // POST: api/Lijes
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public ActionResult<Lijes> CreateLijes(Lijes lijes)
-    {
-        if (!ModelState.IsValid)
+        // PUT: api/Lijes/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public IActionResult EditLijes(int id, Lijes lijes)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != lijes.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_lijesRepository.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var domainLijes = lijes.ToDomain();
+
+            var result =
+                domainLijes.IsValid()
+                .Bind(() => _lijesRepository.Update(domainLijes));
+
+            return result
+                ? AcceptedAtAction("EditLijes", lijes)
+                : Problem(result.Message, statusCode: 500);
         }
 
-        return _lijesRepository.Insert(lijes.ToDbModel())
-            ? CreatedAtAction("GetLijes", new { id = lijes.Id }, lijes)
-            : StatusCode(500);
-    }
+        // POST: api/Lijes
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public ActionResult<Lijes> CreateLijes(Lijes lijes)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    // DELETE: api/Lijes/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteLijes(int id)
-    {
-        if (!_lijesRepository.Exists(id))
-            return NotFound();
+            var domainLijes = lijes.ToDomain();
 
-        return _lijesRepository.Remove(id)
-            ? NoContent()
-            : StatusCode(500);
+            var result =
+                domainLijes.IsValid()
+                .Bind(() => _lijesRepository.Insert(domainLijes));
+
+            return result
+                ? CreatedAtAction("GetLijes", new { id = lijes.Id }, lijes)
+                : Problem(result.Message, statusCode: 500);
+        }
+
+        // DELETE: api/Lijes/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteLijes(int id)
+        {
+            if (!_lijesRepository.Exists(id))
+                return NotFound();
+
+            var deleteResult = _lijesRepository.Remove(id);
+            return deleteResult
+                ? NoContent()
+                : Problem(deleteResult.Message, statusCode: 500);
+        }
     }
 }

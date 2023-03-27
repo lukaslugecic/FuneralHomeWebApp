@@ -1,91 +1,110 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
 
-
-namespace FuneralHomeWebApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class GlazbaController : ControllerBase
+namespace FuneralHome.Controllers
 {
-    private readonly IGlazbaRepository<int, DbModels.Glazba> _glazbaRepository;
-
-    public GlazbaController(IGlazbaRepository<int, DbModels.Glazba> glazbaRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class GlazbaController : ControllerBase
     {
-        _glazbaRepository = glazbaRepository;
-    }
+        private readonly IGlazbaRepository _glazbaRepository;
 
-    // GET: api/Glazba
-    [HttpGet]
-    public ActionResult<IEnumerable<Glazba>> GetAllGlazba()
-    {
-        return Ok(_glazbaRepository.GetAll().Select(DtoMapping.ToDto));
-    }
-
-    // GET: api/Glazba/5
-    [HttpGet("{id}")]
-    public ActionResult<Glazba> GetGlazba(int id)
-    {
-        var glazbaOption = _glazbaRepository.Get(id).Map(DtoMapping.ToDto);
-
-        return glazbaOption
-            ? Ok(glazbaOption.Data)
-            : NotFound();
-    }
-
-    // PUT: api/Glazba/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public IActionResult EditGlazba(int id, Glazba glazba)
-    {
-        if (!ModelState.IsValid)
+        public GlazbaController(IGlazbaRepository repository)
         {
-            return BadRequest(ModelState);
+            _glazbaRepository = repository;
         }
 
-        if (id != glazba.Id)
+        // GET: api/Glazba
+        [HttpGet]
+        public ActionResult<IEnumerable<Glazba>> GetAllGlazba()
         {
-            return BadRequest();
+            var glazbaResult = _glazbaRepository.GetAll()
+                .Map(g => g.Select(DtoMapping.ToDto));
+
+            return glazbaResult
+                ? Ok(glazbaResult.Data)
+                : Problem(glazbaResult.Message, statusCode: 500);
         }
 
-        if (!_glazbaRepository.Exists(id))
+        // GET: api/Glazba/5
+        [HttpGet("{id}")]
+        public ActionResult<Glazba> GetGlazba(int id)
         {
-            return NotFound();
+            var glazbaResult = _glazbaRepository.Get(id).Map(DtoMapping.ToDto);
+
+            return glazbaResult switch
+            {
+                { IsSuccess: true } => Ok(glazbaResult.Data),
+                { IsFailure: true } => NotFound(),
+                { IsException: true } or _ => Problem(glazbaResult.Message, statusCode: 500)
+            };
         }
 
-        return _glazbaRepository.Update(glazba.ToDbModel())
-            ? AcceptedAtAction("EditGlazba", glazba)
-            : StatusCode(500);
-    }
-
-    // POST: api/Glazba
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public ActionResult<Glazba> CreateGlazba(Glazba glazba)
-    {
-        if (!ModelState.IsValid)
+        // PUT: api/Glazba/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public IActionResult EditGlazba(int id, Glazba glazba)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != glazba.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_glazbaRepository.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var domainGlazba = glazba.ToDomain();
+
+            var result =
+                domainGlazba.IsValid()
+                .Bind(() => _glazbaRepository.Update(domainGlazba));
+
+            return result
+                ? AcceptedAtAction("EditGlazba", glazba)
+                : Problem(result.Message, statusCode: 500);
         }
 
-        return _glazbaRepository.Insert(glazba.ToDbModel())
-            ? CreatedAtAction("GetCvijece", new { id = glazba.Id }, glazba)
-            : StatusCode(500);
-    }
+        // POST: api/Glazba
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public ActionResult<Glazba> CreateGlazba(Glazba glazba)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    // DELETE: api/Glazba/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteGlazba(int id)
-    {
-        if (!_glazbaRepository.Exists(id))
-            return NotFound();
+            var domainGlazba = glazba.ToDomain();
 
-        return _glazbaRepository.Remove(id)
-            ? NoContent()
-            : StatusCode(500);
+            var result =
+                domainGlazba.IsValid()
+                .Bind(() => _glazbaRepository.Insert(domainGlazba));
+
+            return result
+                ? CreatedAtAction("GetGlazba", new { id = glazba.Id }, glazba)
+                : Problem(result.Message, statusCode: 500);
+        }
+
+        // DELETE: api/Glazba/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteGlazba(int id)
+        {
+            if (!_glazbaRepository.Exists(id))
+                return NotFound();
+
+            var deleteResult = _glazbaRepository.Remove(id);
+            return deleteResult
+                ? NoContent()
+                : Problem(deleteResult.Message, statusCode: 500);
+        }
     }
 }

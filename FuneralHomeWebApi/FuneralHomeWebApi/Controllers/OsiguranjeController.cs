@@ -1,91 +1,110 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
 
-
-namespace FuneralHomeWebApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class OsiguranjeController : ControllerBase
+namespace FuneralHome.Controllers
 {
-    private readonly IOsiguranjeRepository<int, DbModels.Osiguranje> _osiguranjeRepository;
-
-    public OsiguranjeController(IOsiguranjeRepository<int, DbModels.Osiguranje> osiguranjeRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class OsiguranjeController : ControllerBase
     {
-        _osiguranjeRepository = osiguranjeRepository;
-    }
+        private readonly IOsiguranjeRepository _osiguranjeRepository;
 
-    // GET: api/Osiguranje
-    [HttpGet]
-    public ActionResult<IEnumerable<Osiguranje>> GetAllOsiguranje()
-    {
-        return Ok(_osiguranjeRepository.GetAll().Select(DtoMapping.ToDto));
-    }
-
-    // GET: api/Osiguranje/5
-    [HttpGet("{id}")]
-    public ActionResult<Osiguranje> GetOsiguranje(int id)
-    {
-        var osiguranjeOption = _osiguranjeRepository.Get(id).Map(DtoMapping.ToDto);
-
-        return osiguranjeOption
-            ? Ok(osiguranjeOption.Data)
-            : NotFound();
-    }
-
-    // PUT: api/Osiguranje/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public IActionResult EditOsiguranje(int id, Osiguranje osiguranje)
-    {
-        if (!ModelState.IsValid)
+        public OsiguranjeController(IOsiguranjeRepository repository)
         {
-            return BadRequest(ModelState);
+            _osiguranjeRepository = repository;
         }
 
-        if (id != osiguranje.Id)
+        // GET: api/Osiguranje
+        [HttpGet]
+        public ActionResult<IEnumerable<Osiguranje>> GetAllOsiguranje()
         {
-            return BadRequest();
+            var osiguranjeResult = _osiguranjeRepository.GetAll()
+                .Map(o => o.Select(DtoMapping.ToDto));
+
+            return osiguranjeResult
+                ? Ok(osiguranjeResult.Data)
+                : Problem(osiguranjeResult.Message, statusCode: 500);
         }
 
-        if (!_osiguranjeRepository.Exists(id))
+        // GET: api/Osiguranje/5
+        [HttpGet("{id}")]
+        public ActionResult<Osiguranje> GetOsiguranje(int id)
         {
-            return NotFound();
+            var osiguranjeResult = _osiguranjeRepository.Get(id).Map(DtoMapping.ToDto);
+
+            return osiguranjeResult switch
+            {
+                { IsSuccess: true } => Ok(osiguranjeResult.Data),
+                { IsFailure: true } => NotFound(),
+                { IsException: true } or _ => Problem(osiguranjeResult.Message, statusCode: 500)
+            };
         }
 
-        return _osiguranjeRepository.Update(osiguranje.ToDbModel())
-            ? AcceptedAtAction("EditOglas", osiguranje)
-            : StatusCode(500);
-    }
-
-    // POST: api/Osiguranje
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public ActionResult<Oglas> CreateOsiguranje(Osiguranje osiguranje)
-    {
-        if (!ModelState.IsValid)
+        // PUT: api/Osiguranje/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public IActionResult EditOsiguranje(int id, Osiguranje osiguranje)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != osiguranje.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_osiguranjeRepository.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var domainOsiguranje = osiguranje.ToDomain();
+
+            var result =
+                domainOsiguranje.IsValid()
+                .Bind(() => _osiguranjeRepository.Update(domainOsiguranje));
+
+            return result
+                ? AcceptedAtAction("EditOsiguranje", osiguranje)
+                : Problem(result.Message, statusCode: 500);
         }
 
-        return _osiguranjeRepository.Insert(osiguranje.ToDbModel())
-            ? CreatedAtAction("GetOglas", new { id = osiguranje.Id }, osiguranje)
-            : StatusCode(500);
-    }
+        // POST: api/Osiguranje
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public ActionResult<Osiguranje> CreateOsiguranje(Osiguranje osiguranje)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    // DELETE: api/Osiguranje/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteOglas(int id)
-    {
-        if (!_osiguranjeRepository.Exists(id))
-            return NotFound();
+            var domainOsiguranje = osiguranje.ToDomain();
 
-        return _osiguranjeRepository.Remove(id)
-            ? NoContent()
-            : StatusCode(500);
+            var result =
+                domainOsiguranje.IsValid()
+                .Bind(() => _osiguranjeRepository.Insert(domainOsiguranje));
+
+            return result
+                ? CreatedAtAction("GetOsiguranje", new { id = osiguranje.Id }, osiguranje)
+                : Problem(result.Message, statusCode: 500);
+        }
+
+        // DELETE: api/Osiguranje/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteOsiguranje(int id)
+        {
+            if (!_osiguranjeRepository.Exists(id))
+                return NotFound();
+
+            var deleteResult = _osiguranjeRepository.Remove(id);
+            return deleteResult
+                ? NoContent()
+                : Problem(deleteResult.Message, statusCode: 500);
+        }
     }
 }

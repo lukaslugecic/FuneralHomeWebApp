@@ -1,91 +1,110 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
 
-
-namespace FuneralHomeWebApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class NadgrobniZnakController : ControllerBase
+namespace FuneralHome.Controllers
 {
-    private readonly INadgrobniZnakRepository<int, DbModels.NadgrobniZnak> _nadgrobniZnakRepository;
-
-    public NadgrobniZnakController(INadgrobniZnakRepository<int, DbModels.NadgrobniZnak> nadgrobniZnakRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class NadgrobniZnakController : ControllerBase
     {
-        _nadgrobniZnakRepository = nadgrobniZnakRepository;
-    }
+        private readonly INadgrobniZnakRepository _nadgrobniZnakRepository;
 
-    // GET: api/NadgrobniZnak
-    [HttpGet]
-    public ActionResult<IEnumerable<NadgrobniZnak>> GetAllNadgrobniZnak()
-    {
-        return Ok(_nadgrobniZnakRepository.GetAll().Select(DtoMapping.ToDto));
-    }
-
-    // GET: api/NadgrobniZnak/5
-    [HttpGet("{id}")]
-    public ActionResult<NadgrobniZnak> GetNadgrobniZnak(int id)
-    {
-        var nadgrobniZnakOption = _nadgrobniZnakRepository.Get(id).Map(DtoMapping.ToDto);
-
-        return nadgrobniZnakOption
-            ? Ok(nadgrobniZnakOption.Data)
-            : NotFound();
-    }
-
-    // PUT: api/NadgrobniZnak/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public IActionResult EditNadgrobniZnak(int id, NadgrobniZnak nadgrobni)
-    {
-        if (!ModelState.IsValid)
+        public NadgrobniZnakController(INadgrobniZnakRepository repository)
         {
-            return BadRequest(ModelState);
+            _nadgrobniZnakRepository = repository;
         }
 
-        if (id != nadgrobni.Id)
+        // GET: api/NadgrobniZnak
+        [HttpGet]
+        public ActionResult<IEnumerable<NadgrobniZnak>> GetAllNadgrobniZnak()
         {
-            return BadRequest();
+            var znakResult = _nadgrobniZnakRepository.GetAll()
+                .Map(nz => nz.Select(DtoMapping.ToDto));
+
+            return znakResult
+                ? Ok(znakResult.Data)
+                : Problem(znakResult.Message, statusCode: 500);
         }
 
-        if (!_nadgrobniZnakRepository.Exists(id))
+        // GET: api/NadgrobniZnak/5
+        [HttpGet("{id}")]
+        public ActionResult<NadgrobniZnak> GetNadgrobniZnak(int id)
         {
-            return NotFound();
+            var znakResult = _nadgrobniZnakRepository.Get(id).Map(DtoMapping.ToDto);
+
+            return znakResult switch
+            {
+                { IsSuccess: true } => Ok(znakResult.Data),
+                { IsFailure: true } => NotFound(),
+                { IsException: true } or _ => Problem(znakResult.Message, statusCode: 500)
+            };
         }
 
-        return _nadgrobniZnakRepository.Update(nadgrobni.ToDbModel())
-            ? AcceptedAtAction("EditNadgrobniZnak", nadgrobni)
-            : StatusCode(500);
-    }
-
-    // POST: api/NadgrobniZnak
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public ActionResult<NadgrobniZnak> CreateNadgrobniZnak(NadgrobniZnak nadgrobni)
-    {
-        if (!ModelState.IsValid)
+        // PUT: api/NadgrobniZnak/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public IActionResult EditNadgrobniZnak(int id, NadgrobniZnak znak)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != znak.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_nadgrobniZnakRepository.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var domainZnak = znak.ToDomain();
+
+            var result =
+                domainZnak.IsValid()
+                .Bind(() => _nadgrobniZnakRepository.Update(domainZnak));
+
+            return result
+                ? AcceptedAtAction("EditNadgrobniZnak", znak)
+                : Problem(result.Message, statusCode: 500);
         }
 
-        return _nadgrobniZnakRepository.Insert(nadgrobni.ToDbModel())
-            ? CreatedAtAction("GetLijes", new { id = nadgrobni.Id }, nadgrobni)
-            : StatusCode(500);
-    }
+        // POST: api/NadgrobniZnak
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public ActionResult<NadgrobniZnak> CreateNadgrobniZnak(NadgrobniZnak znak)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    // DELETE: api/NadgrobniZnak/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteNadgrobniZnak(int id)
-    {
-        if (!_nadgrobniZnakRepository.Exists(id))
-            return NotFound();
+            var domainZnak = znak.ToDomain();
 
-        return _nadgrobniZnakRepository.Remove(id)
-            ? NoContent()
-            : StatusCode(500);
+            var result =
+                domainZnak.IsValid()
+                .Bind(() => _nadgrobniZnakRepository.Insert(domainZnak));
+
+            return result
+                ? CreatedAtAction("GetNadgrobniZnak", new { id = znak.Id }, znak)
+                : Problem(result.Message, statusCode: 500);
+        }
+
+        // DELETE: api/NadgrobniZnak/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteNadgrobniZnak(int id)
+        {
+            if (!_nadgrobniZnakRepository.Exists(id))
+                return NotFound();
+
+            var deleteResult = _nadgrobniZnakRepository.Remove(id);
+            return deleteResult
+                ? NoContent()
+                : Problem(deleteResult.Message, statusCode: 500);
+        }
     }
 }

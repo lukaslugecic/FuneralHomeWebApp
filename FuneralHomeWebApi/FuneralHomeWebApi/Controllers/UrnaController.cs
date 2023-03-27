@@ -1,91 +1,110 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
 
-
-namespace FuneralHomeWebApi.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-public class UrnaController : ControllerBase
+namespace FuneralHome.Controllers
 {
-    private readonly IUrnaRepository<int, DbModels.Urna> _urnaRepository;
-
-    public UrnaController(IUrnaRepository<int, DbModels.Urna> urnaRepository)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UrnaController : ControllerBase
     {
-        _urnaRepository = urnaRepository;
-    }
+        private readonly IUrnaRepository _urnaRepository;
 
-    // GET: api/Urna
-    [HttpGet]
-    public ActionResult<IEnumerable<Urna>> GetAllUrna()
-    {
-        return Ok(_urnaRepository.GetAll().Select(DtoMapping.ToDto));
-    }
-
-    // GET: api/Urna/5
-    [HttpGet("{id}")]
-    public ActionResult<Urna> GetUrna(int id)
-    {
-        var urnaOption = _urnaRepository.Get(id).Map(DtoMapping.ToDto);
-
-        return urnaOption
-            ? Ok(urnaOption.Data)
-            : NotFound();
-    }
-
-    // PUT: api/Urna/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public IActionResult EditUrna(int id, Urna urna)
-    {
-        if (!ModelState.IsValid)
+        public UrnaController(IUrnaRepository repository)
         {
-            return BadRequest(ModelState);
+            _urnaRepository = repository;
         }
 
-        if (id != urna.Id)
+        // GET: api/Urna
+        [HttpGet]
+        public ActionResult<IEnumerable<Urna>> GetAllUrna()
         {
-            return BadRequest();
+            var urnaResult = _urnaRepository.GetAll()
+                .Map(u => u.Select(DtoMapping.ToDto));
+
+            return urnaResult
+                ? Ok(urnaResult.Data)
+                : Problem(urnaResult.Message, statusCode: 500);
         }
 
-        if (!_urnaRepository.Exists(id))
+        // GET: api/Urna/5
+        [HttpGet("{id}")]
+        public ActionResult<Urna> GetUrna(int id)
         {
-            return NotFound();
+            var urnaResult = _urnaRepository.Get(id).Map(DtoMapping.ToDto);
+
+            return urnaResult switch
+            {
+                { IsSuccess: true } => Ok(urnaResult.Data),
+                { IsFailure: true } => NotFound(),
+                { IsException: true } or _ => Problem(urnaResult.Message, statusCode: 500)
+            };
         }
 
-        return _urnaRepository.Update(urna.ToDbModel())
-            ? AcceptedAtAction("EditOglas", urna)
-            : StatusCode(500);
-    }
-
-    // POST: api/Urna
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPost]
-    public ActionResult<Urna> CreateUrna(Urna urna)
-    {
-        if (!ModelState.IsValid)
+        // PUT: api/Urna/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public IActionResult EditUrna(int id, Urna urna)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if (id != urna.Id)
+            {
+                return BadRequest();
+            }
+
+            if (!_urnaRepository.Exists(id))
+            {
+                return NotFound();
+            }
+
+            var domainUrna = urna.ToDomain();
+
+            var result =
+                domainUrna.IsValid()
+                .Bind(() => _urnaRepository.Update(domainUrna));
+
+            return result
+                ? AcceptedAtAction("EditUrna", urna)
+                : Problem(result.Message, statusCode: 500);
         }
 
-        return _urnaRepository.Insert(urna.ToDbModel())
-            ? CreatedAtAction("GetUrna", new { id = urna.Id }, urna)
-            : StatusCode(500);
-    }
+        // POST: api/Urna
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public ActionResult<Urna> CreateUrna(Urna urna)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    // DELETE: api/Urna/5
-    [HttpDelete("{id}")]
-    public IActionResult DeleteUrna(int id)
-    {
-        if (!_urnaRepository.Exists(id))
-            return NotFound();
+            var domainUrna = urna.ToDomain();
 
-        return _urnaRepository.Remove(id)
-            ? NoContent()
-            : StatusCode(500);
+            var result =
+                domainUrna.IsValid()
+                .Bind(() => _urnaRepository.Insert(domainUrna));
+
+            return result
+                ? CreatedAtAction("GetUrna", new { id = urna.Id }, urna)
+                : Problem(result.Message, statusCode: 500);
+        }
+
+        // DELETE: api/Unra/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteUrna(int id)
+        {
+            if (!_urnaRepository.Exists(id))
+                return NotFound();
+
+            var deleteResult = _urnaRepository.Remove(id);
+            return deleteResult
+                ? NoContent()
+                : Problem(deleteResult.Message, statusCode: 500);
+        }
     }
 }

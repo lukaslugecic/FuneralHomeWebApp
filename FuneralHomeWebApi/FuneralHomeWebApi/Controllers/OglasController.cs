@@ -1,41 +1,64 @@
 ﻿using FuneralHome.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
-using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
-using FuneralHome.Commons;
-using System;
+using FuneralHome.Repositories.SqlServer;
+using BaseLibrary;
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-
-namespace FuneralHomeWebApi.Controllers;
-
+namespace FuneralHome.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 public class OglasController : ControllerBase
 {
-    private readonly IOglasRepository<int, DbModels.Oglas> _oglasRepository;
+    private readonly IOglasRepository _oglasRepository;
 
-    public OglasController(IOglasRepository<int, DbModels.Oglas> oglasRepository)
+    public OglasController(IOglasRepository repository)
     {
-        _oglasRepository = oglasRepository;
+        _oglasRepository = repository;
     }
 
     // GET: api/Oglas
     [HttpGet]
     public ActionResult<IEnumerable<Oglas>> GetAllOglas()
     {
-        return Ok(_oglasRepository.GetAll().Select(DtoMapping.ToDto));
+        var oglasResults = _oglasRepository.GetAll()
+            .Map(o => o.Select(DtoMapping.ToDto));
+
+        return oglasResults
+            ? Ok(oglasResults.Data)
+            : Problem(oglasResults.Message, statusCode: 500);
     }
 
     // GET: api/Oglas/5
     [HttpGet("{id}")]
     public ActionResult<Oglas> GetOglas(int id)
     {
-        var oglasOption = _oglasRepository.Get(id).Map(DtoMapping.ToDto);
+        var oglasResult = _oglasRepository.Get(id).Map(DtoMapping.ToDto);
 
-        return oglasOption
-            ? Ok(oglasOption.Data)
-            : NotFound();
+        return oglasResult switch
+        {
+            { IsSuccess: true } => Ok(oglasResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(oglasResult.Message, statusCode: 500)
+        };
     }
+
+    /*
+    [HttpGet("/Aggregate/{id}")]
+    public ActionResult<PersonAggregate> GetPersonAggregate(int id)
+    {
+        var personResult = _personRepository.GetAggregate(id).Map(DtoMapping.ToAggregateDto);
+
+        return personResult switch
+        {
+            { IsSuccess: true } => Ok(personResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(personResult.Message, statusCode: 500)
+        };
+    }
+    */
+
+
 
     // PUT: api/Oglas/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -57,9 +80,15 @@ public class OglasController : ControllerBase
             return NotFound();
         }
 
-        return _oglasRepository.Update(oglas.ToDbModel())
+        var domainOglas = oglas.ToDomain();
+
+        var result =
+            domainOglas.IsValid()
+            .Bind(() => _oglasRepository.Update(domainOglas));
+
+        return result
             ? AcceptedAtAction("EditOglas", oglas)
-            : StatusCode(500);
+            : Problem(result.Message, statusCode: 500);
     }
 
     // POST: api/Oglas
@@ -72,9 +101,21 @@ public class OglasController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        return _oglasRepository.Insert(oglas.ToDbModel())
+        var domainOglas = oglas.ToDomain();
+
+        var validationResult = domainOglas.IsValid();
+        if (!validationResult)
+        {
+            return Problem(validationResult.Message, statusCode: 500);
+        }
+
+        var result =
+            domainOglas.IsValid()
+            .Bind(() => _oglasRepository.Insert(domainOglas));
+
+        return result
             ? CreatedAtAction("GetOglas", new { id = oglas.Id }, oglas)
-            : StatusCode(500);
+            : Problem(result.Message, statusCode: 500);
     }
 
     // DELETE: api/Oglas/5
@@ -84,8 +125,9 @@ public class OglasController : ControllerBase
         if (!_oglasRepository.Exists(id))
             return NotFound();
 
-        return _oglasRepository.Remove(id)
+        var deleteResult = _oglasRepository.Remove(id);
+        return deleteResult
             ? NoContent()
-            : StatusCode(500);
+            : Problem(deleteResult.Message, statusCode: 500);
     }
 }
