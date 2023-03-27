@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { IKorisnik } from '../../interfaces/korisnik-data';
 import { ILoginData } from '../../interfaces/login-data';
 import { IRegisterData } from '../../interfaces/register-data';
@@ -9,13 +10,16 @@ import { IRegisterData } from '../../interfaces/register-data';
   providedIn: 'root',
 })
 export class AuthService {
+  /*
   private readonly _user$ = new BehaviorSubject<IKorisnik | null>(null);
   public user$ = this._user$
     .asObservable()
     .pipe(tap((user) => (this.id = user?.id)));
   public id?: number;
+  
 
   constructor(private http: HttpClient) {}
+
 
   public getUser() {
     return this.http.get<IKorisnik>('/api/Korisnik').pipe(
@@ -48,5 +52,18 @@ export class AuthService {
         this._user$.next(null);
       })
     );
+  }
+  */
+
+  private url = 'Korisnik';
+
+  constructor(private http: HttpClient) {}
+
+  public getKorisnici() : Observable<IKorisnik[]> {
+    return this.http.get<IKorisnik[]>(`${environment.apiUrlHttps}/${this.url}`);
+  }
+
+  public register(data: IRegisterData) {
+    return this.http.post<IKorisnik>(`${environment.apiUrlHttps}/${this.url}`, data);
   }
 }

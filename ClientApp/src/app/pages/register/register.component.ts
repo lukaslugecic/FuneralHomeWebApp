@@ -71,7 +71,8 @@ export class RegisterComponent implements OnDestroy {
       Prezime: this.form.get('surname')?.value,
       DatumRodenja: this.form.get('dateOfBirth')?.value,
       Adresa: this.form.get('dateOfBirth')?.value,
-      Oib: this.form.get('oib')?.value
+      Oib: this.form.get('oib')?.value,
+      vrstaKorisnika: "K"
     };
 
     console.log(data);
@@ -91,7 +92,6 @@ export class RegisterComponent implements OnDestroy {
         this.router.navigate(['/']);
       });
     this.subscription.add(registerSubscription);
-
     
   }
 

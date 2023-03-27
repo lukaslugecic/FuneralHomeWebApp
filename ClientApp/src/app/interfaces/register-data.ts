@@ -6,5 +6,6 @@ export interface IRegisterData {
     Oib: string;
     Mail: string;
     Lozinka: string;
+    vrstaKorisnika: string;
   }
   
