@@ -30,6 +30,10 @@ public class Korisnik
     [Required(ErrorMessage = "Password can't be null")]
     [StringLength(50, ErrorMessage = "Password can't be longer than 50 characters")]
     public string Lozinka { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Type can't be null")]
+    [StringLength(1, ErrorMessage = "Type can't be longer than 1 character")]
+    public string VrstaKorisnika { get; set; } = string.Empty;
 }
 
 
@@ -46,6 +50,7 @@ public static partial class DtoMapping
             Oib = korisnik.Oib,
             Mail = korisnik.Mail,
             Lozinka = korisnik.Lozinka,
+            VrstaKorisnika = korisnik.VrstaKorisnika
         };
 
     public static DbModels.Korisnik ToDbModel(this Korisnik korisnik)
@@ -58,6 +63,7 @@ public static partial class DtoMapping
             Adresa = korisnik.Adresa,
             Oib = korisnik.Oib,
             Mail = korisnik.Mail,
-            Lozinka = korisnik.Lozinka
+            Lozinka = korisnik.Lozinka,
+            VrstaKorisnika = korisnik.VrstaKorisnika
         };
 }
