@@ -4,7 +4,7 @@ using System;
 namespace FuneralHome.Repositories;
 
 /// <summary>
-/// Facade interface for a Person repository
+/// Facade interface for a SmrtniSlucaj repository
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TDomainModel"></typeparam>
