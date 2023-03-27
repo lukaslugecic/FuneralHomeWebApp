@@ -1,0 +1,34 @@
+<app-auth-navigation></app-auth-navigation>
+
+<div class="container">
+  <h1>Prijavi se</h1>
+  <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="Email" formControlName="email" />
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Lozinka</mat-label>
+      <input
+        matInput
+        placeholder="Password"
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+      />
+      <mat-icon matSuffix (click)="hide = !hide">{{
+        hide ? "visibility_off" : "visibility"
+      }}</mat-icon>
+    </mat-form-field>
+
+    <p *ngIf="error" class="error">
+      {{ error }}
+    </p>
+
+    <button type="submit" mat-raised-button>Potvrdi</button>
+
+    <div class="info">
+      <a routerLink="/register">Nemaš svoj račun? Registriraj se!</a>
+    </div>
+  </form>
+</div>
