@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FuneralHome.DTOs;
 using FuneralHome.Repositories.SqlServer;
 using BaseLibrary;
+using Microsoft.CodeAnalysis.Scripting;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FuneralHome.Controllers;
@@ -125,6 +126,13 @@ public class KorisnikController : ControllerBase
             return Problem(validationResult.Message, statusCode: 500);
         }
 
+        
+        // Hash the password using BCrypt
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(korisnik.Lozinka);
+
+        // Store the hashed password in the Korisnik object
+        domainKorisnik.Lozinka = hashedPassword;
+        Console.WriteLine(hashedPassword.Length);
         var result =
             domainKorisnik.IsValid()
             .Bind(() => _korisnikRepository.Insert(domainKorisnik));
@@ -133,6 +141,18 @@ public class KorisnikController : ControllerBase
             ? CreatedAtAction("GetKorisnik", new { id = korisnik.Id },  korisnik)
             : Problem(result.Message, statusCode: 500);
     }
+
+    [HttpPost("login")]
+    public IActionResult Login([FromBody] LoginModel model)
+    {
+        if (!_korisnikRepository.Exists(model.Mail))
+            return Unauthorized();
+        var korisnik = _korisnikRepository.GetByMail(model.Mail);
+        return BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka)
+            ? NoContent()
+            : Unauthorized();
+    }
+
 
     // DELETE: api/Korisnik/5
     [HttpDelete("{id}")]
