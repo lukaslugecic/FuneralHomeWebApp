@@ -43,6 +43,22 @@ public class KorisnikController : ControllerBase
         };
     }
 
+
+    // GET: api/Korisnik/GetByMail/example@mail.com
+    [HttpGet("/api/[controller]/GetByMail")]
+    public ActionResult<Korisnik> GetKorisnikByMail(string mail)
+    {
+        var korisnikResult = _korisnikRepository.GetByMail(mail).Map(DtoMapping.ToDto);
+
+        return korisnikResult switch
+        {
+            { IsSuccess: true } => Ok(korisnikResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(korisnikResult.Message, statusCode: 500)
+        };
+    }
+
+
     /*
     [HttpGet("/Aggregate/{id}")]
     public ActionResult<PersonAggregate> GetPersonAggregate(int id)
@@ -58,7 +74,7 @@ public class KorisnikController : ControllerBase
     }
     */
 
-    
+
 
     // PUT: api/Korisnik/5
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

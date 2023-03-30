@@ -42,6 +42,21 @@ public class KorisnikRepository : IKorisnikRepository
         }
     }
 
+    public bool Exists(string mail)
+    {
+        try
+        {
+            var model = _dbContext.Korisnik
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Mail.Equals(mail));
+            return model is not null;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
     public Result<Korisnik> Get(int id)
     {
         try
@@ -54,6 +69,25 @@ public class KorisnikRepository : IKorisnikRepository
             return model is not null
             ? Results.OnSuccess(model)
                 : Results.OnFailure<Korisnik>($"No user with id {id} found");
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<Korisnik>(e);
+        }
+    }
+
+    public Result<Korisnik> GetByMail(string mail)
+    {
+        try
+        {
+            var model = _dbContext.Korisnik
+                          .AsNoTracking()
+                          .FirstOrDefault(k => k.Mail.Equals(mail))?
+                          .ToDomain();
+
+            return model is not null
+            ? Results.OnSuccess(model)
+                : Results.OnFailure<Korisnik>($"No user with mail {mail} found");
         }
         catch (Exception e)
         {

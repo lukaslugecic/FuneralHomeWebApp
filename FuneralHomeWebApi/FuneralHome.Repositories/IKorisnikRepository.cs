@@ -1,4 +1,5 @@
-﻿using FuneralHome.Domain.Models;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
 using System;
 
 namespace FuneralHome.Repositories;
@@ -12,4 +13,6 @@ public interface IKorisnikRepository
     : IRepository<int, Korisnik>,
       IAggregateRepository<int, Korisnik>
 {
+    public bool Exists(string mail);
+    public Result<Korisnik> GetByMail(string mail);
 }
