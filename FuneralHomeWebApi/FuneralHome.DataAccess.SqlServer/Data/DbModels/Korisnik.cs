@@ -42,7 +42,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Unicode(false)]
         public string Mail { get; set; }
         [Required]
-        [StringLength(50)]
+        [StringLength(100)]
         [Unicode(false)]
         public string Lozinka { get; set; }
         [Required]
