@@ -97,7 +97,7 @@ public class Korisnik : AggregateRoot<int>
             (() => _adresa.Length <= 50, "Address lenght must be less than 50 characters"),
             (() => _oib.Length <= 11, "OIB lenght must be less than 50 characters"),
             (() => _mail.Length <= 50, "E-mail address lenght must be less than 50 characters"),
-            (() => _lozinka.Length <= 50, "Password lenght must be less than 50 characters"),
+            (() => _lozinka.Length <= 100, "Password lenght must be less than 50 characters"),
             (() => _vrstaKorisnika.Length <= 1, "Type lenght must be 1 character"),
             (() => !string.IsNullOrEmpty(_ime.Trim()), "First name can't be null, empty, or whitespace"),
             (() => !string.IsNullOrEmpty(_prezime.Trim()), "Last name can't be null, empty, or whitespace"),
