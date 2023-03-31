@@ -11,27 +11,30 @@ import { IRegisterData } from '../../interfaces/register-data';
 })
 export class AuthService {
   /*
-  private readonly _user$ = new BehaviorSubject<IKorisnik | null>(null);
+  private readonly _user$ = new BehaviorSubject<IUser | null>(null);
   public user$ = this._user$
     .asObservable()
     .pipe(tap((user) => (this.id = user?.id)));
   public id?: number;
-  
 
   constructor(private http: HttpClient) {}
 
-
   public getUser() {
-    return this.http.get<IKorisnik>('/api/Korisnik').pipe(
+    return this.http.get<IUser>('/api/user').pipe(
       tap((resp) => {
         this._user$.next(resp);
       })
     );
   }
 
+  public getPatientDoctorId(): Observable<any> {
+    return this.http
+      .get('/api/user/doctor')
+      .pipe(tap((resp) => console.log(resp)));
+  }
 
   public login(data: ILoginData) {
-    return this.http.post<IKorisnik>('/api/login', data).pipe(
+    return this.http.post<IUser>('/api/login', data).pipe(
       tap((resp) => {
         this._user$.next(resp);
       })
@@ -39,7 +42,23 @@ export class AuthService {
   }
 
   public register(data: IRegisterData) {
-    return this.http.post<IKorisnik>('/api/Korisnik', data).pipe(
+    return this.http.post<IUser>('/api/register', data).pipe(
+      tap((resp) => {
+        this._user$.next(resp);
+      })
+    );
+  }
+
+  public createDoctor(data: IDoctorNurseData) {
+    return this.http.post<IUser>('/api/register/doctor', data).pipe(
+      tap((resp) => {
+        this._user$.next(resp);
+      })
+    );
+  }
+
+  public createNurse(data: IDoctorNurseData) {
+    return this.http.post<IUser>('/api/register/nurse', data).pipe(
       tap((resp) => {
         this._user$.next(resp);
       })
@@ -56,6 +75,7 @@ export class AuthService {
   */
 
   private url = 'Korisnik';
+  private readonly _user$ = new BehaviorSubject<IKorisnik | null>(null);
 
   constructor(private http: HttpClient) {}
 
@@ -64,6 +84,27 @@ export class AuthService {
   }
 
   public register(data: IRegisterData) {
-    return this.http.post<IKorisnik>(`${environment.apiUrlHttps}/${this.url}`, data);
+    return this.http.post<IKorisnik>(`${environment.apiUrlHttps}/${this.url}`, data).pipe(
+      tap((resp) => {
+        this._user$.next(resp);
+      })
+    );
   }
+
+  public login(data: ILoginData) {
+    return this.http.post<IKorisnik>(`${environment.apiUrlHttps}/${this.url}/login`, data).pipe(
+      tap((resp) => {
+       this._user$.next(resp);
+      })
+    );
+  }
+
+  public logout() {
+    return this.http.get('/api/logout').pipe(
+      tap(() => {
+        this._user$.next(null);
+      })
+    );
+  }
+  
 }

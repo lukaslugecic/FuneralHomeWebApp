@@ -17,7 +17,7 @@ export class LoginComponent implements OnDestroy {
   public error?: string;
 
   constructor(
-   // private readonly authService: AuthService,
+    private readonly authService: AuthService,
     private readonly snackbar: MatSnackBar,
     private readonly router: Router
   ) {}
@@ -38,11 +38,11 @@ export class LoginComponent implements OnDestroy {
 
     const data: ILoginData = {
       mail: this.form.get('email')?.value as string,
-      password: this.form.get('password')?.value as string,
+      lozinka: this.form.get('password')?.value as string,
     };
 
     console.log(data);
-    /*
+
     const loginSubscription = this.authService
       .login(data)
       .pipe(
@@ -56,7 +56,7 @@ export class LoginComponent implements OnDestroy {
       });
 
     this.subscription.add(loginSubscription);
-    */
+  
   }
   
 
