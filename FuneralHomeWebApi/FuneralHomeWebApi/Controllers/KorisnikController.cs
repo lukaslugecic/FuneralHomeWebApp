@@ -21,7 +21,7 @@ public class KorisnikController : ControllerBase
     }
 
     // GET: api/Korisnik
-    [Authorize]
+    [Authorize(Roles = "A")]
     [HttpGet]
     public ActionResult<IEnumerable<Korisnik>> GetAllKorisnik()
     {
@@ -153,7 +153,7 @@ public class KorisnikController : ControllerBase
             return Unauthorized();
         var korisnik = _korisnikRepository.GetByMail(model.Mail);
 
-        if(BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka))
+        if(!BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka))
             return Unauthorized();
 
         string token = _korisnikRepository.CreateToken(korisnik.Data);
