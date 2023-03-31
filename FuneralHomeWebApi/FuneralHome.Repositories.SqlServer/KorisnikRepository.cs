@@ -1,16 +1,22 @@
 ﻿using FuneralHome.DataAccess.SqlServer.Data;
 using Microsoft.EntityFrameworkCore;
 using FuneralHome.Domain.Models;
+using System.Security.Claims;
 using BaseLibrary;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FuneralHome.Repositories.SqlServer;
 public class KorisnikRepository : IKorisnikRepository
 {
     private readonly FuneralHomeContext _dbContext;
+    private readonly IConfiguration _configuration;
 
-    public KorisnikRepository(FuneralHomeContext dbContext)
+    public KorisnikRepository(FuneralHomeContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
+        _configuration = configuration;
     }
 
     public bool Exists(Korisnik model)
@@ -232,4 +238,27 @@ public class KorisnikRepository : IKorisnikRepository
     public Result UpdateAggregate(Korisnik model)
     {}
     */
+
+    public string CreateToken(Korisnik korisnik)
+    {
+        List<Claim> claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Email, korisnik.Mail),
+            new Claim(ClaimTypes.Role, korisnik.VrstaKorisnika)
+        };
+
+        var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+            _configuration.GetSection("SecretKeys:Token").Value));
+
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.Now.AddDays(1),
+            signingCredentials: creds);
+
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+        return jwt;
+    }
 }

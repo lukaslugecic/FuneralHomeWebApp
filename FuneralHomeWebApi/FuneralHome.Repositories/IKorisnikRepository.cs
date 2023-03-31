@@ -15,4 +15,6 @@ public interface IKorisnikRepository
 {
     public bool Exists(string mail);
     public Result<Korisnik> GetByMail(string mail);
+
+    public string CreateToken(Korisnik korisnik);
 }

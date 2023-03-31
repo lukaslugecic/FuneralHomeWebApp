@@ -4,6 +4,9 @@ using FuneralHome.DTOs;
 using FuneralHome.Repositories.SqlServer;
 using BaseLibrary;
 using Microsoft.CodeAnalysis.Scripting;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace FuneralHome.Controllers;
@@ -12,13 +15,13 @@ namespace FuneralHome.Controllers;
 public class KorisnikController : ControllerBase
 {
     private readonly IKorisnikRepository _korisnikRepository;
-
     public KorisnikController(IKorisnikRepository repository)
     {
         _korisnikRepository = repository;
     }
 
     // GET: api/Korisnik
+    [Authorize]
     [HttpGet]
     public ActionResult<IEnumerable<Korisnik>> GetAllKorisnik()
     {
@@ -142,15 +145,43 @@ public class KorisnikController : ControllerBase
             : Problem(result.Message, statusCode: 500);
     }
 
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginModel model)
+    [HttpPost("Login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
+        
         if (!_korisnikRepository.Exists(model.Mail))
             return Unauthorized();
         var korisnik = _korisnikRepository.GetByMail(model.Mail);
-        return BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka)
-            ? NoContent()
-            : Unauthorized();
+
+        if(BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka))
+            return Unauthorized();
+
+        string token = _korisnikRepository.CreateToken(korisnik.Data);
+
+        return Ok(token);
+        /*
+        if (!_korisnikRepository.Exists(model.Mail))
+            return Unauthorized();
+        var korisnik = _korisnikRepository.GetByMail(model.Mail);
+        if(BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka))
+        {
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, korisnik.Mail) },
+                CookieAuthenticationDefaults.AuthenticationScheme));
+
+            return Ok();
+        }
+        return Unauthorized();
+        */
+    }
+
+    
+
+    [HttpPost("Logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        return Ok();
     }
 
 
