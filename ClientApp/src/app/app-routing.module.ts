@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminGuard } from './guards/admin/admin.guard';
+import { AnonGuard } from './guards/anon/anon.guard';
+import { AuthGuard } from './guards/auth/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { HomeModule } from './pages/home/home.module';
 import { LoginComponent } from './pages/login/login.component';
@@ -9,8 +12,28 @@ import { RegisterModule } from './pages/register/register.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'register', component: RegisterComponent},
-  { path: 'login', component: LoginComponent},
+  {
+    path: '',
+    children: [
+      {
+        path: 'admin',
+        children: [
+          //todo
+        ],
+        canActivate: [AdminGuard],
+      },
+      //todo
+    ],
+    canActivate: [AuthGuard],
+  },
+  {
+    path: '',
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+    ],
+    canActivate: [AnonGuard],
+  },
   { path: '**', redirectTo: '' },
 ];
 
