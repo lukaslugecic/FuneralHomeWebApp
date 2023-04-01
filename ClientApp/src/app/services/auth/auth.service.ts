@@ -91,12 +91,15 @@ export class AuthService {
     );
   }
 
-  public login(data: ILoginData) {
-    return this.http.post<IKorisnik>(`${environment.apiUrlHttps}/${this.url}/login`, data).pipe(
+  public login(data: ILoginData) : Observable<string>{
+    return this.http.post(`${environment.apiUrlHttps}/${this.url}/login`, data, { responseType: 'text'});
+    /*
+    .pipe(
       tap((resp) => {
        this._user$.next(resp);
       })
     );
+    */
   }
 
   public logout() {
