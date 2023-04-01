@@ -51,10 +51,9 @@ export class LoginComponent implements OnDestroy {
           return EMPTY;
         })
       )
-      .subscribe((token : string) => {
-        localStorage.setItem('authToken', token);
-        this.router.navigate(['/']);
-      });
+      .subscribe(() =>
+        this.router.navigate(['/'])
+      );
 
     this.subscription.add(loginSubscription);
   

@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  //public user$ = this.authService.user$;
+  public user$ = this.authService.user$;
   korisnici: IKorisnik[] = [];
   constructor(private readonly authService: AuthService) {}
 

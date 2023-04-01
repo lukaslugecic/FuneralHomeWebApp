@@ -1,13 +1,21 @@
-import { Component} from '@angular/core';
+import { Component, OnDestroy} from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-main-navigation',
   templateUrl: './main-navigation.component.html',
   styleUrls: ['./main-navigation.component.scss']
 })
-export class MainNavigationComponent{
+export class MainNavigationComponent implements OnDestroy{
+  private readonly subscription = new Subscription();
+  public user$ = this.authService.user$;
 
-  constructor() { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
 
   public links = {
     admin: [
@@ -21,5 +29,14 @@ export class MainNavigationComponent{
       { title: 'Profil', path: '/profile' },
     ],
   };
+
+  public onLogoutClick() {
+    const logoutSubscription = this.authService.logout();
+    this.subscription.add(logoutSubscription);
+  }
+
+  public ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
 }

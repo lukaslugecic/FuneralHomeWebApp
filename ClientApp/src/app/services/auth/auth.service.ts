@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { IKorisnik } from '../../interfaces/korisnik-data';
 import { ILoginData } from '../../interfaces/login-data';
@@ -10,74 +11,18 @@ import { IRegisterData } from '../../interfaces/register-data';
   providedIn: 'root',
 })
 export class AuthService {
-  /*
-  private readonly _user$ = new BehaviorSubject<IUser | null>(null);
-  public user$ = this._user$
-    .asObservable()
-    .pipe(tap((user) => (this.id = user?.id)));
-  public id?: number;
-
-  constructor(private http: HttpClient) {}
-
-  public getUser() {
-    return this.http.get<IUser>('/api/user').pipe(
-      tap((resp) => {
-        this._user$.next(resp);
-      })
-    );
-  }
-
-  public getPatientDoctorId(): Observable<any> {
-    return this.http
-      .get('/api/user/doctor')
-      .pipe(tap((resp) => console.log(resp)));
-  }
-
-  public login(data: ILoginData) {
-    return this.http.post<IUser>('/api/login', data).pipe(
-      tap((resp) => {
-        this._user$.next(resp);
-      })
-    );
-  }
-
-  public register(data: IRegisterData) {
-    return this.http.post<IUser>('/api/register', data).pipe(
-      tap((resp) => {
-        this._user$.next(resp);
-      })
-    );
-  }
-
-  public createDoctor(data: IDoctorNurseData) {
-    return this.http.post<IUser>('/api/register/doctor', data).pipe(
-      tap((resp) => {
-        this._user$.next(resp);
-      })
-    );
-  }
-
-  public createNurse(data: IDoctorNurseData) {
-    return this.http.post<IUser>('/api/register/nurse', data).pipe(
-      tap((resp) => {
-        this._user$.next(resp);
-      })
-    );
-  }
-
-  public logout() {
-    return this.http.get('/api/logout').pipe(
-      tap(() => {
-        this._user$.next(null);
-      })
-    );
-  }
-  */
-
   private url = 'Korisnik';
   private readonly _user$ = new BehaviorSubject<IKorisnik | null>(null);
+  public user$: Observable<IKorisnik | null>;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {
+    this._user$ = new BehaviorSubject(JSON.parse(localStorage.getItem('user')!));
+    this.user$ = this._user$.asObservable();
+  }
+
+  public get userValue() {
+    return this._user$.value;
+  }
 
   public getKorisnici() : Observable<IKorisnik[]> {
     return this.http.get<IKorisnik[]>(`${environment.apiUrlHttps}/${this.url}`);
@@ -92,22 +37,18 @@ export class AuthService {
   }
 
   public login(data: ILoginData) : Observable<string>{
-    return this.http.post(`${environment.apiUrlHttps}/${this.url}/login`, data, { responseType: 'text'});
-    /*
-    .pipe(
-      tap((resp) => {
-       this._user$.next(resp);
-      })
-    );
-    */
+    return this.http.post<any>(`${environment.apiUrlHttps}/${this.url}/login`, data)
+      .pipe(map(user => {
+        localStorage.setItem('user', JSON.stringify(user));
+        this._user$.next(user);
+        return user;
+      }));
   }
 
   public logout() {
-    return this.http.get('/api/logout').pipe(
-      tap(() => {
-        this._user$.next(null);
-      })
-    );
+    localStorage.removeItem('user');
+    this._user$.next(null);
+    this.router.navigate(['/login']);
   }
   
 }

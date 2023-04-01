@@ -146,7 +146,7 @@ public class KorisnikController : ControllerBase
     }
 
     [HttpPost("Login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public IActionResult Login([FromBody] LoginModel model)
     {
         
         if (!_korisnikRepository.Exists(model.Mail))
@@ -158,21 +158,9 @@ public class KorisnikController : ControllerBase
 
         string token = _korisnikRepository.CreateToken(korisnik.Data);
 
-        return Ok(token);
-        /*
-        if (!_korisnikRepository.Exists(model.Mail))
-            return Unauthorized();
-        var korisnik = _korisnikRepository.GetByMail(model.Mail);
-        if(BCrypt.Net.BCrypt.Verify(model.Lozinka, korisnik.Data.Lozinka))
-        {
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, korisnik.Mail) },
-                CookieAuthenticationDefaults.AuthenticationScheme));
+        var authKorisnik = korisnik.Data.ToDto(token);
 
-            return Ok();
-        }
-        return Unauthorized();
-        */
+        return Ok(authKorisnik);
     }
 
     

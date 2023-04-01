@@ -1,3 +1,33 @@
-<app-auth-navigation></app-auth-navigation>
-<button (click)="fun()"></button>
-<app-main-footer></app-main-footer>
+<body>
+    <app-main-navigation
+      *ngIf="user$ | async; else authNavigationTemplate"
+    ></app-main-navigation>
+    <ng-template #authNavigationTemplate>
+      <app-auth-navigation></app-auth-navigation>
+    </ng-template>
+  
+    <h1 style="font-size: 3rem; text-align: center ; margin-top: 2rem;">
+      Vaš gubitak - naš dobitak
+    </h1>
+  
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Cras ornare, nisi eu maximus condimentum, lacus ligula aliquam felis,
+        id ultricies est eros eget elit. Sed eget nisi lacinia, tristique velit id,
+        volutpat odio. Mauris in sodales sem. Phasellus lorem dui, pretium non risus a,
+        mollis lacinia libero. Etiam eget justo sit amet lorem pellentesque efficitur.
+        Vestibulum euismod, nunc ac consectetur aliquam, turpis ex consequat mi,
+        id congue massa nisl ac augue. Phasellus vel nunc metus. Integer ultrices tempus pulvinar.
+    </p>
+  
+    <div class="img">
+      <img
+        src="assets\img\funeral1.jpg"
+        width="45%"
+        draggable="false"
+        (dragstart)="(false)"
+        class="unselectable"
+      />
+    </div>
+    <app-main-footer class="footer"></app-main-footer>
+  </body>

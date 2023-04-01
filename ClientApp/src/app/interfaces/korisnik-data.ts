@@ -8,5 +8,6 @@ export interface IKorisnik {
     mail: string;
     lozinka: string;
     vrstaKorisnika: string
+    token : string;
   }
   
