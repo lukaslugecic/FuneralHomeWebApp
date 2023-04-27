@@ -12,7 +12,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     public partial class SmrtniSlucaj
     {
         [Key]
-        public int Id { get; set; }
+        public int IdSmrtniSlucaj { get; set; }
         public int KorisnikId { get; set; }
         [Required]
         [StringLength(50)]

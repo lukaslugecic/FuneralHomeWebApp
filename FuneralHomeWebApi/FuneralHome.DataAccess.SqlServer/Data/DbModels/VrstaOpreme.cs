@@ -8,25 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    public partial class Urna
+    public partial class VrstaOpreme
     {
-        public Urna()
+        public VrstaOpreme()
         {
-            Pogreb = new HashSet<Pogreb>();
+            Oprema = new HashSet<Oprema>();
         }
 
         [Key]
-        public int Id { get; set; }
+        public int IdVrstaOpreme { get; set; }
         [Required]
         [StringLength(50)]
         [Unicode(false)]
-        public string Naziv { get; set; }
-        public byte[] Slika { get; set; }
-        public int Kolicina { get; set; }
-        [Column(TypeName = "numeric(18, 2)")]
-        public decimal Cijena { get; set; }
+        public string NazivVrstaOprema { get; set; }
 
-        [InverseProperty("Urna")]
-        public virtual ICollection<Pogreb> Pogreb { get; set; }
+        [InverseProperty("VrstaOpreme")]
+        public virtual ICollection<Oprema> Oprema { get; set; }
     }
 }

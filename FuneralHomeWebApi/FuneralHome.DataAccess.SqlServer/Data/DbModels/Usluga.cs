@@ -8,25 +8,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    public partial class Cvijece
+    public partial class Usluga
     {
-        public Cvijece()
+        public Usluga()
         {
             Pogreb = new HashSet<Pogreb>();
         }
 
         [Key]
-        public int Id { get; set; }
+        public int IdUsluga { get; set; }
         [Required]
-        [StringLength(50)]
-        [Unicode(false)]
-        public string Naziv { get; set; }
-        public byte[] Slika { get; set; }
-        public int Kolicina { get; set; }
-        [Column(TypeName = "numeric(18, 2)")]
-        public decimal Cijena { get; set; }
+        [StringLength(10)]
+        public string Opis { get; set; }
+        [Required]
+        [StringLength(10)]
+        public string Cijena { get; set; }
+        public int VrstaUslugeId { get; set; }
 
-        [InverseProperty("Cvijece")]
+        [ForeignKey("VrstaUslugeId")]
+        [InverseProperty("Usluga")]
+        public virtual VrstaUsluge VrstaUsluge { get; set; }
+
+        [ForeignKey("UslugaId")]
+        [InverseProperty("Usluga")]
         public virtual ICollection<Pogreb> Pogreb { get; set; }
     }
 }

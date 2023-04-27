@@ -12,7 +12,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     public partial class Osiguranje
     {
         [Key]
-        public int Id { get; set; }
+        public int IdOsiguranje { get; set; }
         public int KorisnikId { get; set; }
         public DateTime DatumUgovaranja { get; set; }
         public bool PlacanjeNaRate { get; set; }

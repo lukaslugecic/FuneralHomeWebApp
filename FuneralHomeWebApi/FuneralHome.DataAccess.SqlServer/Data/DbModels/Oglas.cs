@@ -12,7 +12,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     public partial class Oglas
     {
         [Key]
-        public int Id { get; set; }
+        public int IdOglas { get; set; }
         public int SmrtniSlucajId { get; set; }
         public int OsmrtnicaId { get; set; }
         public byte[] SlikaPok { get; set; }

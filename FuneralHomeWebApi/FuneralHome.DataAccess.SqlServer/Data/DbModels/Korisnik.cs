@@ -18,7 +18,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         }
 
         [Key]
-        public int Id { get; set; }
+        public int IdKorisnik { get; set; }
         [Required]
         [StringLength(50)]
         [Unicode(false)]
