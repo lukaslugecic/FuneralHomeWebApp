@@ -7,19 +7,19 @@ public class Oprema : AggregateRoot<int>
 {
     private string _naziv;
     private byte[]? _slika;
-    private int _kolicinaNaSkladistu;
+    private int _zalihaOpreme;
     private decimal _cijena;
     private int _vrstaOpremeId;
 
 
     public string Naziv { get => _naziv; set => _naziv = value; }
     public byte[]? Slika { get => _slika; set => _slika = value; }
-    public int KolicinaNaSkladistu { get => _kolicinaNaSkladistu; set => _kolicinaNaSkladistu = value; }
+    public int ZalihaOpreme { get => _zalihaOpreme; set => _zalihaOpreme = value; }
     public decimal Cijena { get => _cijena; set => _cijena = value; }
     public int VrstaOpremeId { get => _vrstaOpremeId; set => _vrstaOpremeId = value; }
 
 
-    public Oprema(int id, string naziv, int vrstaOpremeId, byte[]? slika, int kolicinaNaSkladistu, decimal cijena) : base(id)
+    public Oprema(int id, string naziv, int vrstaOpremeId, byte[]? slika, int zalihaOpreme, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
@@ -28,7 +28,7 @@ public class Oprema : AggregateRoot<int>
 
 
         _naziv = naziv;
-        _kolicinaNaSkladistu = kolicinaNaSkladistu;
+        _zalihaOpreme = zalihaOpreme;
         _cijena = cijena;
         _slika = slika;
         _vrstaOpremeId = vrstaOpremeId;
@@ -41,7 +41,7 @@ public class Oprema : AggregateRoot<int>
                _id == oprema._id &&
                _naziv == oprema._naziv &&
                _slika == oprema._slika &&
-               _kolicinaNaSkladistu == oprema._kolicinaNaSkladistu &&
+               _zalihaOpreme == oprema._zalihaOpreme &&
                _cijena == oprema._cijena &&
                _vrstaOpremeId == oprema._vrstaOpremeId;
 
@@ -50,7 +50,7 @@ public class Oprema : AggregateRoot<int>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _slika, _kolicinaNaSkladistu, _cijena, _vrstaOpremeId);
+        return HashCode.Combine(_id, _naziv, _slika, _zalihaOpreme, _cijena, _vrstaOpremeId);
     }
 
     public override Result IsValid()

@@ -23,7 +23,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public string Naziv { get; set; }
         public int VrstaOpremeId { get; set; }
         public byte[] Slika { get; set; }
-        public int KolicinaNaSkladistu { get; set; }
+        public int ZalihaOpreme { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
 

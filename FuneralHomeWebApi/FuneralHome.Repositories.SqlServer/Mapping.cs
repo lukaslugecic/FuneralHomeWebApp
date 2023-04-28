@@ -164,7 +164,7 @@ public static class Mapping
             oprema.Naziv,
             oprema.VrstaOpremeId,
             oprema.Slika,
-            oprema.KolicinaNaSkladistu,
+            oprema.ZalihaOpreme,
             oprema.Cijena
            );
 
@@ -175,7 +175,7 @@ public static class Mapping
             Naziv = oprema.Naziv,
             VrstaOpremeId = oprema.VrstaOpremeId,
             Slika = oprema.Slika,
-            KolicinaNaSkladistu = oprema.KolicinaNaSkladistu,
+            ZalihaOpreme = oprema.ZalihaOpreme,
             Cijena = oprema.Cijena
         };
 

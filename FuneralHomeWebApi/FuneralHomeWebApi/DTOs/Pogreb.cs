@@ -13,16 +13,6 @@ public class Pogreb
     //public DateOnly DatumPogreba { get; set; }
     public DateTime DatumPogreba { get; set; }
     public bool Kremacija { get; set; }
-    public int? UrnaId { get; set; }
-    public int? LijesId { get; set; }
-    public int? CvijeceId { get; set; }
-    public int? NadgrobniZnakId { get; set; }
-    public int? GlazbaId { get; set; }
-    public bool Snimanje { get; set; }
-    public bool Branitelj { get; set; }
-    public bool Golubica { get; set; }
-    public decimal UkupnaCijena { get; set; }
-
 }
 
 
@@ -34,16 +24,7 @@ public static partial class DtoMapping
             Id = pogreb.Id,
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
-            Kremacija = pogreb.Kremacija,
-            UrnaId = pogreb.UrnaId,
-            LijesId = pogreb.LijesId,
-            CvijeceId = pogreb.CvijeceId,
-            NadgrobniZnakId = pogreb.NadgrobniZnakId,
-            GlazbaId = pogreb.GlazbaId,
-            Snimanje = pogreb.Snimanje,
-            Branitelj = pogreb.Branitelj,
-            Golubica = pogreb.Golubica,
-            UkupnaCijena = pogreb.UkupnaCijena
+            Kremacija = pogreb.Kremacija
         };
 
     public static DomainModels.Pogreb ToDomain(this Pogreb pogreb)
@@ -51,15 +32,6 @@ public static partial class DtoMapping
             pogreb.Id,
             pogreb.SmrtniSlucajId,
             pogreb.DatumPogreba,
-            pogreb.Kremacija,
-            pogreb.UrnaId,
-            pogreb.LijesId,
-            pogreb.CvijeceId,
-            pogreb.NadgrobniZnakId,
-            pogreb.GlazbaId,
-            pogreb.Snimanje,
-            pogreb.Branitelj,
-            pogreb.Golubica,
-            pogreb.UkupnaCijena
+            pogreb.Kremacija
         );
 }
