@@ -20,7 +20,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Required]
         [StringLength(50)]
         [Unicode(false)]
-        public string NazivVrstaOprema { get; set; }
+        public string Naziv { get; set; }
 
         [InverseProperty("VrstaOpreme")]
         public virtual ICollection<Oprema> Oprema { get; set; }

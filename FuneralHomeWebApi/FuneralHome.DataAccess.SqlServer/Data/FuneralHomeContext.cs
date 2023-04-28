@@ -54,8 +54,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 
             modelBuilder.Entity<Oprema>(entity =>
             {
-                entity.Property(e => e.KolicinaNaSkladistu).IsFixedLength();
-
                 entity.HasOne(d => d.VrstaOpreme)
                     .WithMany(p => p.Oprema)
                     .HasForeignKey(d => d.VrstaOpremeId)
@@ -122,10 +120,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 
             modelBuilder.Entity<Usluga>(entity =>
             {
-                entity.Property(e => e.Cijena).IsFixedLength();
-
-                entity.Property(e => e.Opis).IsFixedLength();
-
                 entity.HasOne(d => d.VrstaUsluge)
                     .WithMany(p => p.Usluga)
                     .HasForeignKey(d => d.VrstaUslugeId)

@@ -17,13 +17,15 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 
         [Key]
         public int IdOprema { get; set; }
-        public byte[] Slika { get; set; }
         [Required]
-        [StringLength(10)]
-        public string KolicinaNaSkladistu { get; set; }
+        [StringLength(50)]
+        [Unicode(false)]
+        public string Naziv { get; set; }
+        public int VrstaOpremeId { get; set; }
+        public byte[] Slika { get; set; }
+        public int KolicinaNaSkladistu { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
-        public int VrstaOpremeId { get; set; }
 
         [ForeignKey("VrstaOpremeId")]
         [InverseProperty("Oprema")]

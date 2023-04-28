@@ -18,12 +18,16 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int IdUsluga { get; set; }
         [Required]
-        [StringLength(10)]
-        public string Opis { get; set; }
-        [Required]
-        [StringLength(10)]
-        public string Cijena { get; set; }
+        [StringLength(50)]
+        [Unicode(false)]
+        public string Naziv { get; set; }
         public int VrstaUslugeId { get; set; }
+        [Required]
+        [StringLength(100)]
+        [Unicode(false)]
+        public string Opis { get; set; }
+        [Column(TypeName = "numeric(18, 2)")]
+        public decimal Cijena { get; set; }
 
         [ForeignKey("VrstaUslugeId")]
         [InverseProperty("Usluga")]
