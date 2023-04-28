@@ -4,20 +4,20 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class GlazbaRepository : IGlazbaRepository
+public class OsmrtnicaRepository : IOsmrtnicaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public GlazbaRepository(FuneralHomeContext dbContext)
+    public OsmrtnicaRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(Glazba model)
+    public bool Exists(Osmrtnica model)
     {
         try
         {
-            return _dbContext.Glazba
+            return _dbContext.Osmrtnica
                              .AsNoTracking()
                              .Contains(model.ToDbModel());
         }
@@ -32,9 +32,9 @@ public class GlazbaRepository : IGlazbaRepository
     {
         try
         {
-            return _dbContext.Glazba
+            return _dbContext.Osmrtnica
                              .AsNoTracking()
-                             .FirstOrDefault(gl => gl.Id.Equals(id)) != null;
+                             .FirstOrDefault(v => v.IdOsmrtnica.Equals(id)) != null;
         }
         catch (Exception)
         {
@@ -43,49 +43,49 @@ public class GlazbaRepository : IGlazbaRepository
 
     }
 
-    public Result<Glazba> Get(int id)
+    public Result<Osmrtnica> Get(int id)
     {
         try
         {
-            var glazba = _dbContext.Glazba
-                                 .AsNoTracking()
-                                 .FirstOrDefault(gl => gl.Id.Equals(id))?
-                                 .ToDomain();
+            var osmrtnica = _dbContext.Osmrtnica
+                             .AsNoTracking()
+                            .FirstOrDefault(v => v.IdOsmrtnica.Equals(id))?
+                            .ToDomain();
 
-            return glazba is not null
-            ? Results.OnSuccess(glazba)
-                : Results.OnFailure<Glazba>($"No music with such id {id}");
+            return osmrtnica is not null
+            ? Results.OnSuccess(osmrtnica)
+                : Results.OnFailure<Osmrtnica>($"No obituary with such id {id}");
         }
         catch (Exception e)
         {
-            return Results.OnException<Glazba>(e);
+            return Results.OnException<Osmrtnica>(e);
         }
 
     }
 
-    public Result<IEnumerable<Glazba>> GetAll()
+    public Result<IEnumerable<Osmrtnica>> GetAll()
     {
         try
         {
-            var glazba =
-                _dbContext.Glazba
+            var osmrtnica =
+                _dbContext.Osmrtnica
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
-            return Results.OnSuccess(glazba);
+            return Results.OnSuccess(osmrtnica);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<Glazba>>(e);
+            return Results.OnException<IEnumerable<Osmrtnica>>(e);
         }
     }
 
 
-    public Result Insert(Glazba model)
+    public Result Insert(Osmrtnica model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Glazba.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.Osmrtnica.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +110,12 @@ public class GlazbaRepository : IGlazbaRepository
     {
         try
         {
-            var model = _dbContext.Glazba
+            var model = _dbContext.Osmrtnica
                           .AsNoTracking()
-                          .FirstOrDefault(gl => gl.Id.Equals(id));
+                          .FirstOrDefault(o => o.IdOsmrtnica.Equals(id));
             if (model is not null)
             {
-                _dbContext.Glazba.Remove(model);
+                _dbContext.Osmrtnica.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +129,12 @@ public class GlazbaRepository : IGlazbaRepository
         }
     }
 
-    public Result Update(Glazba model)
+    public Result Update(Osmrtnica model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Glazba.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            if (_dbContext.Osmrtnica.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 

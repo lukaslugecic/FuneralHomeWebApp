@@ -4,20 +4,20 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class LijesRepository : ILijesRepository
+public class VrstaOpremeRepository : IVrstaOpremeRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public LijesRepository(FuneralHomeContext dbContext)
+    public VrstaOpremeRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(Lijes model)
+    public bool Exists(VrstaOpreme model)
     {
         try
         {
-            return _dbContext.Lijes
+            return _dbContext.VrstaOpreme
                              .AsNoTracking()
                              .Contains(model.ToDbModel());
         }
@@ -32,9 +32,9 @@ public class LijesRepository : ILijesRepository
     {
         try
         {
-            return _dbContext.Lijes
+            return _dbContext.VrstaOpreme
                              .AsNoTracking()
-                             .FirstOrDefault(l => l.Id.Equals(id)) != null;
+                             .FirstOrDefault(v => v.IdVrstaOpreme.Equals(id)) != null;
         }
         catch (Exception)
         {
@@ -43,49 +43,49 @@ public class LijesRepository : ILijesRepository
 
     }
 
-    public Result<Lijes> Get(int id)
+    public Result<VrstaOpreme> Get(int id)
     {
         try
         {
-            var lijesovi = _dbContext.Lijes
+            var vrsta = _dbContext.VrstaOpreme
                                  .AsNoTracking()
-                                 .FirstOrDefault(l => l.Id.Equals(id))?
+                                 .FirstOrDefault(v => v.IdVrstaOpreme.Equals(id))?
                                  .ToDomain();
 
-            return lijesovi is not null
-            ? Results.OnSuccess(lijesovi)
-                : Results.OnFailure<Lijes>($"No coffins with such id {id}");
+            return vrsta is not null
+            ? Results.OnSuccess(vrsta)
+                : Results.OnFailure<VrstaOpreme>($"No type with such id {id}");
         }
         catch (Exception e)
         {
-            return Results.OnException<Lijes>(e);
+            return Results.OnException<VrstaOpreme>(e);
         }
 
     }
 
-    public Result<IEnumerable<Lijes>> GetAll()
+    public Result<IEnumerable<VrstaOpreme>> GetAll()
     {
         try
         {
-            var lijesovi =
-                _dbContext.Lijes
+            var vrsta =
+                _dbContext.VrstaOpreme
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
-            return Results.OnSuccess(lijesovi);
+            return Results.OnSuccess(vrsta);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<Lijes>>(e);
+            return Results.OnException<IEnumerable<VrstaOpreme>>(e);
         }
     }
 
 
-    public Result Insert(Lijes model)
+    public Result Insert(VrstaOpreme model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Lijes.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.VrstaOpreme.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +110,12 @@ public class LijesRepository : ILijesRepository
     {
         try
         {
-            var model = _dbContext.Lijes
+            var model = _dbContext.VrstaOpreme
                           .AsNoTracking()
-                          .FirstOrDefault(l => l.Id.Equals(id));
+                          .FirstOrDefault(cv => cv.IdVrstaOpreme.Equals(id));
             if (model is not null)
             {
-                _dbContext.Lijes.Remove(model);
+                _dbContext.VrstaOpreme.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +129,12 @@ public class LijesRepository : ILijesRepository
         }
     }
 
-    public Result Update(Lijes model)
+    public Result Update(VrstaOpreme model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Lijes.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            if (_dbContext.VrstaOpreme.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 

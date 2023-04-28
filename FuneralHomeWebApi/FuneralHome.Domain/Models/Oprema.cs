@@ -3,7 +3,7 @@ using FuneralHome.Commons;
 using System.Data;
 
 namespace FuneralHome.Domain.Models;
-public class Oprema : Entity<int>
+public class Oprema : AggregateRoot<int>
 {
     private string _naziv;
     private byte[]? _slika;
@@ -19,7 +19,7 @@ public class Oprema : Entity<int>
     public int VrstaOpremeId { get => _vrstaOpremeId; set => _vrstaOpremeId = value; }
 
 
-    public Oprema(int id, string naziv, byte[]? slika, int kolicinaNaSkladistu, decimal cijena, int vrstaOpremeId) : base(id)
+    public Oprema(int id, string naziv, int vrstaOpremeId, byte[]? slika, int kolicinaNaSkladistu, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {

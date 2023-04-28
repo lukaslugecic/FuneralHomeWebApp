@@ -4,88 +4,122 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class UrnaRepository : IUrnaRepository
+public class UslugaRepository : IUslugaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public UrnaRepository(FuneralHomeContext dbContext)
+    public UslugaRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(Urna model)
+    public bool Exists(Usluga model)
     {
         try
         {
-            return _dbContext.Urna
-                             .AsNoTracking()
-                             .Contains(model.ToDbModel());
+            return _dbContext.Usluga
+                     .AsNoTracking()
+                     .Contains(model.ToDbModel());
         }
         catch (Exception)
         {
             return false;
         }
-
     }
 
     public bool Exists(int id)
     {
         try
         {
-            return _dbContext.Urna
-                             .AsNoTracking()
-                             .FirstOrDefault(u => u.Id.Equals(id)) != null;
+            var model = _dbContext.Usluga
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.IdUsluga.Equals(id));
+            return model is not null;
         }
         catch (Exception)
         {
             return false;
         }
-
     }
 
-    public Result<Urna> Get(int id)
+    public Result<Usluga> Get(int id)
     {
         try
         {
-            var model = _dbContext.Urna
-                                 .AsNoTracking()
-                                 .FirstOrDefault(u => u.Id.Equals(id))?
-                                 .ToDomain();
+            var model = _dbContext.Usluga
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.IdUsluga.Equals(id))?
+                          .ToDomain();
 
             return model is not null
             ? Results.OnSuccess(model)
-                : Results.OnFailure<Urna>($"No urn with such id {id}");
+                : Results.OnFailure<Usluga>($"No service with id {id} found");
         }
         catch (Exception e)
         {
-            return Results.OnException<Urna>(e);
+            return Results.OnException<Usluga>(e);
         }
-
     }
 
-    public Result<IEnumerable<Urna>> GetAll()
+    public Result<Usluga> GetAggregate(int id)
     {
         try
         {
-            var models =
-                _dbContext.Urna
+            var model = _dbContext.Usluga
+                          .Include(o => o.VrstaUsluge)
                           .AsNoTracking()
-                          .Select(Mapping.ToDomain);
+                          .FirstOrDefault(o => o.IdUsluga.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          ?.ToDomain();
+
+
+            return model is not null
+                ? Results.OnSuccess(model)
+                : Results.OnFailure<Usluga>();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<Usluga>(e);
+        }
+    }
+
+    public Result<IEnumerable<Usluga>> GetAll()
+    {
+        try
+        {
+            var models = _dbContext.Usluga
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
             return Results.OnSuccess(models);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<Urna>>(e);
+            return Results.OnException<IEnumerable<Usluga>>(e);
         }
     }
 
+    public Result<IEnumerable<Usluga>> GetAllAggregates()
+    {
+        try
+        {
+            var models = _dbContext.Usluga
+                           .Include(o => o.VrstaUsluge)
+                           .Select(Mapping.ToDomain);
 
-    public Result Insert(Urna model)
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Usluga>>(e);
+        }
+    }
+
+    public Result Insert(Usluga model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Urna.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.Usluga.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +144,13 @@ public class UrnaRepository : IUrnaRepository
     {
         try
         {
-            var model = _dbContext.Urna
+            var model = _dbContext.Usluga
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.Id.Equals(id));
+                          .FirstOrDefault(o => o.IdUsluga.Equals(id));
+
             if (model is not null)
             {
-                _dbContext.Urna.Remove(model);
+                _dbContext.Usluga.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +164,13 @@ public class UrnaRepository : IUrnaRepository
         }
     }
 
-    public Result Update(Urna model)
+    public Result Update(Usluga model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Urna.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            // detach
+            if (_dbContext.Usluga.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -154,4 +190,10 @@ public class UrnaRepository : IUrnaRepository
             return Results.OnException(e);
         }
     }
+
+
+    /*
+    public Result UpdateAggregate(Korisnik model)
+    {}
+    */
 }

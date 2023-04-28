@@ -33,7 +33,7 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             var model = _dbContext.SmrtniSlucaj
                           .AsNoTracking()
-                          .FirstOrDefault(ss => ss.Id.Equals(id));
+                          .FirstOrDefault(ss => ss.IdSmrtniSlucaj.Equals(id));
             return model is not null;
         }
         catch (Exception)
@@ -48,7 +48,7 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             var model = _dbContext.SmrtniSlucaj
                           .AsNoTracking()
-                          .FirstOrDefault(ss => ss.Id.Equals(id))?
+                          .FirstOrDefault(ss => ss.IdSmrtniSlucaj.Equals(id))?
                           .ToDomain();
 
             return model is not null
@@ -69,7 +69,7 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
                           .Include(ss => ss.Korisnik)
                           .Include(ss => ss.Oglas)
                           .AsNoTracking()
-                          .FirstOrDefault(ss => ss.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          .FirstOrDefault(ss => ss.IdSmrtniSlucaj.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
 
 
@@ -148,7 +148,7 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             var model = _dbContext.SmrtniSlucaj
                           .AsNoTracking()
-                          .FirstOrDefault(ss => ss.Id.Equals(id));
+                          .FirstOrDefault(ss => ss.IdSmrtniSlucaj.Equals(id));
 
             if (model is not null)
             {

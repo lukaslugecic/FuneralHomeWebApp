@@ -39,7 +39,7 @@ public class KorisnikRepository : IKorisnikRepository
         {
             var model = _dbContext.Korisnik
                           .AsNoTracking()
-                          .FirstOrDefault(k => k.Id.Equals(id));
+                          .FirstOrDefault(k => k.IdKorisnik.Equals(id));
             return model is not null;
         }
         catch (Exception)
@@ -69,7 +69,7 @@ public class KorisnikRepository : IKorisnikRepository
         {
             var model = _dbContext.Korisnik
                           .AsNoTracking()
-                          .FirstOrDefault(k => k.Id.Equals(id))?
+                          .FirstOrDefault(k => k.IdKorisnik.Equals(id))?
                           .ToDomain();
 
             return model is not null
@@ -109,7 +109,7 @@ public class KorisnikRepository : IKorisnikRepository
                           .Include(k => k.Osiguranje)
                           .Include(k => k.SmrtniSlucaj)
                           .AsNoTracking()
-                          .FirstOrDefault(k => k.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          .FirstOrDefault(k => k.IdKorisnik.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
 
 
@@ -188,7 +188,7 @@ public class KorisnikRepository : IKorisnikRepository
         {
             var model = _dbContext.Korisnik
                           .AsNoTracking()
-                          .FirstOrDefault(k => k.Id.Equals(id));
+                          .FirstOrDefault(k => k.IdKorisnik.Equals(id));
 
             if (model is not null)
             {

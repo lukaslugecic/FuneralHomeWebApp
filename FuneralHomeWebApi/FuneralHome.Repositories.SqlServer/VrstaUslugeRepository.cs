@@ -4,20 +4,20 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class NadgrobniZnakRepository : INadgrobniZnakRepository
+public class VrstaUslugeRepository : IVrstaUslugeRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public NadgrobniZnakRepository(FuneralHomeContext dbContext)
+    public VrstaUslugeRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(NadgrobniZnak model)
+    public bool Exists(VrstaUsluge model)
     {
         try
         {
-            return _dbContext.NadgrobniZnak
+            return _dbContext.VrstaUsluge
                              .AsNoTracking()
                              .Contains(model.ToDbModel());
         }
@@ -32,9 +32,9 @@ public class NadgrobniZnakRepository : INadgrobniZnakRepository
     {
         try
         {
-            return _dbContext.NadgrobniZnak
+            return _dbContext.VrstaUsluge
                              .AsNoTracking()
-                             .FirstOrDefault(nz => nz.Id.Equals(id)) != null;
+                             .FirstOrDefault(v => v.IdVrstaUsluge.Equals(id)) != null;
         }
         catch (Exception)
         {
@@ -43,49 +43,49 @@ public class NadgrobniZnakRepository : INadgrobniZnakRepository
 
     }
 
-    public Result<NadgrobniZnak> Get(int id)
+    public Result<VrstaUsluge> Get(int id)
     {
         try
         {
-            var znakovi = _dbContext.NadgrobniZnak
+            var vrsta = _dbContext.VrstaUsluge
                                  .AsNoTracking()
-                                 .FirstOrDefault(cv => cv.Id.Equals(id))?
+                                 .FirstOrDefault(v => v.IdVrstaUsluge.Equals(id))?
                                  .ToDomain();
 
-            return znakovi is not null
-            ? Results.OnSuccess(znakovi)
-                : Results.OnFailure<NadgrobniZnak>($"No signs with such id {id}");
+            return vrsta is not null
+            ? Results.OnSuccess(vrsta)
+                : Results.OnFailure<VrstaUsluge>($"No type with such id {id}");
         }
         catch (Exception e)
         {
-            return Results.OnException<NadgrobniZnak>(e);
+            return Results.OnException<VrstaUsluge>(e);
         }
 
     }
 
-    public Result<IEnumerable<NadgrobniZnak>> GetAll()
+    public Result<IEnumerable<VrstaUsluge>> GetAll()
     {
         try
         {
-            var znakovi =
-                _dbContext.NadgrobniZnak
+            var vrsta =
+                _dbContext.VrstaUsluge
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
-            return Results.OnSuccess(znakovi);
+            return Results.OnSuccess(vrsta);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<NadgrobniZnak>>(e);
+            return Results.OnException<IEnumerable<VrstaUsluge>>(e);
         }
     }
 
 
-    public Result Insert(NadgrobniZnak model)
+    public Result Insert(VrstaUsluge model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.NadgrobniZnak.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.VrstaUsluge.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +110,12 @@ public class NadgrobniZnakRepository : INadgrobniZnakRepository
     {
         try
         {
-            var model = _dbContext.NadgrobniZnak
+            var model = _dbContext.VrstaUsluge
                           .AsNoTracking()
-                          .FirstOrDefault(nz => nz.Id.Equals(id));
+                          .FirstOrDefault(cv => cv.IdVrstaUsluge.Equals(id));
             if (model is not null)
             {
-                _dbContext.NadgrobniZnak.Remove(model);
+                _dbContext.VrstaUsluge.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +129,12 @@ public class NadgrobniZnakRepository : INadgrobniZnakRepository
         }
     }
 
-    public Result Update(NadgrobniZnak model)
+    public Result Update(VrstaUsluge model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.NadgrobniZnak.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            if (_dbContext.VrstaUsluge.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 

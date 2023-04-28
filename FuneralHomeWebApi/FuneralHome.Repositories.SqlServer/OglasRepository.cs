@@ -33,7 +33,7 @@ public class OglasRepository : IOglasRepository
         {
             var model = _dbContext.Oglas
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.Id.Equals(id));
+                          .FirstOrDefault(o => o.IdOglas.Equals(id));
             return model is not null;
         }
         catch (Exception)
@@ -48,7 +48,7 @@ public class OglasRepository : IOglasRepository
         {
             var model = _dbContext.Oglas
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.Id.Equals(id))?
+                          .FirstOrDefault(o => o.IdOglas.Equals(id))?
                           .ToDomain();
 
             return model is not null
@@ -69,7 +69,7 @@ public class OglasRepository : IOglasRepository
                           .Include(o => o.Osmrtnica)
                           .Include(o => o.SmrtniSlucaj)
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          .FirstOrDefault(o => o.IdOglas.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
 
 
@@ -148,7 +148,7 @@ public class OglasRepository : IOglasRepository
         {
             var model = _dbContext.Oglas
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.Id.Equals(id));
+                          .FirstOrDefault(o => o.IdOglas.Equals(id));
 
             if (model is not null)
             {

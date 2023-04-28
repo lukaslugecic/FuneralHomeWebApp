@@ -4,88 +4,122 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class OsiguranjeRepository : IOsiguranjeRepository
+public class OpremaRepository : IOpremaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public OsiguranjeRepository(FuneralHomeContext dbContext)
+    public OpremaRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(Osiguranje model)
+    public bool Exists(Oprema model)
     {
         try
         {
-            return _dbContext.Osiguranje
-                             .AsNoTracking()
-                             .Contains(model.ToDbModel());
+            return _dbContext.Oprema
+                     .AsNoTracking()
+                     .Contains(model.ToDbModel());
         }
         catch (Exception)
         {
             return false;
         }
-
     }
 
     public bool Exists(int id)
     {
         try
         {
-            return _dbContext.Osiguranje
-                             .AsNoTracking()
-                             .FirstOrDefault(o => o.IdOsiguranje.Equals(id)) != null;
+            var model = _dbContext.Oprema
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.IdOprema.Equals(id));
+            return model is not null;
         }
         catch (Exception)
         {
             return false;
         }
-
     }
 
-    public Result<Osiguranje> Get(int id)
+    public Result<Oprema> Get(int id)
     {
         try
         {
-            var model = _dbContext.Osiguranje
-                                 .AsNoTracking()
-                                 .FirstOrDefault(o => o.IdOsiguranje.Equals(id))?
-                                 .ToDomain();
+            var model = _dbContext.Oprema
+                          .AsNoTracking()
+                          .FirstOrDefault(o => o.IdOprema.Equals(id))?
+                          .ToDomain();
 
             return model is not null
             ? Results.OnSuccess(model)
-                : Results.OnFailure<Osiguranje>($"No insurances with such id {id}");
+                : Results.OnFailure<Oprema>($"No equipment with id {id} found");
         }
         catch (Exception e)
         {
-            return Results.OnException<Osiguranje>(e);
+            return Results.OnException<Oprema>(e);
         }
-
     }
 
-    public Result<IEnumerable<Osiguranje>> GetAll()
+    public Result<Oprema> GetAggregate(int id)
     {
         try
         {
-            var models =
-                _dbContext.Osiguranje
+            var model = _dbContext.Oprema
+                          .Include(o => o.VrstaOpreme)
                           .AsNoTracking()
-                          .Select(Mapping.ToDomain);
+                          .FirstOrDefault(o => o.IdOprema.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          ?.ToDomain();
+
+
+            return model is not null
+                ? Results.OnSuccess(model)
+                : Results.OnFailure<Oprema>();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<Oprema>(e);
+        }
+    }
+
+    public Result<IEnumerable<Oprema>> GetAll()
+    {
+        try
+        {
+            var models = _dbContext.Oprema
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
             return Results.OnSuccess(models);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<Osiguranje>>(e);
+            return Results.OnException<IEnumerable<Oprema>>(e);
         }
     }
 
+    public Result<IEnumerable<Oprema>> GetAllAggregates()
+    {
+        try
+        {
+            var models = _dbContext.Oprema
+                           .Include(o => o.VrstaOpreme)
+                           .Select(Mapping.ToDomain);
 
-    public Result Insert(Osiguranje model)
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Oprema>>(e);
+        }
+    }
+
+    public Result Insert(Oprema model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Osiguranje.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.Oprema.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +144,13 @@ public class OsiguranjeRepository : IOsiguranjeRepository
     {
         try
         {
-            var model = _dbContext.Osiguranje
+            var model = _dbContext.Oprema
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.IdOsiguranje.Equals(id));
+                          .FirstOrDefault(o => o.IdOprema.Equals(id));
+
             if (model is not null)
             {
-                _dbContext.Osiguranje.Remove(model);
+                _dbContext.Oprema.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +164,13 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         }
     }
 
-    public Result Update(Osiguranje model)
+    public Result Update(Oprema model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Osiguranje.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            // detach
+            if (_dbContext.Oprema.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -154,4 +190,10 @@ public class OsiguranjeRepository : IOsiguranjeRepository
             return Results.OnException(e);
         }
     }
+
+
+    /*
+    public Result UpdateAggregate(Korisnik model)
+    {}
+    */
 }

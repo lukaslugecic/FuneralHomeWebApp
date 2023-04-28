@@ -3,7 +3,7 @@ using FuneralHome.Commons;
 using System.Data;
 
 namespace FuneralHome.Domain.Models;
-public class Usluga : Entity<int>
+public class Usluga : AggregateRoot<int>
 {
     private string _naziv;
     private int _vrstaUslugeId;

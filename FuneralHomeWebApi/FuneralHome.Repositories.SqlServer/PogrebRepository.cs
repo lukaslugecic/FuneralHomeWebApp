@@ -33,7 +33,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var model = _dbContext.Pogreb
                           .AsNoTracking()
-                          .FirstOrDefault(p => p.Id.Equals(id));
+                          .FirstOrDefault(p => p.IdPogreb.Equals(id));
             return model is not null;
         }
         catch (Exception)
@@ -48,7 +48,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var model = _dbContext.Pogreb
                           .AsNoTracking()
-                          .FirstOrDefault(p => p.Id.Equals(id))?
+                          .FirstOrDefault(p => p.IdPogreb.Equals(id))?
                           .ToDomain();
 
             return model is not null
@@ -67,13 +67,10 @@ public class PogrebRepository : IPogrebRepository
         {
             var model = _dbContext.Pogreb
                           .Include(p => p.SmrtniSlucaj)
-                          .Include(p => p.Urna)
-                          .Include(p => p.Lijes)
-                          .Include(p => p.Cvijece)
-                          .Include(p => p.NadgrobniZnak)
-                          .Include(p => p.Glazba)
+                          .Include(p => p.PogrebOprema)
+                          .Include(p => p.Usluga) // ????
                           .AsNoTracking()
-                          .FirstOrDefault(p => p.Id.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
+                          .FirstOrDefault(p => p.IdPogreb.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
 
 
@@ -109,11 +106,8 @@ public class PogrebRepository : IPogrebRepository
         {
             var models = _dbContext.Pogreb
                             .Include(p => p.SmrtniSlucaj)
-                            .Include(p => p.Urna)
-                            .Include(p => p.Lijes)
-                            .Include(p => p.Cvijece)
-                            .Include(p => p.NadgrobniZnak)
-                            .Include(p => p.Glazba)
+                            .Include(p => p.PogrebOprema)
+                            .Include(p => p.Usluga) // ????
                             .Select(Mapping.ToDomain);
 
             return Results.OnSuccess(models);
@@ -156,7 +150,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var model = _dbContext.Pogreb
                           .AsNoTracking()
-                          .FirstOrDefault(p => p.Id.Equals(id));
+                          .FirstOrDefault(p => p.IdPogreb.Equals(id));
 
             if (model is not null)
             {

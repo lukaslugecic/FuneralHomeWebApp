@@ -20,7 +20,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int IdPogreb { get; set; }
         public int SmrtniSlucajId { get; set; }
-        public DateOnly DatumPogreb { get; set; }
+        public DateTime DatumPogreb { get; set; }
         public bool Kremacija { get; set; }
 
         [ForeignKey("SmrtniSlucajId")]
