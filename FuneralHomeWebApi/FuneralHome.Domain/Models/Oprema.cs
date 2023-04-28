@@ -3,21 +3,23 @@ using FuneralHome.Commons;
 using System.Data;
 
 namespace FuneralHome.Domain.Models;
-public class Cvijece : Entity<int>
+public class Oprema : Entity<int>
 {
     private string _naziv;
     private byte[]? _slika;
-    private int _kolicina;
+    private int _kolicinaNaSkladistu;
     private decimal _cijena;
- 
+    private int _vrstaOpremeId;
+
 
     public string Naziv { get => _naziv; set => _naziv = value; }
     public byte[]? Slika { get => _slika; set => _slika = value; }
-    public int Kolicina { get => _kolicina; set => _kolicina = value; }
+    public int KolicinaNaSkladistu { get => _kolicinaNaSkladistu; set => _kolicinaNaSkladistu = value; }
     public decimal Cijena { get => _cijena; set => _cijena = value; }
+    public int VrstaOpremeId { get => _vrstaOpremeId; set => _vrstaOpremeId = value; }
 
 
-    public Cvijece(int id, string naziv, byte[]? slika, int kolicina, decimal cijena) : base(id)
+    public Oprema(int id, string naziv, byte[]? slika, int kolicinaNaSkladistu, decimal cijena, int vrstaOpremeId) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
@@ -26,28 +28,29 @@ public class Cvijece : Entity<int>
 
 
         _naziv = naziv;
-        _kolicina = kolicina;
+        _kolicinaNaSkladistu = kolicinaNaSkladistu;
         _cijena = cijena;
         _slika = slika;
-
+        _vrstaOpremeId = vrstaOpremeId;
     }
 
     public override bool Equals(object? obj)
     {
         return obj is not null &&
-                obj is Cvijece cvijece &&
-               _id == cvijece._id &&
-               _naziv == cvijece._naziv &&
-               _slika == cvijece._slika &&
-               _kolicina == cvijece._kolicina &&
-               _cijena == cvijece._cijena;
+                obj is Oprema oprema &&
+               _id == oprema._id &&
+               _naziv == oprema._naziv &&
+               _slika == oprema._slika &&
+               _kolicinaNaSkladistu == oprema._kolicinaNaSkladistu &&
+               _cijena == oprema._cijena &&
+               _vrstaOpremeId == oprema._vrstaOpremeId;
 
 
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _slika, _kolicina, _cijena);
+        return HashCode.Combine(_id, _naziv, _slika, _kolicinaNaSkladistu, _cijena, _vrstaOpremeId);
     }
 
     public override Result IsValid()
