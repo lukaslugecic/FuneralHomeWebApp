@@ -91,17 +91,38 @@ public static class Mapping
            pogreb.IdPogreb,
            pogreb.SmrtniSlucajId,
            pogreb.DatumPogreb,
-           pogreb.Kremacija
+           pogreb.Kremacija,
+           //pogreb.SmrtniSlucaj.ToDomain(),
+           pogreb.PogrebOprema.Select(ToDomain),
+           pogreb.Usluga.Select(ToDomain)
        );
 
     public static DbModels.Pogreb ToDbModel(this Pogreb pogreb)
         => new DbModels.Pogreb()
         {
-           IdPogreb = pogreb.Id,
-           SmrtniSlucajId = pogreb.SmrtniSlucajId,
-           DatumPogreb = pogreb.DatumPogreba,
-           Kremacija = pogreb.Kremacija
+            IdPogreb = pogreb.Id,
+            SmrtniSlucajId = pogreb.SmrtniSlucajId,
+            DatumPogreb = pogreb.DatumPogreba,
+            Kremacija = pogreb.Kremacija,
+            PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
+            Usluga = pogreb.PogrebUsluga.Select(pu => pu.ToDbModel()).ToList(),
+            //SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDbModel()
         };
+
+
+
+    public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)
+        => new PogrebOprema(
+            pogrebOprema.Oprema.ToDomain(),
+            pogrebOprema.Kolicina
+            );
+    public static DbModels.PogrebOprema ToDbModel(this PogrebOprema pogrebOprema, int pogrebId)
+       => new DbModels.PogrebOprema()
+       {
+           PogrebId = pogrebId,
+           OpremaId = pogrebOprema.Oprema.Id,
+           Kolicina = pogrebOprema.Kolicina
+       };
 
     public static SmrtniSlucaj ToDomain(this DbModels.SmrtniSlucaj smrtniSlucaj)
        => new SmrtniSlucaj(

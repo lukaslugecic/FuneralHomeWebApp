@@ -66,9 +66,10 @@ public class PogrebRepository : IPogrebRepository
         try
         {
             var model = _dbContext.Pogreb
-                          .Include(p => p.SmrtniSlucaj)
+                          //.Include(p => p.SmrtniSlucaj)
                           .Include(p => p.PogrebOprema)
-                          .Include(p => p.Usluga) // ????
+                          .ThenInclude(po => po.Oprema)
+                          .Include(p => p.Usluga)
                           .AsNoTracking()
                           .FirstOrDefault(p => p.IdPogreb.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
@@ -196,8 +197,91 @@ public class PogrebRepository : IPogrebRepository
     }
 
 
-    /*
-    public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    
+    public Result UpdateAggregate(Pogreb model)
+    {
+        try
+        {
+            _dbContext.ChangeTracker.Clear();
+
+            var dbModel = _dbContext.Pogreb
+                              .Include(_ => _.PogrebOprema)
+                              .ThenInclude(_ => _.Oprema)
+                              .Include(_ => _.Usluga)
+                              //.AsNoTracking()
+                              .FirstOrDefault(_ => _.IdPogreb == model.Id);
+            if (dbModel == null)
+                return Results.OnFailure($"Funeral with id {model.Id} not found.");
+
+            
+
+            dbModel.SmrtniSlucajId = model.SmrtniSlucajId;
+            dbModel.DatumPogreb = model.DatumPogreba;
+            dbModel.Kremacija = model.Kremacija;
+
+            
+            foreach (var pogrebOprema in model.PogrebOprema)
+            {
+                // it exists in the DB, so just update it
+                var pogrebOpremaToUpdate =
+                    dbModel.PogrebOprema
+                           .FirstOrDefault(po => po.PogrebId.Equals(model.Id) && po.OpremaId.Equals(pogrebOprema.Oprema.Id));
+                if (pogrebOpremaToUpdate != null)
+                {
+                    pogrebOprema.Kolicina = pogrebOprema.Kolicina;
+                }
+                else // it does not exist in the DB, so add it
+                {
+                    dbModel.PogrebOprema.Add(pogrebOprema.ToDbModel(model.Id));
+                }
+            }
+
+            dbModel.PogrebOprema
+                  .Where(po => !model.PogrebOprema.Any(_ => _.Oprema.Id == po.OpremaId))
+                  .ToList()
+                  .ForEach(pogrebOprema =>
+                  {
+                      dbModel.PogrebOprema.Remove(pogrebOprema);
+                  });
+
+            foreach (var pogrebUsluga in model.PogrebUsluga)
+            {
+                var pogrebUslugaToUpdate = dbModel.Usluga.FirstOrDefault(pu => pu.Pogreb.Any(p => p.IdPogreb.Equals(model.Id)) && pu.IdUsluga.Equals(pogrebUsluga.Id));
+                if (pogrebUslugaToUpdate != null)
+                {
+                    pogrebUslugaToUpdate.VrstaUslugeId = pogrebUsluga.VrstaUslugeId;
+                    pogrebUslugaToUpdate.Naziv = pogrebUsluga.Naziv;
+                    pogrebUslugaToUpdate.Opis = pogrebUsluga.Opis;
+                    pogrebUslugaToUpdate.Cijena = pogrebUsluga.Cijena;
+                }
+                else
+                {
+                    dbModel.Usluga.Add(pogrebUsluga.ToDbModel());
+                }
+            }
+
+            dbModel.Usluga
+                .Where(po => !model.PogrebUsluga.Any(_ => _.Id == po.IdUsluga))
+                  .ToList()
+                  .ForEach(pogrebUsluga =>
+                  {
+                      dbModel.Usluga.Remove(pogrebUsluga);
+                  });
+
+
+            _dbContext.Pogreb
+                      .Update(dbModel);
+
+            var isSuccess = _dbContext.SaveChanges() > 0;
+            _dbContext.ChangeTracker.Clear();
+            return isSuccess
+                ? Results.OnSuccess()
+                : Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+    
 }

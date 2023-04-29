@@ -194,8 +194,10 @@ public class OglasRepository : IOglasRepository
     }
 
 
-    /*
-    public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    
+    public Result UpdateAggregate(Oglas model)
+    {
+        return Results.OnFailure();
+    }
+    
 }

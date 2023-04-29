@@ -192,8 +192,10 @@ public class UslugaRepository : IUslugaRepository
     }
 
 
-    /*
-    public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    
+    public Result UpdateAggregate(Usluga model)
+    {
+       return Results.OnFailure();
+    }
+    
 }

@@ -192,8 +192,10 @@ public class OpremaRepository : IOpremaRepository
     }
 
 
-    /*
-    public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    
+    public Result UpdateAggregate(Oprema model)
+    {
+        return Results.OnFailure();
+    }
+    
 }

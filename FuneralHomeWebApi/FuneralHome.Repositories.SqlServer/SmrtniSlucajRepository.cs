@@ -194,8 +194,10 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
     }
 
 
-    /*
-    public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    
+    public Result UpdateAggregate(SmrtniSlucaj model)
+    {
+        return Results.OnFailure();
+    }
+    
 }

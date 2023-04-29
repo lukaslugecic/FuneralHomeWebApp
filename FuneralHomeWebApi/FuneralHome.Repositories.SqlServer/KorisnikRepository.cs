@@ -234,10 +234,12 @@ public class KorisnikRepository : IKorisnikRepository
     }
 
 
-    /*
+    
     public Result UpdateAggregate(Korisnik model)
-    {}
-    */
+    {
+        return Results.OnFailure();
+    }
+    
 
     public string CreateToken(Korisnik korisnik)
     {
