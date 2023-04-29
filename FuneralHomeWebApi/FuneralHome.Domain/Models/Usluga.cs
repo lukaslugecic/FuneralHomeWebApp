@@ -7,6 +7,7 @@ public class Usluga : AggregateRoot<int>
 {
     private string _naziv;
     private int _vrstaUslugeId;
+    private string _vrstaUslugeNaziv;
     private string _opis;
     private decimal _cijena;
 
@@ -14,13 +15,19 @@ public class Usluga : AggregateRoot<int>
     public string Opis { get => _opis; set => _opis = value; }
     public decimal Cijena { get => _cijena; set => _cijena = value; }
     public int VrstaUslugeId { get => _vrstaUslugeId; set => _vrstaUslugeId = value; }
+    public string VrstaUslugeNaziv { get => _vrstaUslugeNaziv; set => _vrstaUslugeNaziv = value; }
 
 
-    public Usluga(int id, string naziv, int vrstaUslugeId, string opis, decimal cijena) : base(id)
+    public Usluga(int id, string naziv, int vrstaUslugeId, string vrstaUslugeNaziv, string opis, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
             throw new ArgumentException($"'{nameof(naziv)}' cannot be null or empty.", nameof(naziv));
+        }
+
+        if (string.IsNullOrEmpty(vrstaUslugeNaziv))
+        {
+            throw new ArgumentException($"'{nameof(vrstaUslugeNaziv)}' cannot be null or empty.", nameof(vrstaUslugeNaziv));
         }
 
 
@@ -28,6 +35,7 @@ public class Usluga : AggregateRoot<int>
         _opis = opis;
         _cijena = cijena;
         _vrstaUslugeId = vrstaUslugeId;
+        _vrstaUslugeNaziv = vrstaUslugeNaziv;
 
     }
 
@@ -38,6 +46,7 @@ public class Usluga : AggregateRoot<int>
                _id == usluga._id &&
                _naziv == usluga._naziv &&
                _vrstaUslugeId == usluga._vrstaUslugeId &&
+               _vrstaUslugeNaziv == usluga._vrstaUslugeNaziv &&
                _opis == usluga._opis &&
                _cijena == usluga._cijena;
               
@@ -46,7 +55,7 @@ public class Usluga : AggregateRoot<int>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _vrstaUslugeId, _opis, _cijena);
+        return HashCode.Combine(_id, _naziv, _vrstaUslugeId, _vrstaUslugeNaziv ,_opis, _cijena);
     }
 
     public override Result IsValid()

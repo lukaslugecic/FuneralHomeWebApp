@@ -47,6 +47,7 @@ public class UslugaRepository : IUslugaRepository
         try
         {
             var model = _dbContext.Usluga
+                          .Include(o => o.VrstaUsluge)
                           .AsNoTracking()
                           .FirstOrDefault(o => o.IdUsluga.Equals(id))?
                           .ToDomain();
@@ -87,6 +88,7 @@ public class UslugaRepository : IUslugaRepository
         try
         {
             var models = _dbContext.Usluga
+                           .Include(o => o.VrstaUsluge)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
 

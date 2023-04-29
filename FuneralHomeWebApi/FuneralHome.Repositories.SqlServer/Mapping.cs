@@ -152,6 +152,7 @@ public static class Mapping
            usluga.IdUsluga,
            usluga.Naziv,
            usluga.VrstaUslugeId,
+           usluga.VrstaUsluge.Naziv,
            usluga.Opis,
            usluga.Cijena
        );

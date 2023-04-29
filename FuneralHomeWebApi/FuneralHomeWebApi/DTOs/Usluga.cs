@@ -16,6 +16,8 @@ public class Usluga
 
     public int VrstaUslugeId { get; set; }
 
+    public string VrstaUslugeNaziv { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Description can't be null")]
     [StringLength(100, ErrorMessage = "Description can't be longer than 100 characters")]
     public string Opis { get; set; } = string.Empty;
@@ -30,6 +32,7 @@ public static partial class DtoMapping
         {
             Id = usluga.Id,
             VrstaUslugeId = usluga.VrstaUslugeId,
+            VrstaUslugeNaziv = usluga.VrstaUslugeNaziv,
             Naziv = usluga.Naziv,
             Opis = usluga.Opis,
             Cijena = usluga.Cijena
@@ -40,6 +43,7 @@ public static partial class DtoMapping
             usluga.Id,
             usluga.Naziv,
             usluga.VrstaUslugeId,
+            usluga.VrstaUslugeNaziv,
             usluga.Opis,
             usluga.Cijena
        );
