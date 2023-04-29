@@ -47,6 +47,7 @@ public class OpremaRepository : IOpremaRepository
         try
         {
             var model = _dbContext.Oprema
+                          .Include(o => o.VrstaOpreme)
                           .AsNoTracking()
                           .FirstOrDefault(o => o.IdOprema.Equals(id))?
                           .ToDomain();
@@ -87,6 +88,7 @@ public class OpremaRepository : IOpremaRepository
         try
         {
             var models = _dbContext.Oprema
+                           .Include(o => o.VrstaOpreme)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
 

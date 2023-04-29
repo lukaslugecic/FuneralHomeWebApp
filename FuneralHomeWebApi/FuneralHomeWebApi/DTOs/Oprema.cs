@@ -16,6 +16,8 @@ public class Oprema
 
     public int VrstaOpremeId { get; set; }
 
+    public string VrstaOpremeNaziv { get; set; } = string.Empty;
+
     public byte[]? Slika { get; set; }
     public int ZalihaOpreme { get; set; }
     public decimal Cijena { get; set; }
@@ -29,6 +31,7 @@ public static partial class DtoMapping
         {
             Id = oprema.Id,
             VrstaOpremeId = oprema.VrstaOpremeId,
+            VrstaOpremeNaziv = oprema.VrstaOpremeNaziv,
             Naziv = oprema.Naziv,
             Slika = oprema.Slika,
             ZalihaOpreme = oprema.ZalihaOpreme,
@@ -40,6 +43,7 @@ public static partial class DtoMapping
             oprema.Id,
             oprema.Naziv,
             oprema.VrstaOpremeId,
+            oprema.VrstaOpremeNaziv,
             oprema.Slika,
             oprema.ZalihaOpreme,
             oprema.Cijena

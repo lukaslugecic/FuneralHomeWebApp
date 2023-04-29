@@ -10,6 +10,7 @@ public class Oprema : AggregateRoot<int>
     private int _zalihaOpreme;
     private decimal _cijena;
     private int _vrstaOpremeId;
+    private string _vrstaOpremeNaziv;
 
 
     public string Naziv { get => _naziv; set => _naziv = value; }
@@ -18,12 +19,19 @@ public class Oprema : AggregateRoot<int>
     public decimal Cijena { get => _cijena; set => _cijena = value; }
     public int VrstaOpremeId { get => _vrstaOpremeId; set => _vrstaOpremeId = value; }
 
+    public string VrstaOpremeNaziv { get => _vrstaOpremeNaziv; set => _vrstaOpremeNaziv = value; }
 
-    public Oprema(int id, string naziv, int vrstaOpremeId, byte[]? slika, int zalihaOpreme, decimal cijena) : base(id)
+
+    public Oprema(int id, string naziv, int vrstaOpremeId, string vrstaOpremeNaziv, byte[]? slika, int zalihaOpreme, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
             throw new ArgumentException($"'{nameof(naziv)}' cannot be null or empty.", nameof(naziv));
+        }
+
+        if (string.IsNullOrEmpty(vrstaOpremeNaziv))
+        {
+            throw new ArgumentException($"'{nameof(vrstaOpremeNaziv)}' cannot be null or empty.", nameof(vrstaOpremeNaziv));
         }
 
 
@@ -32,6 +40,7 @@ public class Oprema : AggregateRoot<int>
         _cijena = cijena;
         _slika = slika;
         _vrstaOpremeId = vrstaOpremeId;
+        _vrstaOpremeNaziv = vrstaOpremeNaziv;
     }
 
     public override bool Equals(object? obj)
@@ -43,14 +52,15 @@ public class Oprema : AggregateRoot<int>
                _slika == oprema._slika &&
                _zalihaOpreme == oprema._zalihaOpreme &&
                _cijena == oprema._cijena &&
-               _vrstaOpremeId == oprema._vrstaOpremeId;
+               _vrstaOpremeId == oprema._vrstaOpremeId &&
+               _vrstaOpremeNaziv == oprema._vrstaOpremeNaziv;
 
 
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _slika, _zalihaOpreme, _cijena, _vrstaOpremeId);
+        return HashCode.Combine(_id, _naziv, _slika, _zalihaOpreme, _cijena, _vrstaOpremeId, _vrstaOpremeNaziv);
     }
 
     public override Result IsValid()

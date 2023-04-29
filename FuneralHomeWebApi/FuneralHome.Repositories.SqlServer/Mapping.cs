@@ -184,6 +184,7 @@ public static class Mapping
             oprema.IdOprema,
             oprema.Naziv,
             oprema.VrstaOpremeId,
+            oprema.VrstaOpreme.Naziv,
             oprema.Slika,
             oprema.ZalihaOpreme,
             oprema.Cijena
