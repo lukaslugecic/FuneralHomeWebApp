@@ -100,6 +100,25 @@ public class OpremaRepository : IOpremaRepository
         }
     }
 
+
+    public Result<IEnumerable<Oprema>> GetAllByType(int id)
+    {
+        try
+        {
+            var models = _dbContext.Oprema
+                           .Include(o => o.VrstaOpreme)
+                           .Where(o => o.VrstaOpremeId.Equals(id))
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Oprema>>(e);
+        }
+    }
+
     public Result<IEnumerable<Oprema>> GetAllAggregates()
     {
         try

@@ -29,6 +29,18 @@ public class OpremaController : ControllerBase
             : Problem(opremaResults.Message, statusCode: 500);
     }
 
+    // Get: api/Oprema/Vrste/1
+    [HttpGet("/api/[controller]/Vrste/{id}")]
+    public ActionResult<IEnumerable<Usluga>> GetAllByType(int id)
+    {
+        var uslugaResults = _opremaRepository.GetAllByType(id)
+            .Map(o => o.Select(DtoMapping.ToDto));
+
+        return uslugaResults
+           ? Ok(uslugaResults.Data)
+           : Problem(uslugaResults.Message, statusCode: 500);
+    }
+
     // GET: api/Oprema/5
     [HttpGet("{id}")]
     public ActionResult<Oprema> GetOprema(int id)

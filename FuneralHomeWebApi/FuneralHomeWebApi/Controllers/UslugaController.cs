@@ -29,7 +29,7 @@ public class UslugaController : ControllerBase
             : Problem(uslugaResults.Message, statusCode: 500);
     }
 
-    // GEt: api/Usluga/GetAllByType/1
+    // GEt: api/Usluga/Vrste/1
     [HttpGet("/api/[controller]/Vrste/{id}")]
     public ActionResult<IEnumerable<Usluga>> GetAllByType(int id)
     {
