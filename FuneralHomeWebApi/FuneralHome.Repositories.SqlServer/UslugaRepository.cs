@@ -100,6 +100,24 @@ public class UslugaRepository : IUslugaRepository
         }
     }
 
+    public Result<IEnumerable<Usluga>> GetAllByType(int id)
+    {
+        try
+        {
+            var models = _dbContext.Usluga
+                           .Include(o => o.VrstaUsluge)
+                           .Where(o=> o.VrstaUslugeId.Equals(id))
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Usluga>>(e);
+        }
+    }
+
     public Result<IEnumerable<Usluga>> GetAllAggregates()
     {
         try

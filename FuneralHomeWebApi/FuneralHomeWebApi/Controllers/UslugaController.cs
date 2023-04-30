@@ -29,6 +29,18 @@ public class UslugaController : ControllerBase
             : Problem(uslugaResults.Message, statusCode: 500);
     }
 
+    // GEt: api/Usluga/GetAllByType/1
+    [HttpGet("/api/[controller]/Vrste/{id}")]
+    public ActionResult<IEnumerable<Usluga>> GetAllByType(int id)
+    {
+        var uslugaResults = _uslugaRepository.GetAllByType(id)
+            .Map(u => u.Select(DtoMapping.ToDto));
+
+        return uslugaResults
+           ? Ok(uslugaResults.Data)
+           : Problem(uslugaResults.Message, statusCode: 500);
+    }
+
     // GET: api/Usluga/5
     [HttpGet("{id}")]
     public ActionResult<Usluga> GetUsluga(int id)
