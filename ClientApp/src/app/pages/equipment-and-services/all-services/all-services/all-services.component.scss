@@ -1,0 +1,22 @@
+
+
+.main-body {
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 80%;
+  }
+
+.filter {
+    mat-form-field {
+        width: 90%;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.action {
+    display: flex;
+    gap: 5px;
+}

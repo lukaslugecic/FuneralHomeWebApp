@@ -23,11 +23,17 @@ export class MainNavigationComponent implements OnDestroy{
       { title: 'Admin', path: '/admin' },
       { title: 'Profil', path: '/profile' },
     ],
-    nonAdmin: [
+    employee: [
+      { title: 'Naslovna', path: '/' },
+      { title: 'Oprema', path: '/equipment' },
+      { title: 'Usluge', path: '/services' },
+      { title: 'Profil', path: '/profile' },
+    ],
+    customer: [
       { title: 'Naslovna', path: '/' },
       { title: 'Kalendar', path: '/patient' },
       { title: 'Profil', path: '/profile' },
-    ],
+    ]
   };
 
   public onLogoutClick() {

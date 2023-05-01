@@ -9,6 +9,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginModule } from './pages/login/login.module';
 import { RegisterComponent } from './pages/register/register.component';
 import { RegisterModule } from './pages/register/register.module';
+import { AllServicesComponent } from './pages/equipment-and-services/all-services/all-services/all-services.component';
+import { AllServicesModule } from './pages/equipment-and-services/all-services/all-services/all-services.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,7 +24,8 @@ const routes: Routes = [
         ],
         canActivate: [AdminGuard],
       },
-      //todo
+      { path: 'services', component: AllServicesComponent}
+      
     ],
     canActivate: [AuthGuard],
   },
@@ -42,7 +45,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HomeModule,
     RegisterModule,
-    LoginModule
+    LoginModule,
+    AllServicesModule
   ],
   exports: [RouterModule]
 })

@@ -1,0 +1,40 @@
+<div mat-dialog-title>
+    <h1>Employee Form</h1>
+</div>
+<form [formGroup]="serviceForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Vrsta usluge</mat-label>
+                <mat-select formControlName="vrstaUsluge">
+                    <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Naziv</mat-label>
+                <input matInput type="text" placeholder="Npr. Nova usluga" formControlName="naziv">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Cijena</mat-label>
+                <input matInput type="number" placeholder="Npr. 120" formControlName="cijena">
+                <mat-hint>U eurima</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Opis</mat-label>
+                <input matInput placeholder="Npr. Opis nove usluge.." formControlName="opis">
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Ažuriraj': 'Spremi'}}</button>
+    </div>
+</form>
+
