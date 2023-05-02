@@ -21,18 +21,17 @@ export class MainNavigationComponent implements OnDestroy{
     admin: [
       { title: 'Naslovna', path: '/' },
       { title: 'Admin', path: '/admin' },
-      { title: 'Profil', path: '/profile' },
     ],
     employee: [
       { title: 'Naslovna', path: '/' },
       { title: 'Oprema', path: '/equipment' },
       { title: 'Usluge', path: '/services' },
-      { title: 'Profil', path: '/profile' },
+      { title: 'Pogrebi', path: '/funerals' },
+      { title: 'Smrtni slučajevi', path: '/deaths' },
     ],
     customer: [
       { title: 'Naslovna', path: '/' },
       { title: 'Kalendar', path: '/patient' },
-      { title: 'Profil', path: '/profile' },
     ]
   };
 

@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { ServiceDialogComponent } from 'src/app/components/dialogs/service-dialog/service-dialog/service-dialog.component';
+import { ServiceDialogComponent } from 'src/app/components/dialogs/service-dialog/service-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

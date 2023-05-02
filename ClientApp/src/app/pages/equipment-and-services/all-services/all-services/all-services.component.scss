@@ -3,12 +3,12 @@
 .main-body {
     padding-top: 20px;
     margin: 0 auto;
-    max-width: 80%;
+    max-width: 90%;
   }
 
 .filter {
     mat-form-field {
-        width: 90%;
+        width: 75%;
     }
     display: flex;
     justify-content: space-between;
@@ -18,5 +18,19 @@
 
 .action {
     display: flex;
-    gap: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.0075em;
+    margin-bottom: 1 rem;
 }

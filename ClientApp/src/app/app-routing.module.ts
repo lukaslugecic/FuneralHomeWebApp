@@ -11,6 +11,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { RegisterModule } from './pages/register/register.module';
 import { AllServicesComponent } from './pages/equipment-and-services/all-services/all-services/all-services.component';
 import { AllServicesModule } from './pages/equipment-and-services/all-services/all-services/all-services.module';
+import { AllEquipmentComponent } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.component';
+import { AllEquipmentModule } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -24,8 +26,8 @@ const routes: Routes = [
         ],
         canActivate: [AdminGuard],
       },
-      { path: 'services', component: AllServicesComponent}
-      
+      { path: 'services', component: AllServicesComponent},
+      { path: 'equipment', component: AllEquipmentComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -46,7 +48,8 @@ const routes: Routes = [
     HomeModule,
     RegisterModule,
     LoginModule,
-    AllServicesModule
+    AllServicesModule,
+    AllEquipmentModule
   ],
   exports: [RouterModule]
 })

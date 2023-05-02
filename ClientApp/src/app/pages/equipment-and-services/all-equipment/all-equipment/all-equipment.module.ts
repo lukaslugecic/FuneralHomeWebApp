@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
-import { AllServicesComponent } from './all-services.component';
+import { AllEquipmentComponent } from './all-equipment.component';
 
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,10 +21,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ServiceDialogModule } from 'src/app/components/dialogs/service-dialog/service-dialog.module';
+import { EquipmentDialogModule } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.module';
+
 
 
 @NgModule({
-  declarations: [AllServicesComponent],
+  declarations: [AllEquipmentComponent],
   imports: [
     CommonModule,
     MainFooterModule,
@@ -45,8 +47,8 @@ import { ServiceDialogModule } from 'src/app/components/dialogs/service-dialog/s
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
-    ServiceDialogModule
+    EquipmentDialogModule
   ],
-  exports: [AllServicesComponent]
+  exports: [AllEquipmentComponent]
 })
-export class AllServicesModule { }
+export class AllEquipmentModule { }

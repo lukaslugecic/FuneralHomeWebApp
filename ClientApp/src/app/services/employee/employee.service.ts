@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
+import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +14,16 @@ export class EmployeeService {
 
   // Equipment
 
-  public getAllEquipments() : Observable<Array<any>> {
+  public getAllEquipment() : Observable<Array<any>> {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Oprema`);
   }
 
-  public getAllEmployeesByType(type: number) : Observable<Array<any>> {
+  public getAllEquipmentByType(type: number) : Observable<Array<any>> {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Oprema/Vrste/${type}`);
+  }
+
+  getTypesOfEquipment() : Observable<Array<IVrstaOpremeData>> {
+    return this.http.get<Array<IVrstaOpremeData>>(`${environment.apiUrlHttps}/VrstaOpreme`);
   }
 
   public updateEquipment(id: number, data: any) : Observable<any> {
@@ -27,6 +32,10 @@ export class EmployeeService {
 
   public addEquipment(data: any) : Observable<any> {
     return this.http.post<any>(`${environment.apiUrlHttps}/Oprema`, data);
+  }
+
+  public deleteEquipment(id: number) : Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrlHttps}/Oprema/${id}`);
   }
 
   // Service

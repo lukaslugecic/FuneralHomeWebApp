@@ -1,0 +1,52 @@
+<div mat-dialog-title>
+    <h1>Oprema</h1>
+</div>
+<form [formGroup]="equipmentForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Vrsta opreme</mat-label>
+                <mat-select formControlName="vrstaOpreme">
+                    <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Naziv</mat-label>
+                <input matInput type="text" placeholder="Npr. Nova oprema" formControlName="naziv">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Cijena</mat-label>
+                <input matInput type="number" placeholder="Npr. 120" formControlName="cijena">
+                <mat-hint>U eurima</mat-hint>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Zaliha opreme</mat-label>
+                <input matInput type="number" placeholder="Npr. 120" formControlName="zalihaOpreme">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+                <input type="file" class="file-input" (change)="onFileSelected($event)" #fileUpload>
+
+                <div class="file-upload" >
+                    <button mat-mini-fab color="primary" type="button" (click)="fileUpload.click()">
+                        <mat-icon>attach_file</mat-icon>
+                    </button>
+                        {{fileName || "No file uploaded yet."}}
+                </div>
+        </div>
+    </div>
+    
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Ažuriraj': 'Spremi'}}</button>
+    </div>
+</form>
+

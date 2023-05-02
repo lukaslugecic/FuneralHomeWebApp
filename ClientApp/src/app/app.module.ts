@@ -6,12 +6,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthService } from './services/auth/auth.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './services/auth/auth.interceptor';
-import { EquipmentDialogComponent } from './components/dialogs/equipment/equipment-dialog/equipment-dialog.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    EquipmentDialogComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

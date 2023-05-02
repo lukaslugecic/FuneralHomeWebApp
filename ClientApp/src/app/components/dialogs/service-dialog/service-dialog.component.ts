@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable, switchMap, tap } from 'rxjs';
 import { IUslugaData } from 'src/app/interfaces/usluga-data';
 import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
 import { EmployeeService } from 'src/app/services/employee/employee.service';
