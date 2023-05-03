@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ServiceDialogComponent } from 'src/app/components/dialogs/service-dialog/service-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
+import { ServiceService } from 'src/app/services/service/service.service';
 
 @Component({
   selector: 'app-all-services',
@@ -36,8 +35,7 @@ export class AllServicesComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly authService: AuthService,
-    private readonly employeeService: EmployeeService,
+    private readonly _serviceService: ServiceService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -47,9 +45,9 @@ export class AllServicesComponent implements OnInit {
 
   getAllServices() {
     // najprije dohvatimo sve opreme i vrste opreme zatim filtriramo opremu po vrsti opreme
-    this.employeeService.getAllServices().subscribe({
+    this._serviceService.getAllServices().subscribe({
       next: (res) => {
-        this.employeeService.getTypesOfServices().subscribe({
+        this._serviceService.getTypesOfServices().subscribe({
           next: (res2) => {
             //dodaj u types sve vrste opreme koje već nisu u types
             res2.forEach((type: any) => {
@@ -87,7 +85,7 @@ export class AllServicesComponent implements OnInit {
 
   deleteService(id: number) {
     if (confirm('Jeste li sigurni da želite obrisati uslugu?')) {
-      this.employeeService.deleteService(id).subscribe({
+      this._serviceService.deleteService(id).subscribe({
         next: (res) => {
           this.snackBar.open('Usluga je uspješno obrisana!', 'U redu', {
             duration: 3000,

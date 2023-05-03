@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipmentDialogComponent } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.component';
 import { FuneralDialogComponent } from 'src/app/components/dialogs/funeral-dialog/funeral-dialog.component';
+import { Router } from '@angular/router';
+import { FuneralService } from 'src/app/services/funeral/funeral.service';
 
 @Component({
   selector: 'app-funerals',
@@ -31,8 +31,8 @@ export class FuneralsComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly authService: AuthService,
-    private readonly employeeService: EmployeeService,
+    private router: Router,
+    private _funeralService: FuneralService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -41,7 +41,7 @@ export class FuneralsComponent implements OnInit {
   }
 
   getAllFunerals() {
-    this.employeeService.getAllFunereals().subscribe({
+    this._funeralService.getAllFunereals().subscribe({
       next: (res) => {
         console.log(res);
         this.dataSource = new MatTableDataSource(res);
@@ -61,9 +61,9 @@ export class FuneralsComponent implements OnInit {
     }
   }
 
-  deleteEquipment(id: number) {
+  deleteFuneral(id: number) {
     if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
-      this.employeeService.deleteEquipment(id).subscribe({
+      this._funeralService.deleteFuneral(id).subscribe({
         next: (res) => {
           this.snackBar.open('Oprema je uspješno obrisana!', 'U redu', {
             duration: 3000,
@@ -102,6 +102,11 @@ export class FuneralsComponent implements OnInit {
         }
       },
     });
+  }
+  
+
+  redirectToDetails(id: number) {
+    this.router.navigate([`/funerals/${id}`]);
   }
   
 }

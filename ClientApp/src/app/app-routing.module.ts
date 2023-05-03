@@ -19,6 +19,7 @@ import { DeathsComponent } from './pages/deaths/deaths.component';
 import { DeathsModule } from './pages/deaths/deaths.module';
 import { AllUsersComponent } from './pages/admin/all-users/all-users.component';
 import { AllUsersModule } from './pages/admin/all-users/all-users.module';
+import { FuneralDetailComponent } from './pages/funerals/funeral-detail/funeral-detail.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
       { path: 'services', component: AllServicesComponent},
       { path: 'equipment', component: AllEquipmentComponent},
       { path: 'funerals', component: FuneralsComponent},
+      { path: 'funerals/:id', component: FuneralDetailComponent},
       { path: 'deaths', component: DeathsComponent}
     ],
     canActivate: [AuthGuard],

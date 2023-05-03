@@ -3,10 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IOpremaData } from 'src/app/interfaces/oprema-data';
-import { IUslugaData } from 'src/app/interfaces/usluga-data';
 import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
-import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
+import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
   selector: 'app-equipment-dialog',
@@ -30,7 +28,7 @@ export class EquipmentDialogComponent implements OnInit {
   types: IVrstaOpremeData[] = [];
 
   constructor(
-    private _employeeService: EmployeeService,
+    private readonly _equipmentService: EquipmentService,
     private _dialogRef: MatDialogRef<EquipmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly snackBar: MatSnackBar
@@ -38,7 +36,7 @@ export class EquipmentDialogComponent implements OnInit {
 
   ngOnInit() {
     // dohvatiti vrste usluga i spremiti u this.types zatim popuniti formu sa podacima ako je data != null
-    this._employeeService.getTypesOfEquipment().subscribe((data: any) => {
+    this._equipmentService.getTypesOfEquipment().subscribe((data: any) => {
       this.types = data;
       if (this.data) {
         this.equipmentForm.patchValue({
@@ -66,7 +64,7 @@ export class EquipmentDialogComponent implements OnInit {
           VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
         }
         console.log(this.toUpdate);
-        this._employeeService
+        this._equipmentService
           .updateEquipment(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
@@ -92,7 +90,7 @@ export class EquipmentDialogComponent implements OnInit {
           VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
           VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
         }
-        this._employeeService.addEquipment(this.toUpdate).subscribe({
+        this._equipmentService.addEquipment(this.toUpdate).subscribe({
           next: (val: any) => {
             this.snackBar.open('Oprema uspješno dodana!', 'U redu', {
               duration: 3000,

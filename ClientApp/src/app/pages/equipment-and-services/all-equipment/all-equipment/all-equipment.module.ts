@@ -20,7 +20,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { ServiceDialogModule } from 'src/app/components/dialogs/service-dialog/service-dialog.module';
 import { EquipmentDialogModule } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.module';
 
 

@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipmentDialogComponent } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.component';
 import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
   selector: 'app-all-equipment',
@@ -37,8 +36,7 @@ export class AllEquipmentComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly authService: AuthService,
-    private readonly employeeService: EmployeeService,
+    private readonly _equipmentService: EquipmentService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -50,9 +48,9 @@ export class AllEquipmentComponent implements OnInit {
 
   getAllEquipment() {
     // najprije dohvatimo sve opreme i vrste opreme zatim filtriramo opremu po vrsti opreme
-    this.employeeService.getAllEquipment().subscribe({
+    this._equipmentService.getAllEquipment().subscribe({
       next: (res) => {
-        this.employeeService.getTypesOfEquipment().subscribe({
+        this._equipmentService.getTypesOfEquipment().subscribe({
           next: (res2) => {
             //dodaj u types sve vrste opreme koje već nisu u types
             res2.forEach((type: any) => {
@@ -92,7 +90,7 @@ export class AllEquipmentComponent implements OnInit {
 
   deleteEquipment(id: number) {
     if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
-      this.employeeService.deleteEquipment(id).subscribe({
+      this._equipmentService.deleteEquipment(id).subscribe({
         next: (res) => {
           this.snackBar.open('Oprema je uspješno obrisana!', 'U redu', {
             duration: 3000,

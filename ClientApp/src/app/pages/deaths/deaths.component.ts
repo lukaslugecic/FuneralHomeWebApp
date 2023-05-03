@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
+import { DeathService } from 'src/app/services/death/death.service';
 
 @Component({
   selector: 'app-deaths',
@@ -32,8 +31,7 @@ export class DeathsComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly authService: AuthService,
-    private readonly employeeService: EmployeeService,
+    private _deathService: DeathService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -42,7 +40,7 @@ export class DeathsComponent implements OnInit {
   }
 
   getAllDeaths() {
-    this.employeeService.getAllDeaths().subscribe({
+    this._deathService.getAllDeaths().subscribe({
       next: (res) => {
         console.log(res);
         this.dataSource = new MatTableDataSource(res);
@@ -64,7 +62,7 @@ export class DeathsComponent implements OnInit {
 
   deleteEquipment(id: number) {
     if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
-      this.employeeService.deleteEquipment(id).subscribe({
+      this._deathService.deleteDeath(id).subscribe({
         next: (res) => {
           this.snackBar.open('Smrtni slučaj je uspješno obrisan!', 'U redu', {
             duration: 3000,

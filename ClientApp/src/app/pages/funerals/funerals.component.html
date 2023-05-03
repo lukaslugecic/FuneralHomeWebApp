@@ -44,12 +44,15 @@
           
           
           <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Uredi/Obiši </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
             <td mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="redirectToDetails(row.id)" >
+                <mat-icon>info</mat-icon>
+              </button>
               <button mat-icon-button (click)="openEditForm(row)">
                 <mat-icon>edit</mat-icon>
               </button>
-              <button mat-icon-button color="warn" (click)="deleteEquipment(row.id)">
+              <button mat-icon-button color="warn" (click)="deleteFuneral(row.id)">
                 <mat-icon>delete</mat-icon>
               </button>
             </td>
