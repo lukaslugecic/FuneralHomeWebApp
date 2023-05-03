@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,13 +7,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserDialogComponent } from 'src/app/components/dialogs/user-dialog/user-dialog.component';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-all-users',
   templateUrl: './all-users.component.html',
   styleUrls: ['./all-users.component.scss']
 })
-export class AllUsersComponent implements OnInit {
+export class AllUsersComponent implements OnInit, OnChanges {
+
+  selectedType: any = 'S';
+
   displayedColumns: string[] = [
     'id',
     'ime',
@@ -33,8 +37,7 @@ export class AllUsersComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly authService: AuthService,
-    private readonly employeeService: EmployeeService,
+    private readonly userService: UserService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -42,11 +45,22 @@ export class AllUsersComponent implements OnInit {
     this.getAllUsers();
   }
 
+  ngOnChanges(changes: any): void {
+    this.getAllUsers();
+  }
+
   getAllUsers() {
-    this.authService.getKorisnici().subscribe({
+    console.log(this.selectedType);
+    this.userService.getAllUsers().subscribe({
       next: (res) => {
         console.log(res);
-        this.dataSource = new MatTableDataSource(res);
+        if(this.selectedType !== 'S'){
+          console.log('filterRazodS');
+          this.dataSource = new MatTableDataSource(res.filter((user: any) => user.vrstaKorisnika === this.selectedType));
+        } else {
+          console.log('filterS');
+          this.dataSource = new MatTableDataSource(res);
+        }
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
       }
@@ -64,16 +78,16 @@ export class AllUsersComponent implements OnInit {
   }
 
   deleteEquipment(id: number) {
-    if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
-      this.employeeService.deleteEquipment(id).subscribe({
+    if (confirm('Jeste li sigurni da želite obrisati korisnika?')) {
+      this.userService.deleteUser(id).subscribe({
         next: (res) => {
-          this.snackBar.open('Smrtni slučaj je uspješno obrisan!', 'U redu', {
+          this.snackBar.open('Korisnik je uspješno obrisan!', 'U redu', {
             duration: 3000,
           });
           this.getAllUsers();
         },
         error: (err) => {
-          this.snackBar.open('Greška prilikom brisanja smrtnog slučaja!', 'Zatvori', {
+          this.snackBar.open('Greška prilikom brisanja korisnika!', 'Zatvori', {
             duration: 3000,
           });
         },
@@ -105,7 +119,6 @@ export class AllUsersComponent implements OnInit {
       },
     });
   }
-  
 }
 
 

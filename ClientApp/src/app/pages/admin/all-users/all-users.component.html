@@ -1,16 +1,23 @@
 <app-main-navigation></app-main-navigation>
 
 <div class="main-body">
-    <h1>Korisnici</h1>
-      <div class="filter">
-        <mat-form-field>
-          <mat-label>Filter</mat-label>
-          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-        </mat-form-field>
-        <button mat-raised-button (click)="openAddForm()"> Dodaj korisnika </button>
-      </div>
-  
-    
+        <h1>Korisnici</h1>
+        <div class="header">
+          <!--na promjenu zovi funkciju getAllUsers-->
+
+          <mat-select [(value)]="selectedType" (selectionChange)="getAllUsers()">
+            <mat-option value="S" selected>Svi Korisnici</mat-option>
+            <mat-option value="A">Administratori</mat-option>
+            <mat-option value="Z">Zaposlenici</mat-option>
+            <mat-option value="K">Klijenti</mat-option>
+          </mat-select>
+          <mat-form-field>
+            <mat-label>Pretraži</mat-label>
+            <input matInput (keyup)="applyFilter($event)" #input>
+          </mat-form-field>
+          <button mat-raised-button (click)="openAddForm()"> Dodaj korisnika </button>
+        </div>
+
       <div class="table-container">
         <table mat-table [dataSource]="dataSource" matSort>
     

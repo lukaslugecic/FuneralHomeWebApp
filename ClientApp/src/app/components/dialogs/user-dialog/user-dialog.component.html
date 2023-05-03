@@ -1,1 +1,86 @@
-<p>user-dialog works!</p>
+<div mat-dialog-title>
+    <h1>Employee Form</h1>
+</div>
+<form [formGroup]="userForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Ime</mat-label>
+                <input matInput type="text" placeholder="Ime" formControlName="ime">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Prezime</mat-label>
+                <input matInput type="text" placeholder="Prezime" formControlName="prezime">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Vrsta korisnika</mat-label>
+                <mat-select formControlName="vrstaKorisnika">
+                    <mat-option *ngFor="let val of types" [value]="val.value">{{val.viewValue}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>OIB</mat-label>
+                <input matInput type="text" placeholder="11 brojeva" formControlName="oib">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum rođenja</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="datumRodenja">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Adresa stanovanja</mat-label>
+                <input matInput type="text" placeholder="Adresa stanovanja" formControlName="adresa">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>E-mail</mat-label>
+                <input matInput type="text" placeholder="Npr. email@com" formControlName="mail">
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Lozinka</mat-label>
+                <input
+                    matInput
+                    type="password"
+                    placeholder="" 
+                    formControlName="lozinka"
+                    [type]="hide ? 'password' : 'text'">
+                <mat-icon matSuffix (click)="hide = !hide">
+                    {{hide ? "visibility_off" : "visibility"}}
+                </mat-icon>
+            </mat-form-field>
+            
+        </div>
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Ponovljena lozinka</mat-label>
+                <input 
+                    matInput
+                    type="password"
+                    placeholder=""
+                    formControlName="ponovljenaLozinka"
+                    [type]="hide ? 'password' : 'text'">
+            </mat-form-field>    
+        </div>
+        
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">{{data ? 'Ažuriraj': 'Spremi'}}</button>
+    </div>
+</form>
+

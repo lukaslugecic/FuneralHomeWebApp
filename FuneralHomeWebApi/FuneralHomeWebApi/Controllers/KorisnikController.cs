@@ -102,6 +102,12 @@ public class KorisnikController : ControllerBase
 
         var domainKorisnik = korisnik.ToDomain();
 
+        // Hash the password using BCrypt
+        var hashedPassword = BCrypt.Net.BCrypt.HashPassword(korisnik.Lozinka);
+
+        // Store the hashed password in the Korisnik object
+        domainKorisnik.Lozinka = hashedPassword;
+
         var result =
             domainKorisnik.IsValid()
             .Bind(() => _korisnikRepository.Update(domainKorisnik));
@@ -135,7 +141,7 @@ public class KorisnikController : ControllerBase
 
         // Store the hashed password in the Korisnik object
         domainKorisnik.Lozinka = hashedPassword;
-        Console.WriteLine(hashedPassword.Length);
+       
         var result =
             domainKorisnik.IsValid()
             .Bind(() => _korisnikRepository.Insert(domainKorisnik));

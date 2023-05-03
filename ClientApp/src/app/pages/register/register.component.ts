@@ -40,8 +40,7 @@ export class RegisterComponent implements OnDestroy {
     dateOfBirth: new FormControl('', [Validators.required]),
     oib: new FormControl('', [
       Validators.required,
-      Validators.minLength(11),
-      Validators.maxLength(11)
+      Validators.pattern('^[0-9]{11}$'),
     ]),
   });
 
@@ -65,14 +64,15 @@ export class RegisterComponent implements OnDestroy {
     }
 
     const data: IRegisterData = {
+      Id: 0,
       Mail: this.form.get('email')?.value,
       Lozinka: this.form.get('password')?.value,
       Ime: this.form.get('name')?.value,
       Prezime: this.form.get('surname')?.value,
       DatumRodenja: this.form.get('dateOfBirth')?.value,
-      Adresa: this.form.get('dateOfBirth')?.value,
-      Oib: this.form.get('oib')?.value,
-      vrstaKorisnika: "K"
+      Adresa: this.form.get('address')?.value,
+      Oib: this.form.get('oib')?.value.toString(),
+      VrstaKorisnika: "K"
     };
 
     console.log(data);

@@ -1,4 +1,5 @@
 export interface IRegisterData {
+    Id: number;
     Ime: string;
     Prezime: string;
     DatumRodenja: string;
@@ -6,6 +7,6 @@ export interface IRegisterData {
     Oib: string;
     Mail: string;
     Lozinka: string;
-    vrstaKorisnika: string;
+    VrstaKorisnika: string;
   }
   

@@ -22,7 +22,7 @@ export class EmployeeService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Oprema/Vrste/${type}`);
   }
 
-  getTypesOfEquipment() : Observable<Array<IVrstaOpremeData>> {
+  public getTypesOfEquipment() : Observable<Array<IVrstaOpremeData>> {
     return this.http.get<Array<IVrstaOpremeData>>(`${environment.apiUrlHttps}/VrstaOpreme`);
   }
 
