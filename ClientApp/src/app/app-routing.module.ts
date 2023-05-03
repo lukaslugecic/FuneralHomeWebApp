@@ -15,6 +15,10 @@ import { AllEquipmentComponent } from './pages/equipment-and-services/all-equipm
 import { AllEquipmentModule } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.module';
 import { FuneralsComponent } from './pages/funerals/funerals.component';
 import { FuneralsModule } from './pages/funerals/funerals.module';
+import { DeathsComponent } from './pages/deaths/deaths.component';
+import { DeathsModule } from './pages/deaths/deaths.module';
+import { AllUsersComponent } from './pages/admin/all-users/all-users.component';
+import { AllUsersModule } from './pages/admin/all-users/all-users.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,15 +26,13 @@ const routes: Routes = [
     path: '',
     children: [
       {
-        path: 'admin',
-        children: [
-          //todo
-        ],
+        path: 'users', component: AllUsersComponent,
         canActivate: [AdminGuard],
       },
       { path: 'services', component: AllServicesComponent},
       { path: 'equipment', component: AllEquipmentComponent},
-      { path: 'funerals', component: FuneralsComponent}
+      { path: 'funerals', component: FuneralsComponent},
+      { path: 'deaths', component: DeathsComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -53,7 +55,9 @@ const routes: Routes = [
     LoginModule,
     AllServicesModule,
     AllEquipmentModule,
-    FuneralsModule
+    FuneralsModule,
+    DeathsModule,
+    AllUsersModule
   ],
   exports: [RouterModule]
 })

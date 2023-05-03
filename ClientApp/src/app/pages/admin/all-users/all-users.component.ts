@@ -6,22 +6,23 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
+import { UserDialogComponent } from 'src/app/components/dialogs/user-dialog/user-dialog.component';
 
 @Component({
-  selector: 'app-deaths',
-  templateUrl: './deaths.component.html',
-  styleUrls: ['./deaths.component.scss']
+  selector: 'app-all-users',
+  templateUrl: './all-users.component.html',
+  styleUrls: ['./all-users.component.scss']
 })
-export class DeathsComponent implements OnInit {
+export class AllUsersComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'korisnikId',
-    'imePok',
-    'prezimePok',
-    'oibpok',
-    'datumRodenjaPok',
-    'datumSmrtiPok',
+    'ime',
+    'prezime',
+    'oib',
+    'datumRodenja',
+    'adresa',
+    'mail',
+    'vrstaKorisnika',
     'action'
     ];
 
@@ -38,11 +39,11 @@ export class DeathsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getAllDeaths();
+    this.getAllUsers();
   }
 
-  getAllDeaths() {
-    this.employeeService.getAllDeaths().subscribe({
+  getAllUsers() {
+    this.authService.getKorisnici().subscribe({
       next: (res) => {
         console.log(res);
         this.dataSource = new MatTableDataSource(res);
@@ -69,7 +70,7 @@ export class DeathsComponent implements OnInit {
           this.snackBar.open('Smrtni slučaj je uspješno obrisan!', 'U redu', {
             duration: 3000,
           });
-          this.getAllDeaths();
+          this.getAllUsers();
         },
         error: (err) => {
           this.snackBar.open('Greška prilikom brisanja smrtnog slučaja!', 'Zatvori', {
@@ -81,25 +82,25 @@ export class DeathsComponent implements OnInit {
   }
 
   openEditForm(data: any) {
-    const dialogRef = this._dialog.open(DeathDialogComponent, {
+    const dialogRef = this._dialog.open(UserDialogComponent, {
       data,
     });
 
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.getAllDeaths();
+          this.getAllUsers();
         }
       },
     });
   }
 
   openAddForm() {
-    const dialogRef = this._dialog.open(DeathDialogComponent);
+    const dialogRef = this._dialog.open(UserDialogComponent);
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.getAllDeaths();
+          this.getAllUsers();
         }
       },
     });

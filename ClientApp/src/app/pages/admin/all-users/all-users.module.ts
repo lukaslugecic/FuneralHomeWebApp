@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeathsComponent } from './deaths.component';
+import { AllUsersComponent } from './all-users.component';
 
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
@@ -23,7 +23,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
-  declarations: [DeathsComponent],
+  declarations: [AllUsersComponent],
   imports: [
     CommonModule,
     MainFooterModule,
@@ -46,4 +46,4 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule
   ]
 })
-export class DeathsModule { }
+export class AllUsersModule { }

@@ -1,13 +1,13 @@
 <app-main-navigation></app-main-navigation>
 
 <div class="main-body">
-    <h1>Smrtni slučajevi</h1>
+    <h1>Korisnici</h1>
       <div class="filter">
         <mat-form-field>
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
         </mat-form-field>
-        <button mat-raised-button (click)="openAddForm()"> Dodaj smrtni slučaj </button>
+        <button mat-raised-button (click)="openAddForm()"> Dodaj korisnika </button>
       </div>
   
     
@@ -19,36 +19,44 @@
             <td mat-cell *matCellDef="let row"> {{row.id}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="korisnikId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prijavio korisnik </th>
-            <td mat-cell *matCellDef="let row"> {{row.korisnikId}} </td>
-          </ng-container>
-    
-          <ng-container matColumnDef="imePok">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime pokojnika </th>
-            <td mat-cell *matCellDef="let row"> {{row.imePok}}</td>
+          <ng-container matColumnDef="ime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime </th>
+            <td mat-cell *matCellDef="let row"> {{row.ime}}</td>
           </ng-container>
   
-          <ng-container matColumnDef="prezimePok">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime pokojnika </th>
-            <td mat-cell *matCellDef="let row"> {{row.prezimePok}}</td>
+          <ng-container matColumnDef="prezime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime </th>
+            <td mat-cell *matCellDef="let row"> {{row.prezime}}</td>
           </ng-container>
 
-          <ng-container matColumnDef="oibpok">
+          <ng-container matColumnDef="oib">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> OIB </th>
-            <td mat-cell *matCellDef="let row"> {{row.oibpok}}</td>
+            <td mat-cell *matCellDef="let row"> {{row.oib}}</td>
           </ng-container>
 
-          <ng-container matColumnDef="datumRodenjaPok">
+          <ng-container matColumnDef="datumRodenja">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum rođenja </th>
-            <td mat-cell *matCellDef="let row"> {{row.datumRodenjaPok | date}}</td>
+            <td mat-cell *matCellDef="let row"> {{row.datumRodenja | date}}</td>
           </ng-container>
   
-          <ng-container matColumnDef="datumSmrtiPok">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum smrti </th>
-            <td mat-cell *matCellDef="let row"> {{row.datumSmrtiPok | date}}</td>
+          <ng-container matColumnDef="adresa">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Adresa </th>
+            <td mat-cell *matCellDef="let row"> {{row.adresa}}</td>
           </ng-container>
-          
+  
+          <ng-container matColumnDef="mail">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> E-mail </th>
+            <td mat-cell *matCellDef="let row"> {{row.mail}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="vrstaKorisnika">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vrsta korisnika </th>
+            <td mat-cell *matCellDef="let row"> {{
+                row.vrstaKorisnika == 'A' ? 'Admin'
+                : row.vrstaKorisnika == 'Z' ? 'Zaposlenik'
+                : 'Klijent'}}</td>
+          </ng-container>
+
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Uredi/Obiši </th>
             <td mat-cell *matCellDef="let row">

@@ -16,8 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AllServicesComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'naziv',
     'vrstaUslugeNaziv',
+    'naziv',
     'opis',
     'cijena',
     'action'

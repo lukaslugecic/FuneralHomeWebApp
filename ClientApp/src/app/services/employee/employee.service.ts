@@ -71,6 +71,12 @@ export class EmployeeService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`);
   }
 
+  // Deaths
+
+  public getAllDeaths() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj`);
+  }
+
  }
 
 
