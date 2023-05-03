@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipmentDialogComponent } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.component';
+import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
 
 @Component({
   selector: 'app-all-equipment',
@@ -24,6 +25,11 @@ export class AllEquipmentComponent implements OnInit {
     'action'
     ];
 
+  selectedType: any =  0;
+  types: IVrstaOpremeData[] = [
+    { id: 0, naziv: 'Sva oprema' }
+  ];
+
   dataSource!: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -40,15 +46,38 @@ export class AllEquipmentComponent implements OnInit {
     this.getAllEquipment();
   }
 
+  
+
   getAllEquipment() {
+    // najprije dohvatimo sve opreme i vrste opreme zatim filtriramo opremu po vrsti opreme
     this.employeeService.getAllEquipment().subscribe({
       next: (res) => {
-        console.log(res);
-        this.dataSource = new MatTableDataSource(res);
-        this.dataSource.sort = this.sort;
-        this.dataSource.paginator = this.paginator;
+        this.employeeService.getTypesOfEquipment().subscribe({
+          next: (res2) => {
+            //dodaj u types sve vrste opreme koje već nisu u types
+            res2.forEach((type: any) => {
+              if(!this.types.find((t: any) => t.id === type.id)){
+                this.types.push(type);
+              }
+            });
+            // ako je odabrana vrsta opreme, filtriramo opremu po vrsti opreme
+            if(this.selectedType !== 0){
+              this.dataSource = new MatTableDataSource(res.filter((equipment: any) => equipment.vrstaOpremeId === this.selectedType));
+            } else {
+              this.dataSource = new MatTableDataSource(res);
+            }
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+          },
+          error: (err) => {
+            this.snackBar.open('Greška prilikom dohvaćanja vrsta opreme!', 'Zatvori', {
+              duration: 3000,
+            });
+          },
+        });
       }
     });
+    
   }
 
   

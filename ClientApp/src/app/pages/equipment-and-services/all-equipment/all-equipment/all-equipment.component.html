@@ -2,13 +2,17 @@
 
 <div class="main-body">
   <h1>Oprema</h1>
-    <div class="filter">
-      <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
-      </mat-form-field>
-      <button mat-raised-button (click)="openAddForm()"> Dodaj novu opremu </button>
-    </div>
+  <div class="header">
+    <mat-select [(value)]="selectedType" (selectionChange)="getAllEquipment()">
+      <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
+      </mat-option>
+    </mat-select>
+    <mat-form-field>
+      <mat-label>Pretraži</mat-label>
+      <input matInput (keyup)="applyFilter($event)" #input>
+    </mat-form-field>
+    <button mat-raised-button (click)="openAddForm()"> Dodaj opremu </button>
+  </div>
 
   
     <div class="table-container">

@@ -53,12 +53,9 @@ export class AllUsersComponent implements OnInit, OnChanges {
     console.log(this.selectedType);
     this.userService.getAllUsers().subscribe({
       next: (res) => {
-        console.log(res);
         if(this.selectedType !== 'S'){
-          console.log('filterRazodS');
           this.dataSource = new MatTableDataSource(res.filter((user: any) => user.vrstaKorisnika === this.selectedType));
         } else {
-          console.log('filterS');
           this.dataSource = new MatTableDataSource(res);
         }
         this.dataSource.sort = this.sort;

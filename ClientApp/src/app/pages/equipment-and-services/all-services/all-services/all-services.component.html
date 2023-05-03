@@ -2,14 +2,17 @@
 
 <div class="main-body">
     <h1>Usluge</h1>
-    <div class="filter">
+    <div class="header">
+      <mat-select [(value)]="selectedType" (selectionChange)="getAllServices()">
+        <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
+        </mat-option>
+      </mat-select>
       <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+        <mat-label>Pretraži</mat-label>
+        <input matInput (keyup)="applyFilter($event)" #input>
       </mat-form-field>
-      <button mat-raised-button (click)="openAddForm()"> Dodaj novu uslugu </button>
+      <button mat-raised-button (click)="openAddForm()"> Dodaj uslugu </button>
     </div>
-
   
     <div class="table-container">
       <table mat-table [dataSource]="dataSource" matSort>

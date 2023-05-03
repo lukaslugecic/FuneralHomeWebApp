@@ -6,9 +6,13 @@
     max-width: 90%;
   }
 
-.filter {
+  .header {
     mat-form-field {
-        width: 75%;
+        width: 50%;
+    }
+    mat-select {
+        font-size: larger;
+        width: 15%;
     }
     display: flex;
     justify-content: space-between;
