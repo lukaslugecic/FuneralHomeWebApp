@@ -14,6 +14,14 @@ export class DeathService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj`);
   }
 
+  public addDeath(data: any) : Observable<any> {
+    return this.http.post(`${environment.apiUrlHttps}/SmrtniSlucaj`, data);
+  }
+
+  public updateDeath(id: number, data: any) : Observable<any> {
+    return this.http.put(`${environment.apiUrlHttps}/SmrtniSlucaj/${id}`, data);
+  }
+
   public deleteDeath(id: number) : Observable<any> {
     return this.http.delete(`${environment.apiUrlHttps}/SmrtniSlucaj/${id}`);
   }

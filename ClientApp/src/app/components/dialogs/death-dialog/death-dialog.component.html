@@ -1,1 +1,56 @@
-<p>death-dialog works!</p>
+<div mat-dialog-title>
+    <h1>{{data ? 'Uredi korisnika': 'Dodaj korisnika'}}</h1>
+</div>
+<form [formGroup]="deathForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Ime</mat-label>
+                <input matInput type="text" placeholder="Ime" formControlName="imePok">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Prezime</mat-label>
+                <input matInput type="text" placeholder="Prezime" formControlName="prezimePok">
+            </mat-form-field>
+        </div>
+
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>OIB</mat-label>
+                <input matInput type="text" placeholder="11 brojeva" formControlName="oibpok">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum rođenja</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="datumRodenjaPok">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum smrti</mat-label>
+                <input matInput [matDatepicker]="picker2" placeholder="MM/DD/YYYY" formControlName="datumSmrtiPok">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Prijavio korisnik</mat-label>
+                <mat-select formControlName="korisnikId">
+                    <mat-option *ngFor="let val of korisnici" [value]="val.korisnikId">{{val.imeIprezime}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">Spremi</button>
+    </div>
+</form>
+

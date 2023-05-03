@@ -21,7 +21,7 @@ public class KorisnikController : ControllerBase
     }
 
     // GET: api/Korisnik
-    [Authorize(Roles = "A")]
+   // [Authorize(Roles = "A")]
     [HttpGet]
     public ActionResult<IEnumerable<Korisnik>> GetAllKorisnik()
     {

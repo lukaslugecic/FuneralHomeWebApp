@@ -14,6 +14,10 @@ export class FuneralService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`);
   }
 
+  public getFuneralDetailById(id: number) : Observable<any> {
+    return this.http.get<any>(`${environment.apiUrlHttps}/Pogreb/Aggregate/${id}`);
+  }
+
   public deleteFuneral(id: number) : Observable<any> {
     return this.http.delete<any>(`${environment.apiUrlHttps}/Pogreb/${id}`);
   }

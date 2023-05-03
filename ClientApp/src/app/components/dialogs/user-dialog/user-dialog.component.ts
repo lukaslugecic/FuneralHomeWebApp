@@ -86,14 +86,14 @@ export class UserDialogComponent implements OnInit {
           .updateUser(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
-              this.snackBar.open('Korisnik uspješno ažuriran!', 'U redu', {
+              this.snackBar.open('Korisnik uspješno uređen!', 'U redu', {
                 duration: 3000,
               });
               this._dialogRef.close(true);
             },
             error: (err: any) => {
               console.error(err);
-              this.snackBar.open('Greška prilikom ažuriranja korisnika!', 'Zatvori', {
+              this.snackBar.open('Greška prilikom uređivanja korisnika!', 'Zatvori', {
                 duration: 3000,
               });
             },

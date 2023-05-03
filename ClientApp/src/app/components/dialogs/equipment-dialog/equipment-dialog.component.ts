@@ -68,14 +68,14 @@ export class EquipmentDialogComponent implements OnInit {
           .updateEquipment(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
-              this.snackBar.open('Oprema uspješno ažurirana!', 'U redu', {
+              this.snackBar.open('Oprema uspješno uređena!', 'U redu', {
                 duration: 3000,
               });
               this._dialogRef.close(true);
             },
             error: (err: any) => {
               console.error(err);
-              this.snackBar.open('Greška prilikom ažuriranja opreme!', 'Zatvori', {
+              this.snackBar.open('Greška prilikom uređivanja opreme!', 'Zatvori', {
                 duration: 3000,
               });
             },

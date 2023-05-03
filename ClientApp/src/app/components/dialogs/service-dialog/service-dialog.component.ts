@@ -62,14 +62,14 @@ export class ServiceDialogComponent implements OnInit {
           .updateService(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
-              this.snackBar.open('Usluga uspješno ažurirana!', 'U redu', {
+              this.snackBar.open('Usluga uspješno uređena!', 'U redu', {
                 duration: 3000,
               });
               this._dialogRef.close(true);
             },
             error: (err: any) => {
               console.error(err);
-              this.snackBar.open('Greška prilikom ažuriranja usluge!', 'Zatvori', {
+              this.snackBar.open('Greška prilikom uređivanja usluge!', 'Zatvori', {
                 duration: 3000,
               });
             },

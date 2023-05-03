@@ -56,7 +56,7 @@ public class PogrebController : ControllerBase
     }
 
     
-    [HttpGet("/Aggregate/{id}")]
+    [HttpGet("/api/[controller]/Aggregate/{id}")]
     public ActionResult<PogrebAggregate> GetPogrebAggregate(int id)
     {
         var pogrebResult = _pogrebRepository.GetAggregate(id).Map(DtoMapping.ToAggregateDto);
