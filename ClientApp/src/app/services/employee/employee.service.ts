@@ -65,6 +65,12 @@ export class EmployeeService {
   }
    
 
+  // Funerals
+
+  public getAllFunereals() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`);
+  }
+
  }
 
 

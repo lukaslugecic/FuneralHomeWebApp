@@ -13,6 +13,8 @@ import { AllServicesComponent } from './pages/equipment-and-services/all-service
 import { AllServicesModule } from './pages/equipment-and-services/all-services/all-services/all-services.module';
 import { AllEquipmentComponent } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.component';
 import { AllEquipmentModule } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.module';
+import { FuneralsComponent } from './pages/funerals/funerals.component';
+import { FuneralsModule } from './pages/funerals/funerals.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -27,7 +29,8 @@ const routes: Routes = [
         canActivate: [AdminGuard],
       },
       { path: 'services', component: AllServicesComponent},
-      { path: 'equipment', component: AllEquipmentComponent}
+      { path: 'equipment', component: AllEquipmentComponent},
+      { path: 'funerals', component: FuneralsComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -49,7 +52,8 @@ const routes: Routes = [
     RegisterModule,
     LoginModule,
     AllServicesModule,
-    AllEquipmentModule
+    AllEquipmentModule,
+    FuneralsModule
   ],
   exports: [RouterModule]
 })

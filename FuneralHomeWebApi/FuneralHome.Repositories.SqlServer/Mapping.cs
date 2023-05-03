@@ -109,8 +109,6 @@ public static class Mapping
             //SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDbModel()
         };
 
-
-
     public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)
         => new PogrebOprema(
             pogrebOprema.Oprema.ToDomain(),
@@ -123,6 +121,16 @@ public static class Mapping
            OpremaId = pogrebOprema.Oprema.Id,
            Kolicina = pogrebOprema.Kolicina
        };
+
+    public static PogrebSmrtniSlucaj ToDomain2(this DbModels.Pogreb pogreb)
+        => new PogrebSmrtniSlucaj(
+                pogreb.IdPogreb,
+                pogreb.SmrtniSlucaj.ImePok,
+                pogreb.SmrtniSlucaj.PrezimePok,
+                pogreb.DatumPogreb,
+                pogreb.Kremacija
+            );
+
 
     public static SmrtniSlucaj ToDomain(this DbModels.SmrtniSlucaj smrtniSlucaj)
        => new SmrtniSlucaj(

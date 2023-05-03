@@ -25,6 +25,10 @@ public class Usluga : AggregateRoot<int>
             throw new ArgumentException($"'{nameof(naziv)}' cannot be null or empty.", nameof(naziv));
         }
 
+        if(string.IsNullOrEmpty(vrstaUslugeNaziv))
+        {
+            throw new ArgumentException($"'{nameof(vrstaUslugeNaziv)}' cannot be null or empty.", nameof(vrstaUslugeNaziv));
+        }
         
 
 

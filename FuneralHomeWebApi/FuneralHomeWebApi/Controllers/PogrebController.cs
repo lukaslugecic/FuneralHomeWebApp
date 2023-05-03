@@ -30,6 +30,17 @@ public class PogrebController : ControllerBase
             : Problem(pogrebResults.Message, statusCode: 500);
     }
 
+    // GET: api/Pogreb/PogrebSmrtniSlucaj
+    [HttpGet("PogrebSmrtniSlucaj")]
+    public ActionResult<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj()
+    {
+        var pogrebResults = _pogrebRepository.GetAllPogrebSmrtniSlucaj()
+            .Map(p => p.Select(DtoMapping.ToDto));
+        return pogrebResults
+            ? Ok(pogrebResults.Data)
+            : Problem(pogrebResults.Message, statusCode: 500);
+    }
+
     // GET: api/Pogreb/5
     [HttpGet("{id}")]
     public ActionResult<Pogreb> GetPogreb(int id)

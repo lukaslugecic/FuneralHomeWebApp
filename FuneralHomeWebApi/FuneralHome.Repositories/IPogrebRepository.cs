@@ -1,4 +1,5 @@
-﻿using FuneralHome.Domain.Models;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
 using System;
 
 namespace FuneralHome.Repositories;
@@ -12,4 +13,5 @@ public interface IPogrebRepository
     : IRepository<int, Pogreb>,
       IAggregateRepository<int, Pogreb>
 {
+    Result<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj();
 }

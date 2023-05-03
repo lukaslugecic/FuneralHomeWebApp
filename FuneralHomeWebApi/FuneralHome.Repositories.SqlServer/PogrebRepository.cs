@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using FuneralHome.Domain.Models;
 using BaseLibrary;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FuneralHome.Repositories.SqlServer;
 public class PogrebRepository : IPogrebRepository
@@ -69,7 +70,9 @@ public class PogrebRepository : IPogrebRepository
                           //.Include(p => p.SmrtniSlucaj)
                           .Include(p => p.PogrebOprema)
                           .ThenInclude(po => po.Oprema)
+                          .ThenInclude(o => o.VrstaOpreme)
                           .Include(p => p.Usluga)
+                          .ThenInclude(u => u.VrstaUsluge)
                           .AsNoTracking()
                           .FirstOrDefault(p => p.IdPogreb.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
@@ -98,6 +101,23 @@ public class PogrebRepository : IPogrebRepository
         catch (Exception e)
         {
             return Results.OnException<IEnumerable<Pogreb>>(e);
+        }
+    }
+
+    public Result<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj()
+    {
+        try
+        {
+            var models = _dbContext.Pogreb
+                           .Include(p => p.SmrtniSlucaj)
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain2);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<PogrebSmrtniSlucaj>>(e);
         }
     }
 
@@ -207,7 +227,9 @@ public class PogrebRepository : IPogrebRepository
             var dbModel = _dbContext.Pogreb
                               .Include(_ => _.PogrebOprema)
                               .ThenInclude(_ => _.Oprema)
+                              .ThenInclude(o => o.VrstaOpreme)
                               .Include(_ => _.Usluga)
+                              .ThenInclude(u => u.VrstaUsluge)
                               //.AsNoTracking()
                               .FirstOrDefault(_ => _.IdPogreb == model.Id);
             if (dbModel == null)
