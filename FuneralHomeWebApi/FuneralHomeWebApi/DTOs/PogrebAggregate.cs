@@ -17,6 +17,7 @@ public class PogrebAggregate
     public IEnumerable<Usluga> PogrebUsluga { get; set; } = Enumerable.Empty<Usluga>();
 
     public SmrtniSlucaj SmrtniSlucaj { get; set; } = new SmrtniSlucaj();
+    public Korisnik Korisnik { get; set; } = new Korisnik();
 }
 
 
@@ -35,7 +36,8 @@ public static partial class DtoMapping
             PogrebUsluga = pogreb.PogrebUsluga == null
                             ? new List<Usluga>()
                             : pogreb.PogrebUsluga.Select(pa => pa.ToDto()).ToList(),
-            SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDto()
+            SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDto(),
+            Korisnik = pogreb.Korisnik.ToDto()
         };
 
     public static DomainModels.Pogreb ToDomain(this PogrebAggregate pogreb)
@@ -44,6 +46,7 @@ public static partial class DtoMapping
             pogreb.SmrtniSlucajId,
             pogreb.DatumPogreba,
             pogreb.Kremacija,
+            pogreb.Korisnik.ToDomain(),
             pogreb.SmrtniSlucaj.ToDomain(),
             pogreb.PogrebOprema.Select(ToDomain),
             pogreb.PogrebUsluga.Select(ToDomain)

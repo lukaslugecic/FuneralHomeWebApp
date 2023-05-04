@@ -13,6 +13,8 @@ public class PogrebSmrtniSlucaj
     public string PrezimePok { get; set; } = string.Empty;
     public DateTime DatumPogreba { get; set; }
     public bool Kremacija { get; set; }
+    public string Ime { get; set; } = string.Empty;
+    public string Prezime { get; set; } = string.Empty;
 
     //public decimal Cijena { get; set; }
 }
@@ -28,7 +30,9 @@ public static partial class DtoMapping
             PrezimePok = pogreb.PrezimePok,
             DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
-            //Cijena = pogreb.Cijena
+            //Cijena = pogreb.Cijena,
+            Ime = pogreb.Ime,
+            Prezime = pogreb.Prezime
         };
 
     public static DomainModels.PogrebSmrtniSlucaj ToDomain(this PogrebSmrtniSlucaj pogreb)
@@ -37,7 +41,9 @@ public static partial class DtoMapping
             pogreb.ImePok,
             pogreb.PrezimePok,
             pogreb.DatumPogreba,
-            pogreb.Kremacija
-           // pogreb.Cijena
+            pogreb.Kremacija,
+           // pogreb.Cijena,
+            pogreb.Ime,
+            pogreb.Prezime
         );
 }

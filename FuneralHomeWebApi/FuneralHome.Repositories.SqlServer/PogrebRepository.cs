@@ -68,6 +68,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var model = _dbContext.Pogreb
                           .Include(p => p.SmrtniSlucaj)
+                          .ThenInclude(ss => ss.Korisnik)
                           .Include(p => p.PogrebOprema)
                           .ThenInclude(po => po.Oprema)
                           .ThenInclude(o => o.VrstaOpreme)
@@ -110,6 +111,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var models = _dbContext.Pogreb
                            .Include(p => p.SmrtniSlucaj)
+                           .ThenInclude(ss => ss.Korisnik)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain2);
 

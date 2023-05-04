@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { IPogrebAggregateData } from 'src/app/interfaces/pogreb-aggregate-data';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -14,8 +15,8 @@ export class FuneralService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`);
   }
 
-  public getFuneralDetailById(id: number) : Observable<any> {
-    return this.http.get<any>(`${environment.apiUrlHttps}/Pogreb/Aggregate/${id}`);
+  public getFuneralDetailById(id: number) : Observable<IPogrebAggregateData> {
+    return this.http.get<IPogrebAggregateData>(`${environment.apiUrlHttps}/Pogreb/Aggregate/${id}`);
   }
 
   public deleteFuneral(id: number) : Observable<any> {

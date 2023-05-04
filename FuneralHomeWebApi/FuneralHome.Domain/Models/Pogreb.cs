@@ -12,6 +12,7 @@ public class Pogreb : AggregateRoot<int>
     private readonly List<PogrebOprema> _pogrebOprema;
     private readonly List<Usluga> _pogrebUsluga;
     private SmrtniSlucaj? _smrtniSlucaj; // readonly?
+    private Korisnik? _korisnik;
 
     public int SmrtniSlucajId { get => _smrtniSlucajId; set => _smrtniSlucajId = value; }
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
@@ -19,8 +20,10 @@ public class Pogreb : AggregateRoot<int>
     public IReadOnlyList<PogrebOprema> PogrebOprema => _pogrebOprema.ToList();
     public IReadOnlyList<Usluga> PogrebUsluga => _pogrebUsluga.ToList();
     public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value;}
+    public Korisnik? Korisnik { get => _korisnik; set => _korisnik = value; }
 
     public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija,
+        Korisnik? korisnik = null,
         SmrtniSlucaj? smrtniSlucaj = null,
         IEnumerable<PogrebOprema>? pogrebOprema = null,
         IEnumerable<Usluga>? pogrebUsluga = null) : base(id)
@@ -28,6 +31,7 @@ public class Pogreb : AggregateRoot<int>
         _smrtniSlucajId = smrtniSlucajId;
         _datumPogreba = datumPogreba;
         _kremacija = kremacija;
+        _korisnik = korisnik;
         _smrtniSlucaj = smrtniSlucaj;
         _pogrebOprema = pogrebOprema?.ToList() ?? new List<PogrebOprema>();
         _pogrebUsluga = pogrebUsluga?.ToList() ?? new List<Usluga>();

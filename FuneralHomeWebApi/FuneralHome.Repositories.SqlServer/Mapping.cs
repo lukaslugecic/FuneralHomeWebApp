@@ -92,6 +92,7 @@ public static class Mapping
            pogreb.SmrtniSlucajId,
            pogreb.DatumPogreb,
            pogreb.Kremacija,
+           pogreb.SmrtniSlucaj?.Korisnik.ToDomain(),
            pogreb.SmrtniSlucaj?.ToDomain(),
            pogreb.PogrebOprema.Select(ToDomain),
            pogreb.Usluga.Select(ToDomain)
@@ -128,7 +129,9 @@ public static class Mapping
                 pogreb.SmrtniSlucaj.ImePok,
                 pogreb.SmrtniSlucaj.PrezimePok,
                 pogreb.DatumPogreb,
-                pogreb.Kremacija
+                pogreb.Kremacija,
+                pogreb.SmrtniSlucaj.Korisnik.Ime,
+                pogreb.SmrtniSlucaj.Korisnik.Prezime
             );
 
 

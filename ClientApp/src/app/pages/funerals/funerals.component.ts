@@ -21,6 +21,8 @@ export class FuneralsComponent implements OnInit {
     'prezimePok',
     'datumPogreba',
     'kremacija',
+    'ime',
+    'prezime',
     'action'
     ];
 
