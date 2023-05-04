@@ -92,7 +92,7 @@ public static class Mapping
            pogreb.SmrtniSlucajId,
            pogreb.DatumPogreb,
            pogreb.Kremacija,
-           //pogreb.SmrtniSlucaj.ToDomain(),
+           pogreb.SmrtniSlucaj?.ToDomain(),
            pogreb.PogrebOprema.Select(ToDomain),
            pogreb.Usluga.Select(ToDomain)
        );
@@ -106,7 +106,7 @@ public static class Mapping
             Kremacija = pogreb.Kremacija,
             PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
             Usluga = pogreb.PogrebUsluga.Select(pu => pu.ToDbModel()).ToList(),
-            //SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDbModel()
+            SmrtniSlucaj = pogreb.SmrtniSlucaj?.ToDbModel()
         };
 
     public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)

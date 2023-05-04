@@ -67,7 +67,7 @@ public class PogrebRepository : IPogrebRepository
         try
         {
             var model = _dbContext.Pogreb
-                          //.Include(p => p.SmrtniSlucaj)
+                          .Include(p => p.SmrtniSlucaj)
                           .Include(p => p.PogrebOprema)
                           .ThenInclude(po => po.Oprema)
                           .ThenInclude(o => o.VrstaOpreme)

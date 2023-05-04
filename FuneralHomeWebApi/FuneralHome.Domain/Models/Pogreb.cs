@@ -11,24 +11,24 @@ public class Pogreb : AggregateRoot<int>
     //private decimal _ukupnaCijena;
     private readonly List<PogrebOprema> _pogrebOprema;
     private readonly List<Usluga> _pogrebUsluga;
-    //private SmrtniSlucaj _smrtniSlucaj; // readonly?
+    private SmrtniSlucaj? _smrtniSlucaj; // readonly?
 
     public int SmrtniSlucajId { get => _smrtniSlucajId; set => _smrtniSlucajId = value; }
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
     public IReadOnlyList<PogrebOprema> PogrebOprema => _pogrebOprema.ToList();
     public IReadOnlyList<Usluga> PogrebUsluga => _pogrebUsluga.ToList();
-    //public SmrtniSlucaj SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value;}
+    public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value;}
 
-    public Pogreb(int id, int smrtnislucajId, DateTime datumPogreba, bool kremacija,
-        //SmrtniSlucaj? smrtniSlucaj = null,
+    public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija,
+        SmrtniSlucaj? smrtniSlucaj = null,
         IEnumerable<PogrebOprema>? pogrebOprema = null,
         IEnumerable<Usluga>? pogrebUsluga = null) : base(id)
     {
-        _smrtniSlucajId = smrtnislucajId;
+        _smrtniSlucajId = smrtniSlucajId;
         _datumPogreba = datumPogreba;
         _kremacija = kremacija;
-        //_smrtniSlucaj = smrtniSlucaj;
+        _smrtniSlucaj = smrtniSlucaj;
         _pogrebOprema = pogrebOprema?.ToList() ?? new List<PogrebOprema>();
         _pogrebUsluga = pogrebUsluga?.ToList() ?? new List<Usluga>();
     }
@@ -84,7 +84,7 @@ public class Pogreb : AggregateRoot<int>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _smrtniSlucajId, _datumPogreba ,_kremacija, _pogrebOprema, _pogrebUsluga);
+        return HashCode.Combine(_id, _smrtniSlucajId ,_datumPogreba ,_kremacija, _pogrebOprema, _pogrebUsluga);
     }
 
     public override Result IsValid()
