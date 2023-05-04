@@ -22,6 +22,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int SmrtniSlucajId { get; set; }
         public DateTime DatumPogreb { get; set; }
         public bool Kremacija { get; set; }
+        [Column(TypeName = "numeric(18, 2)")]
+        public decimal Cijena { get; set; }
 
         [ForeignKey("SmrtniSlucajId")]
         [InverseProperty("Pogreb")]
