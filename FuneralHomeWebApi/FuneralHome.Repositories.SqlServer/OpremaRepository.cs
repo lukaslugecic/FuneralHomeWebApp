@@ -212,8 +212,64 @@ public class OpremaRepository : IOpremaRepository
         }
     }
 
+    public Result IncreaseZaliha(Oprema model, int kolicina)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            dbModel.ZalihaOpreme += kolicina;
+            // detach
+            if (_dbContext.Oprema.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
 
-    
+    public Result DecreaseZaliha(Oprema model, int kolicina)
+    {
+        try
+        {
+            var dbModel = model.ToDbModel();
+            dbModel.ZalihaOpreme -= kolicina;
+            if (dbModel.ZalihaOpreme < 0)
+            {
+                return Results.OnFailure();
+            }
+            // detach
+            if (_dbContext.Oprema.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+
+                // every Update attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
+
     public Result UpdateAggregate(Oprema model)
     {
         return Results.OnFailure();

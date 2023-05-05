@@ -37,5 +37,13 @@ export class FuneralService {
   public addFuneralDeath(data: any) : Observable<any> {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`, data);
   }
+
+  public incrementEquipment(id: number, opremaId : number) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/IncrementOprema/${id}?opremaId=${opremaId}`, null);
+  }
+
+  public decrementEquipment(id: number, opremaId : number) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/DecrementOprema/${id}?opremaId=${opremaId}`, null);
+  }
   
 }

@@ -103,6 +103,62 @@ public class OpremaController : ControllerBase
             : Problem(result.Message, statusCode: 500);
     }
 
+    // PUT: api/Oprema/IncreaseZaliha/5
+    [HttpPut("IncreaseZaliha/{id}")]
+    public IActionResult IncreaseZaliha(int id, Oprema oprema, int kolicina)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        if (id != oprema.Id)
+        {
+            return BadRequest();
+        }
+        if (!_opremaRepository.Exists(id))
+        {
+            return NotFound();
+        }
+        var domainOprema = oprema.ToDomain();
+        var result =
+            domainOprema.IsValid()
+            .Bind(() => _opremaRepository.IncreaseZaliha(domainOprema, kolicina));
+        return result
+            ? AcceptedAtAction("IncreaseOprema", oprema)
+            : Problem(result.Message, statusCode: 500);
+    }
+
+
+    // PUT: api/Oprema/DecreaseZaliha/5
+    [HttpPut("DecreaseZaliha/{id}")]
+    public IActionResult DecreaseZaliha(int id, Oprema oprema, int kolicina)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (id != oprema.Id)
+        {
+            return BadRequest();
+        }
+
+        if (!_opremaRepository.Exists(id))
+        {
+            return NotFound();
+        }
+
+        var domainOprema = oprema.ToDomain();
+
+        var result =
+            domainOprema.IsValid()
+            .Bind(() => _opremaRepository.DecreaseZaliha(domainOprema, kolicina));
+
+        return result
+            ? AcceptedAtAction("DecreaseOprema", oprema)
+            : Problem(result.Message, statusCode: 500);
+    }
+
     // POST: api/Oprema
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]

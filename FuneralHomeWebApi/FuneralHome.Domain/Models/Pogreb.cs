@@ -52,6 +52,26 @@ public class Pogreb : AggregateRoot<int>
         return AddOprema(pogrebOprema.Oprema, pogrebOprema.Kolicina);
     }
 
+    public bool IncrementOprema(int opremaId)
+    {
+        var pogrebOprema = _pogrebOprema.FirstOrDefault(po => po.Oprema.Id == opremaId);
+        if (pogrebOprema is null)
+            return false;
+        pogrebOprema.Kolicina++;
+        return true;
+    }
+
+    public bool DecrementOprema(int opremaId)
+    {
+        var pogrebOprema = _pogrebOprema.FirstOrDefault(po => po.Oprema.Id == opremaId);
+        if (pogrebOprema is null)
+            return false;
+        pogrebOprema.Kolicina--;
+        if (pogrebOprema.Kolicina == 0)
+            _pogrebOprema.Remove(pogrebOprema);
+        return true;
+    }
+
     public bool RemoveOprema(PogrebOprema pogrebOprema)
     {
         return _pogrebOprema.Remove(pogrebOprema);

@@ -14,4 +14,7 @@ public interface IOpremaRepository
       IAggregateRepository<int, Oprema>
 {
     Result<IEnumerable<Oprema>> GetAllByType(int id);
+
+    Result IncreaseZaliha(Oprema model, int kolicina);
+    Result DecreaseZaliha(Oprema model, int kolicina);
 }

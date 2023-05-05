@@ -12,10 +12,12 @@ namespace FuneralHome.Controllers;
 public class PogrebController : ControllerBase
 {
     private readonly IPogrebRepository _pogrebRepository;
+    private readonly IOpremaRepository _opremaRepository;
 
-    public PogrebController(IPogrebRepository repository)
+    public PogrebController(IPogrebRepository repository, IOpremaRepository opremaRepository)
     {
         _pogrebRepository = repository;
+        _opremaRepository = opremaRepository;
     }
 
     // GET: api/Pogreb
@@ -98,7 +100,14 @@ public class PogrebController : ControllerBase
             return Problem(validationResult.Message, statusCode: 500);
         }
 
-        pogreb.AddOprema(domainPogrebOprema);
+        if (pogreb.AddOprema(domainPogrebOprema))
+        {
+            var opremaResult = _opremaRepository.DecreaseZaliha(domainPogrebOprema.Oprema, domainPogrebOprema.Kolicina);
+            if (opremaResult.IsFailure)
+            {
+                return Problem(opremaResult.Message, statusCode: 500);
+            }
+        };
 
         var updateResult =
             pogreb.IsValid()
@@ -109,7 +118,7 @@ public class PogrebController : ControllerBase
             : Problem(updateResult.Message, statusCode: 500);
     }
 
-
+    
     [HttpPost("RemoveOprema/{pogrebId}")]
     public IActionResult RemoveOprema(int pogrebId, Oprema oprema)
     {
@@ -129,18 +138,107 @@ public class PogrebController : ControllerBase
         }
 
         var pogreb = pogrebResult.Data;
-
+        
         var domainOprema = oprema.ToDomain();
+
+        var kolicina = pogreb.PogrebOprema
+            .Where(o => o.Oprema.Id == oprema.Id)
+            .Select(o => o.Kolicina).FirstOrDefault();
+
+        if (kolicina == 0)
+        {
+            return NotFound($"Couldn't find equipment kolicina {oprema.Naziv}");
+        }
 
         if (!pogreb.RemoveOprema(domainOprema))
         {
             return NotFound($"Couldn't find equipment {oprema.Naziv}");
         }
 
+        var opremaResult = _opremaRepository.IncreaseZaliha(domainOprema, kolicina);
+        if (opremaResult.IsFailure)
+        {
+            return Problem(opremaResult.Message, statusCode: 500);
+        }
+        
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
 
+        return updateResult
+            ? Accepted()
+            : Problem(updateResult.Message, statusCode: 500);
+    }
+
+    [HttpPost("IncrementOprema/{pogrebId}")]
+    public IActionResult IncrementOprema(int pogrebId, int opremaId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var pogrebResult = _pogrebRepository.GetAggregate(pogrebId);
+        if (pogrebResult.IsFailure)
+        {
+            return NotFound();
+        }
+        if (pogrebResult.IsException)
+        {
+            return Problem(pogrebResult.Message, statusCode: 500);
+        }
+
+        var pogreb = pogrebResult.Data;
+    
+        if (pogreb.IncrementOprema(opremaId))
+        {
+            var oprema = _opremaRepository.Get(opremaId).Data;
+            var opremaResult = _opremaRepository.DecreaseZaliha(oprema, 1);
+            if (opremaResult.IsFailure)
+            {
+                return Problem(opremaResult.Message, statusCode: 500);
+            }
+        };
+
+        var updateResult =
+            pogreb.IsValid()
+            .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
+
+        return updateResult
+            ? Accepted()
+            : Problem(updateResult.Message, statusCode: 500);
+    }
+
+    [HttpPost("DecrementOprema/{pogrebId}")]
+    public IActionResult DecrementOprema(int pogrebId, int opremaId)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var pogrebResult = _pogrebRepository.GetAggregate(pogrebId);
+        if (pogrebResult.IsFailure)
+        {
+            return NotFound();
+        }
+        if (pogrebResult.IsException)
+        {
+            return Problem(pogrebResult.Message, statusCode: 500);
+        }
+        var pogreb = pogrebResult.Data;
+
+        if (pogreb.DecrementOprema(opremaId))
+        {
+            var oprema = _opremaRepository.Get(opremaId).Data;
+            var opremaResult = _opremaRepository.IncreaseZaliha(oprema, 1);
+            if (opremaResult.IsFailure)
+            {
+                return Problem(opremaResult.Message, statusCode: 500);
+            }
+        };
+        var updateResult =
+            pogreb.IsValid()
+            .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
         return updateResult
             ? Accepted()
             : Problem(updateResult.Message, statusCode: 500);

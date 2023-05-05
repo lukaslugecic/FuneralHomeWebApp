@@ -71,16 +71,15 @@ export class FuneralDetailComponent implements OnInit {
   }
 
   getAllInfo() {
+    this.arrayOfDeaths = [];
+    this.arrayOfEquipment = [];
+    this.arrayOfServices = [];
     this.funeralId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log(this.funeralId);
     this._funeralService.getFuneralDetailById(this.funeralId).subscribe({
       next: (res) => {
-        console.log(res);
         this.arrayOfDeaths.push(res);
         this.arrayOfEquipment = res.pogrebOprema;
-        console.log(this.arrayOfEquipment);
         this.arrayOfServices = res.pogrebUsluga;
-        console.log(this.arrayOfServices);
         this.dataSourceDeaths = new MatTableDataSource(this.arrayOfDeaths);
         this.dataSourceEquipment = new MatTableDataSource(this.arrayOfEquipment);
         this.dataSourceServices = new MatTableDataSource(this.arrayOfServices);
@@ -136,4 +135,19 @@ export class FuneralDetailComponent implements OnInit {
   }
 
 
+  incrementEquipment(id: number){
+    this._funeralService.incrementEquipment(this.funeralId!, id).subscribe({
+      next: (res) => {
+        this.getAllInfo();
+      }
+    });
+  }
+
+  decrementEquipment(id: number){
+    this._funeralService.decrementEquipment(this.funeralId!, id).subscribe({
+      next: (res) => {
+        this.getAllInfo();
+      }
+    });
+  }
 }

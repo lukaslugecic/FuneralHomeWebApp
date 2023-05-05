@@ -330,7 +330,7 @@ public class PogrebRepository : IPogrebRepository
                            .FirstOrDefault(po => po.PogrebId.Equals(model.Id) && po.OpremaId.Equals(pogrebOprema.Oprema.Id));
                 if (pogrebOpremaToUpdate != null)
                 {
-                    pogrebOprema.Kolicina = pogrebOprema.Kolicina;
+                    pogrebOpremaToUpdate.Kolicina = pogrebOprema.Kolicina;
                 }
                 else // it does not exist in the DB, so add it
                 {
