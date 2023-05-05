@@ -38,6 +38,10 @@ export class FuneralService {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/PogrebSmrtniSlucaj`, data);
   }
 
+  public addEquipment(id: number, data : any) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/AddOprema/${id}`, data);
+  }
+
   public incrementEquipment(id: number, opremaId : number) : Observable<any> {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/IncrementOprema/${id}?opremaId=${opremaId}`, null);
   }

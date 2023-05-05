@@ -107,7 +107,7 @@
   <div class="table-container">
     <div class="header">
       <h2>Popis opreme</h2>
-        <button mat-raised-button >Dodaj opremu</button>
+        <button mat-raised-button (click)="addEquipment()">Dodaj opremu</button>
       </div>
       
       <table mat-table [dataSource]="dataSourceEquipment" matSort>
@@ -159,7 +159,7 @@
     <div class="table-container">
       <div class="header">
         <h2>Popis usluga</h2>
-        <button mat-raised-button >Dodaj uslugu</button>
+        <button mat-raised-button (click)="addService()">Dodaj uslugu</button>
       </div>
       <table mat-table [dataSource]="dataSourceServices" matSort>
         

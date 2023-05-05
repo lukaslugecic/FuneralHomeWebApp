@@ -2,9 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { forkJoin } from 'rxjs';
 import { IOpremaData } from 'src/app/interfaces/oprema-data';
+import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
 import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
+import { FuneralService } from 'src/app/services/funeral/funeral.service';
 
 @Component({
   selector: 'app-add-equipment-dialog',
@@ -13,84 +16,64 @@ import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 })
 export class AddEquipmentDialogComponent implements OnInit {
   
-  fileName = '';
-
   equipmentForm: FormGroup = new FormGroup({
-    naziv: new FormControl('', [Validators.required]),
-    zalihaOpreme: new FormControl('', [Validators.required]),
-    cijena: new FormControl('', [Validators.required]),
+    opremaId: new FormControl('', [Validators.required]),
     vrstaOpreme: new FormControl('', [Validators.required]),
-    slika: new FormControl('')
+    kolicina : new FormControl('', [Validators.required]),
   });
   
-  toUpdate: IOpremaData = {} as IOpremaData;
+  toAdd: IPogrebOpremaData = {} as IPogrebOpremaData;
 
   types: IVrstaOpremeData[] = [];
+  equipment: any[] = [];
+  equipmentToShow: Oprema[] = [];
+  filteredEquipmentToShow: Oprema[] = [];
+
 
   constructor(
     private readonly _equipmentService: EquipmentService,
+    private readonly _funeralService: FuneralService,
     private _dialogRef: MatDialogRef<AddEquipmentDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
-    // dohvatiti vrste usluga i spremiti u this.types zatim popuniti formu sa podacima ako je data != null
-    this._equipmentService.getTypesOfEquipment().subscribe((data: any) => {
-      this.types = data;
-      if (this.data) {
-        this.equipmentForm.patchValue({
-          naziv: this.data.naziv,
-          zalihaOpreme: this.data.zalihaOpreme,
-          cijena: this.data.cijena,
-          vrstaOpreme: this.data.vrstaOpremeId,
-          slika: this.data.slika
+    forkJoin([
+      this._equipmentService.getTypesOfEquipment(),
+      this._equipmentService.getAllEquipment(),
+    ]).subscribe(([types, equipment]) => {
+      this.types = types;
+      this.equipment = equipment;
+      equipment.forEach((e: any) => {
+        this.equipmentToShow.push({
+          id: e.id,
+          vrstaOpreme: e.vrstaOpremeId,
+          naziv: "Naziv: " + e.naziv + ", Cijena: " + e.cijena + "€",
         });
-      }
+      });
+    });
+    this.equipmentForm.get('vrstaOpreme')?.valueChanges.subscribe(value => {
+      // Filter the equipment options based on the selected type
+      this.filteredEquipmentToShow = this.equipmentToShow.filter(e => e.vrstaOpreme === value);
     });
   }
 
   onFormSubmit() {
-    console.log(this.equipmentForm.value);
     if (this.equipmentForm.valid) {
-      if (this.data) {
-        this.toUpdate = {
-          Id: this.data.id,
-          Naziv: this.equipmentForm.value.naziv,
-          Cijena: this.equipmentForm.value.cijena,
-          ZalihaOpreme: this.equipmentForm.value.zalihaOpreme,
-          Slika: this.equipmentForm.value.slika,
-          VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
-          VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
+        this.toAdd = {
+          oprema: {
+            id: this.equipmentForm.value.opremaId,
+            naziv: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.naziv,
+            vrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
+            vrstaOpremeNaziv: this.types.find((t: any) => t.id === this.equipmentForm.get('vrstaOpreme')?.value)?.naziv as string, // this.equipment.find((e: any) => e.id === this.equipmentForm.get('opremaId')?.value)?.VrstaOpremeNaziv as string,
+            slika: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.slika,
+            zalihaOpreme: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.zalihaOpreme,
+            cijena: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.cijena,
+          },
+          kolicina: this.equipmentForm.get('kolicina')?.value,
         }
-        console.log(this.toUpdate);
-        this._equipmentService
-          .updateEquipment(this.data.id, this.toUpdate)
-          .subscribe({
-            next: (val: any) => {
-              this.snackBar.open('Oprema uspješno uređena!', 'U redu', {
-                duration: 3000,
-              });
-              this._dialogRef.close(true);
-            },
-            error: (err: any) => {
-              console.error(err);
-              this.snackBar.open('Greška prilikom uređivanja opreme!', 'Zatvori', {
-                duration: 3000,
-              });
-            },
-          });
-      } else {
-        this.toUpdate = {
-          Id: 0,
-          Naziv: this.equipmentForm.value.naziv,
-          Cijena: this.equipmentForm.value.cijena,
-          ZalihaOpreme: this.equipmentForm.value.zalihaOpreme,
-          Slika: this.equipmentForm.value.slika,
-          VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
-          VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
-        }
-        this._equipmentService.addEquipment(this.toUpdate).subscribe({
+        this._funeralService.addEquipment(this.data, this.toAdd).subscribe({
           next: (val: any) => {
             this.snackBar.open('Oprema uspješno dodana!', 'U redu', {
               duration: 3000,
@@ -104,31 +87,18 @@ export class AddEquipmentDialogComponent implements OnInit {
             });
           },
         });
-        console.log(this.toUpdate);
-      }
+       console.log(this.data);
+       console.log(this.toAdd);
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {
         duration: 3000,
       });
     }
   }
-
-
-  onFileSelected(event : any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.fileName = file.name;
-    }
-    // pretvori file u BLOB u hex formatu
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.equipmentForm.patchValue({
-        slika: reader.result?.toString().split(',')[1]
-      });
-    }
-    
 }
 
-
-}
+type Oprema = {
+  id: number;
+  naziv: string;
+  vrstaOpreme: string;
+};

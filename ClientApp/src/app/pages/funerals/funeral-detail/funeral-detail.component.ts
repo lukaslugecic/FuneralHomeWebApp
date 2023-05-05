@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
+import { AddEquipmentDialogComponent } from 'src/app/components/dialogs/add-equipment-dialog/add-equipment-dialog.component';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
 import { FuneralDialogComponent } from 'src/app/components/dialogs/funeral-dialog/funeral-dialog.component';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
@@ -134,12 +135,33 @@ export class FuneralDetailComponent implements OnInit {
     });
   }
 
+  addEquipment() {
+    const dialogRef = this._dialog.open(AddEquipmentDialogComponent, {
+      data: this.funeralId,
+    });
+    dialogRef.afterClosed().subscribe({
+      next: (val) => {
+        if (val) {
+          this.getAllInfo();
+        }
+      },
+    });
+  }
+
+  addService() {
+    console.log("addService");
+  }
 
   incrementEquipment(id: number){
     this._funeralService.incrementEquipment(this.funeralId!, id).subscribe({
       next: (res) => {
         this.getAllInfo();
-      }
+      },
+      error: (err) => {
+        this._snackBar.open('Nema više opreme na zalihi', 'Zatvori', {
+          duration: 3000,
+        });
+      },
     });
   }
 
@@ -150,4 +172,5 @@ export class FuneralDetailComponent implements OnInit {
       }
     });
   }
+
 }
