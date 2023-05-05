@@ -9,11 +9,11 @@ import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
 import { ServiceService } from 'src/app/services/service/service.service';
 
 @Component({
-  selector: 'app-all-services',
-  templateUrl: './all-services.component.html',
-  styleUrls: ['./all-services.component.scss']
+  selector: 'app-services',
+  templateUrl: './services.component.html',
+  styleUrls: ['./services.component.scss']
 })
-export class AllServicesComponent implements OnInit {
+export class ServicesComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'vrstaUslugeNaziv',

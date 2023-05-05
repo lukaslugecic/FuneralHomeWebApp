@@ -9,10 +9,10 @@ import { LoginComponent } from './pages/login/login.component';
 import { LoginModule } from './pages/login/login.module';
 import { RegisterComponent } from './pages/register/register.component';
 import { RegisterModule } from './pages/register/register.module';
-import { AllServicesComponent } from './pages/equipment-and-services/all-services/all-services/all-services.component';
-import { AllServicesModule } from './pages/equipment-and-services/all-services/all-services/all-services.module';
-import { AllEquipmentComponent } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.component';
-import { AllEquipmentModule } from './pages/equipment-and-services/all-equipment/all-equipment/all-equipment.module';
+import { ServicesComponent } from './pages/services/services.component';
+import { ServicesModule } from './pages/services/services.module';
+import { EquipmentComponent } from './pages/equipment/equipment.component';
+import { EquipmentModule } from './pages/equipment/equipment.module';
 import { FuneralsComponent } from './pages/funerals/funerals.component';
 import { FuneralsModule } from './pages/funerals/funerals.module';
 import { DeathsComponent } from './pages/deaths/deaths.component';
@@ -30,8 +30,8 @@ const routes: Routes = [
         path: 'users', component: AllUsersComponent,
         canActivate: [AdminGuard],
       },
-      { path: 'services', component: AllServicesComponent},
-      { path: 'equipment', component: AllEquipmentComponent},
+      { path: 'services', component: ServicesComponent},
+      { path: 'equipment', component: EquipmentComponent},
       { path: 'funerals', component: FuneralsComponent},
       { path: 'funerals/:id', component: FuneralDetailComponent},
       { path: 'deaths', component: DeathsComponent}
@@ -55,8 +55,8 @@ const routes: Routes = [
     HomeModule,
     RegisterModule,
     LoginModule,
-    AllServicesModule,
-    AllEquipmentModule,
+    ServicesModule,
+    EquipmentModule,
     FuneralsModule,
     DeathsModule,
     AllUsersModule

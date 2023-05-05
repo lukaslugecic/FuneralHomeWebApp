@@ -9,11 +9,11 @@ import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
-  selector: 'app-all-equipment',
-  templateUrl: './all-equipment.component.html',
-  styleUrls: ['./all-equipment.component.scss']
+  selector: 'app-equipment',
+  templateUrl: './equipment.component.html',
+  styleUrls: ['./equipment.component.scss']
 })
-export class AllEquipmentComponent implements OnInit {
+export class EquipmentComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
     'vrstaOpremeNaziv',
