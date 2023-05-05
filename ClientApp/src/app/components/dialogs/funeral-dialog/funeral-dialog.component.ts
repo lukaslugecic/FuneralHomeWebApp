@@ -52,7 +52,10 @@ export class FuneralDialogComponent implements OnInit {
       // iz svakog korisnika izvuci id i ime
       res.forEach((k) => {
         if(k.vrstaKorisnika === 'K'){
-          this.korisnici.push( {korisnikId : k.id, imeIprezime : k.ime +  " " + k.prezime});
+          this.korisnici.push( {
+            korisnikId : k.id,
+            imeIprezime : k.ime +  " " + k.prezime
+          });
         }
       });
     });
@@ -65,26 +68,34 @@ export class FuneralDialogComponent implements OnInit {
           this.slucajevi.push( {
             smrtniSlucajId : d.id,
             imeIprezime : d.imePok +  " " + d.prezimePok,
-            datumSmrti: d.datumSmrti
+            datumSmrti: d.datumSmrtiPok
           });
         }
       });
     });
+
+    
 
     if (this.data) {
       this.funeralForm.patchValue({
         datumPogreba: this.data.datumPogreba,
         kremacija: this.data.kremacija,
         smrtniSlucajId: this.data.smrtniSlucajId,
-        korisnikId: this.data.korisnikId,
+        korisnikId: this.data.korisnikId ?? this.data.korisnik.id,
         ukupnaCijena: this.data.ukupnaCijena
       });
       this.slucajevi.push( {
         smrtniSlucajId : this.data.smrtniSlucajId,
-        imeIprezime : this.data.imePok +  " " + this.data.prezimePok,
-        datumSmrti : this.data.datumSmrti
+        // dohvatiti iz this.data ili ako ne postoji iz this.data.smrtniSlucaj
+        imeIprezime : this.data.ime
+          ? this.data.ime + " " + this.data.prezime
+          : this.data.smrtniSlucaj.imePok + " " + this.data.smrtniSlucaj.prezimePok, 
+        datumSmrti : this.data.datumSmrti ?? this.data.smrtniSlucaj.datumSmrtiPok
       });
     }
+
+    console.log(this.slucajevi);
+
   }
 
   onFormSubmit() {
@@ -129,7 +140,8 @@ export class FuneralDialogComponent implements OnInit {
       } else {
         this.toUpdate = {
           Id: 0,
-          DatumPogreba: this.funeralForm.value.datumPogreba,
+          DatumPogreba: new Date(new Date(this.funeralForm.value.datumPogreba).getTime() 
+            - new Date(this.funeralForm.value.datumPogreba).getTimezoneOffset() * 60000),
           Kremacija: this.funeralForm.value.kremacija,
           SmrtniSlucajId: this.funeralForm.value.smrtniSlucajId,
           ImePok: this.slucajevi.find(s => s.smrtniSlucajId === this.funeralForm.value.smrtniSlucajId)?.imeIprezime?.split(" ")[0] || '',

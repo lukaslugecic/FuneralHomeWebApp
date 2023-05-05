@@ -28,7 +28,7 @@ public static partial class DtoMapping
         => new PogrebAggregate()
         {
             Id = pogreb.Id,
-            //SmrtniSlucajId = pogreb.SmrtniSlucajId,
+            SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
             UkupnaCijena = pogreb.UkupnaCijena,
@@ -38,8 +38,8 @@ public static partial class DtoMapping
             PogrebUsluga = pogreb.PogrebUsluga == null
                             ? new List<Usluga>()
                             : pogreb.PogrebUsluga.Select(pa => pa.ToDto()).ToList(),
-            SmrtniSlucaj = pogreb.SmrtniSlucaj.ToDto(),
-            Korisnik = pogreb.Korisnik.ToDto()
+            SmrtniSlucaj = pogreb.SmrtniSlucaj!.ToDto(),
+            Korisnik = pogreb.Korisnik!.ToDto()
         };
 
     public static DomainModels.Pogreb ToDomain(this PogrebAggregate pogreb)
