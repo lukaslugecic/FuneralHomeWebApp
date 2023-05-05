@@ -48,30 +48,48 @@ export class DeathDialogComponent implements OnInit {
         }
       });
     });
-
-    console.log("nesto" + this.korisnici)
-      if (this.data) {
-        this.deathForm.patchValue({
-          imePok: this.data.imePok,
-          prezimePok: this.data.prezimePok,
-          oibpok: this.data.oibpok,
-          datumRodenjaPok: this.data.datumRodenjaPok,
-          datumSmrtiPok: this.data.datumSmrtiPok,
-          korisnikId: this.data.korisnikId,
-        });
-      }
+    if (this.data) {
+      this.deathForm.patchValue({
+        imePok: this.data.imePok,
+        prezimePok: this.data.prezimePok,
+        oibpok: this.data.oibpok,
+        datumRodenjaPok: this.data.datumRodenjaPok,
+        datumSmrtiPok: this.data.datumSmrtiPok,
+        korisnikId: this.data.korisnikId,
+      });
+    }
   }
 
   onFormSubmit() {
     if (this.deathForm.valid) {
+      if(this.deathForm.value.datumRodenjaPok > this.deathForm.value.datumSmrtiPok){
+        this.snackBar.open('Datum smrti ne može biti prije datuma rođenja!', 'U redu', {
+          duration: 3000,
+        });
+        return;
+      }
+      if(this.deathForm.value.datumSmrtiPok > new Date()){
+        this.snackBar.open('Datum smrti ne može biti u budućnosti!', 'U redu', {
+          duration: 3000,
+        });
+        return;
+      }
+      if(this.deathForm.value.datumRodenjaPok > new Date()){
+        this.snackBar.open('Datum rođenja ne može biti u budućnosti!', 'U redu', {
+          duration: 3000,
+        });
+        return;
+      }
       if (this.data) {
         this.toUpdate = {
           Id: this.data.id,
           ImePok: this.deathForm.value.imePok,
           PrezimePok: this.deathForm.value.prezimePok,
           Oibpok: this.deathForm.value.oibpok,
-          DatumRodenjaPok: this.deathForm.value.datumRodenjaPok,
-          DatumSmrtiPok: this.deathForm.value.datumSmrtiPok,
+          DatumRodenjaPok: new Date(new Date(this.deathForm.value.datumRodenjaPok).getTime() 
+            - new Date(this.deathForm.value.datumRodenjaPok).getTimezoneOffset() * 60000),
+          DatumSmrtiPok: new Date(new Date(this.deathForm.value.datumSmrtiPok).getTime()
+            - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
           KorisnikId: this.deathForm.value.korisnikId,
         }
         console.log(this.toUpdate);
@@ -97,8 +115,10 @@ export class DeathDialogComponent implements OnInit {
           ImePok: this.deathForm.value.imePok,
           PrezimePok: this.deathForm.value.prezimePok,
           Oibpok: this.deathForm.value.oibpok,
-          DatumRodenjaPok: this.deathForm.value.datumRodenjaPok,
-          DatumSmrtiPok: this.deathForm.value.datumSmrtiPok,
+          DatumRodenjaPok: new Date(new Date(this.deathForm.value.datumRodenjaPok).getTime() 
+            - new Date(this.deathForm.value.datumRodenjaPok).getTimezoneOffset() * 60000),
+          DatumSmrtiPok: new Date(new Date(this.deathForm.value.datumSmrtiPok).getTime()
+            - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
           KorisnikId: this.deathForm.value.korisnikId,
         }
         this._deathService.addDeath(this.toUpdate).subscribe({

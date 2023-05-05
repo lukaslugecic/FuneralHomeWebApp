@@ -5,25 +5,31 @@ using System.Data;
 namespace FuneralHome.Domain.Models;
 public class PogrebSmrtniSlucaj : AggregateRoot<int>
 {
+    private int _smrtniSlucajId;
     private string _imePok;
     private string _prezimePok;
+    private DateTime _datumSmrti;
     private DateTime _datumPogreba;
     private bool _kremacija;
-    // private decimal _cijena;
+    private decimal _ukupnaCijena;
+    private int _korisnikId;
     private string _ime;
     private string _prezime;
     
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
+    public int SmrtniSlucajId { get => _smrtniSlucajId; set => _smrtniSlucajId = value; }
     public string ImePok { get => _imePok; set => _imePok = value; }
     public string PrezimePok { get => _prezimePok; set => _prezimePok = value; }
-    //public decimal Cijena { get => _cijena; set => _cijena = value; }
-
+    public DateTime DatumSmrti { get => _datumSmrti; set => _datumSmrti = value; }
+    public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
+    public int KorisnikId { get => _korisnikId; set => _korisnikId = value; }
     public string Ime { get => _ime; set => _ime = value; }
     public string Prezime { get => _prezime; set => _prezime = value; }
 
 
-    public PogrebSmrtniSlucaj(int id, string imePok, string prezimePok, DateTime datumPogreba, bool kremacija, string ime, string prezime) : base(id)
+    public PogrebSmrtniSlucaj(int id, int smrtniSlucajId, string imePok, string prezimePok, DateTime datumSmrti, DateTime datumPogreba, bool kremacija, decimal ukupnaCijena,
+        int korisnikId, string ime, string prezime) : base(id)
     {
         if (string.IsNullOrEmpty(imePok))
         {
@@ -44,12 +50,15 @@ public class PogrebSmrtniSlucaj : AggregateRoot<int>
         {
             throw new ArgumentException($"'{nameof(prezime)}' cannot be null or empty.", nameof(prezime));
         }
-
+        
+        _smrtniSlucajId = smrtniSlucajId;
+        _datumSmrti = datumSmrti;
         _datumPogreba = datumPogreba;
         _kremacija = kremacija;
-        //_cijena = cijena;
+        _ukupnaCijena = ukupnaCijena;
         _imePok = imePok;
         _prezimePok = prezimePok;
+        _korisnikId = korisnikId;
         _ime = ime;
         _prezime = prezime;
     }
@@ -62,15 +71,16 @@ public class PogrebSmrtniSlucaj : AggregateRoot<int>
                _id == pogreb._id &&
                _datumPogreba == pogreb._datumPogreba &&
                _kremacija == pogreb._kremacija &&
+               _ukupnaCijena == pogreb._ukupnaCijena &&
                _imePok == pogreb._imePok &&
-               _prezimePok == pogreb._prezimePok;
-               //_cijena == pogreb._cijena;
+               _prezimePok == pogreb._prezimePok &&
+               _smrtniSlucajId == pogreb._smrtniSlucajId;
                
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _imePok, _prezimePok, _datumPogreba, _kremacija);
+        return HashCode.Combine(_id, _smrtniSlucajId, _imePok, _prezimePok, _datumPogreba, _kremacija, _ukupnaCijena);
     }
 
     public override Result IsValid()

@@ -21,6 +21,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FuneralDetailModule } from './funeral-detail/funeral-detail.module';
+import { FuneralDialogModule } from 'src/app/components/dialogs/funeral-dialog/funeral-dialog.module';
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import { FuneralDetailModule } from './funeral-detail/funeral-detail.module';
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
-    FuneralDetailModule
+    FuneralDetailModule,
+    FuneralDialogModule
   ]
 })
 export class FuneralsModule { }

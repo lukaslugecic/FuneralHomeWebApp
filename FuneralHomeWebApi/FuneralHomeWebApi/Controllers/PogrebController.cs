@@ -255,6 +255,37 @@ public class PogrebController : ControllerBase
             : Problem(result.Message, statusCode: 500);
     }
 
+    // PUT: api/Pogreb/SmrtniSlucaj/5
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPut("PogrebSmrtniSlucaj/{id}")]
+    public IActionResult EditPogrebSmrtniSlucaj(int id, PogrebSmrtniSlucaj pogreb)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        if (id != pogreb.Id)
+        {
+            return BadRequest();
+        }
+
+        if (!_pogrebRepository.Exists(id))
+        {
+            return NotFound();
+        }
+
+        var domainPogreb = pogreb.ToDomain();
+
+        var result =
+            domainPogreb.IsValid()
+            .Bind(() => _pogrebRepository.Update(domainPogreb));
+
+        return result
+            ? AcceptedAtAction("EditPogrebSmrtniSlucaj", pogreb)
+            : Problem(result.Message, statusCode: 500);
+    }
+
     // POST: api/Pogreb
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
@@ -279,6 +310,33 @@ public class PogrebController : ControllerBase
 
         return result
             ? CreatedAtAction("GetPogreb", new { id = pogreb.Id }, pogreb)
+            : Problem(result.Message, statusCode: 500);
+    }
+
+    // POST: api/Pogreb
+    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    [HttpPost("PogrebSmrtniSlucaj")]
+    public ActionResult<Pogreb> CreatePogreb(PogrebSmrtniSlucaj pogreb)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var domainPogreb = pogreb.ToDomain();
+
+        var validationResult = domainPogreb.IsValid();
+        if (!validationResult)
+        {
+            return Problem(validationResult.Message, statusCode: 500);
+        }
+
+        var result =
+            domainPogreb.IsValid()
+            .Bind(() => _pogrebRepository.Insert(domainPogreb));
+
+        return result
+            ? CreatedAtAction("GetPogrebSmrtniSlucaj", new { id = pogreb.Id }, pogreb)
             : Problem(result.Message, statusCode: 500);
     }
 

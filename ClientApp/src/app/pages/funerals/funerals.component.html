@@ -7,7 +7,7 @@
           <mat-label>Filter</mat-label>
           <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
         </mat-form-field>
-        <button mat-raised-button (click)="openAddForm()"> Dodaj novu opremu </button>
+        <button mat-raised-button (click)="openAddForm()"> Dodaj novi pogreb </button>
       </div>
   
     
@@ -46,11 +46,14 @@
           
     
           <ng-container matColumnDef="kremacija">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sahrana </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vrsta sahrane </th>
             <td mat-cell *matCellDef="let row"> {{row.kremacija ? 'Kremacija' : 'Ukop'}} </td>
           </ng-container>
           
-          
+          <ng-container matColumnDef="ukupnaCijena">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cijena pogreba </th>
+            <td mat-cell *matCellDef="let row"> {{row.ukupnaCijena | currency:'EUR'}} </td>
+          </ng-container>
           
           <ng-container matColumnDef="action">
             <th mat-header-cell *matHeaderCellDef mat-sort-header></th>

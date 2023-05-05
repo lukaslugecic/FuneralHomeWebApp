@@ -61,10 +61,10 @@ export class DeathsComponent implements OnInit {
   }
 
   deleteEquipment(id: number) {
-    if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
+    if (confirm('Jeste li sigurni da želite obrisati smrtni slučaj?')) {
       this._deathService.deleteDeath(id).subscribe({
         next: (res) => {
-          this.snackBar.open('Smrtni slučaj je uspješno obrisan!', 'U redu', {
+          this.snackBar.open('Smrtni slučaj uspješno je obrisan!', 'U redu', {
             duration: 3000,
           });
           this.getAllDeaths();

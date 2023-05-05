@@ -31,6 +31,11 @@
           <td mat-cell *matCellDef="let row"> {{row.korisnik.prezime}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="ukupnaCijena">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ukupna cijena </th>
+          <td mat-cell *matCellDef="let row"> {{row.ukupnaCijena | currency:'EUR'}} </td>
+        </ng-container>
+
 
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Uredi / Izbriši</b></th>

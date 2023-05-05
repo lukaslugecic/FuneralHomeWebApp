@@ -5,7 +5,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute } from '@angular/router';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
 import { FuneralDialogComponent } from 'src/app/components/dialogs/funeral-dialog/funeral-dialog.component';
-import { IPogrebAggregateData } from 'src/app/interfaces/pogreb-aggregate-data';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
 
 @Component({
@@ -22,10 +21,12 @@ export class FuneralDetailComponent implements OnInit {
     'kremacija',
     'ime',
     'prezime',
+    'ukupnaCijena',
     'action'
   ];
 
   deathColumns: string[] = [
+    'id',
     'imePok',
     'prezimePok',
     'oibpok',

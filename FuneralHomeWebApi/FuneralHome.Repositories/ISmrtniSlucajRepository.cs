@@ -1,4 +1,5 @@
-﻿using FuneralHome.Domain.Models;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
 using System;
 
 namespace FuneralHome.Repositories;
@@ -12,4 +13,5 @@ public interface ISmrtniSlucajRepository
     : IRepository<int, SmrtniSlucaj>,
       IAggregateRepository<int, SmrtniSlucaj>
 {
+    Result<IEnumerable<SmrtniSlucaj>> GetAllWithoutFuneral();
 }

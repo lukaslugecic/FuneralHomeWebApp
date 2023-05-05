@@ -167,6 +167,48 @@ public class PogrebRepository : IPogrebRepository
         }
     }
 
+    public Result Insert(PogrebSmrtniSlucaj model)
+    {
+        // dodaj novi Pogreb u bazu i njegov SmrtniSlucaj.KorisnikId postavi na model.KorisnikId
+        try
+        {
+            var dbModel = model.ToDbModel();
+            if (_dbContext.Pogreb.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            {
+                var isSuccess = _dbContext.SaveChanges() > 0;
+                try
+                {
+                                     var pogreb = _dbContext.Pogreb
+                                    .Include(p => p.SmrtniSlucaj)
+                                    .Where(p => p.SmrtniSlucaj.Oibpok.Equals(dbModel.SmrtniSlucaj.Oibpok))
+                                    .AsNoTracking()
+                                    .FirstOrDefault();
+                    if (pogreb is not null)
+                    {
+                        pogreb.SmrtniSlucaj.KorisnikId = model.KorisnikId;
+                        _dbContext.Pogreb.Update(pogreb);
+                        isSuccess = _dbContext.SaveChanges() > 0;
+                    }
+                }
+                catch (Exception e)
+                {
+                    return Results.OnException(e);
+                }
+                // every Add attaches the entity object and EF begins tracking
+                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
+                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+                return isSuccess
+                    ? Results.OnSuccess()
+                    : Results.OnFailure();
+            }
+            return Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+
     public Result Remove(int id)
     {
         try
@@ -218,8 +260,44 @@ public class PogrebRepository : IPogrebRepository
         }
     }
 
+    public Result Update(PogrebSmrtniSlucaj model)
+    {
+        try
+        {
+            _dbContext.ChangeTracker.Clear();
 
-    
+            var dbModel = _dbContext.Pogreb
+                              .Include(p => p.SmrtniSlucaj)
+                              .ThenInclude(ss => ss.Korisnik)
+                              //.AsNoTracking()
+                              .FirstOrDefault(p => p.IdPogreb == model.Id);
+            if (dbModel == null)
+                return Results.OnFailure($"Funeral with id {model.Id} not found.");
+
+            dbModel.SmrtniSlucajId = model.SmrtniSlucajId;
+            dbModel.DatumPogreb = model.DatumPogreba;
+            dbModel.Kremacija = model.Kremacija;
+            dbModel.UkupnaCijena = model.UkupnaCijena;
+            dbModel.SmrtniSlucaj.KorisnikId = model.KorisnikId;
+            
+
+            _dbContext.Pogreb
+                     .Update(dbModel);
+
+            var isSuccess = _dbContext.SaveChanges() > 0;
+            _dbContext.ChangeTracker.Clear();
+            return isSuccess
+                ? Results.OnSuccess()
+                : Results.OnFailure();
+        }
+        catch (Exception e)
+        {
+            return Results.OnException(e);
+        }
+    }
+ 
+
+
     public Result UpdateAggregate(Pogreb model)
     {
         try

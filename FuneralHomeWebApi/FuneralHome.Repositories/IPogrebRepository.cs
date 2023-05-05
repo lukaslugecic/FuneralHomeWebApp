@@ -14,4 +14,6 @@ public interface IPogrebRepository
       IAggregateRepository<int, Pogreb>
 {
     Result<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj();
+    Result Update(PogrebSmrtniSlucaj model);
+    Result Insert(PogrebSmrtniSlucaj model);
 }

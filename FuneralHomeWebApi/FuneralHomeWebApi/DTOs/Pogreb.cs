@@ -12,6 +12,7 @@ public class Pogreb
     public int SmrtniSlucajId { get; set; }
     public DateTime DatumPogreba { get; set; }
     public bool Kremacija { get; set; }
+    public decimal UkupnaCijena { get; set; } 
 }
 
 
@@ -23,7 +24,8 @@ public static partial class DtoMapping
             Id = pogreb.Id,
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
-            Kremacija = pogreb.Kremacija
+            Kremacija = pogreb.Kremacija,
+            UkupnaCijena = pogreb.UkupnaCijena
         };
 
     public static DomainModels.Pogreb ToDomain(this Pogreb pogreb)
@@ -31,6 +33,7 @@ public static partial class DtoMapping
             pogreb.Id,
             pogreb.SmrtniSlucajId,
             pogreb.DatumPogreba,
-            pogreb.Kremacija
+            pogreb.Kremacija,
+            pogreb.UkupnaCijena
         );
 }

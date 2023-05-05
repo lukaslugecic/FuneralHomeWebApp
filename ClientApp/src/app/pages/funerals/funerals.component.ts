@@ -23,6 +23,7 @@ export class FuneralsComponent implements OnInit {
     'kremacija',
     'ime',
     'prezime',
+    'ukupnaCijena',
     'action'
     ];
 
@@ -64,16 +65,16 @@ export class FuneralsComponent implements OnInit {
   }
 
   deleteFuneral(id: number) {
-    if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
+    if (confirm('Jeste li sigurni da želite obrisati pogreb?')) {
       this._funeralService.deleteFuneral(id).subscribe({
         next: (res) => {
-          this.snackBar.open('Oprema je uspješno obrisana!', 'U redu', {
+          this.snackBar.open('Pogreb je uspješno obrisan!', 'U redu', {
             duration: 3000,
           });
           this.getAllFunerals();
         },
         error: (err) => {
-          this.snackBar.open('Greška prilikom brisanja opreme!', 'Zatvori', {
+          this.snackBar.open('Greška prilikom brisanja pogreba!', 'Zatvori', {
             duration: 3000,
           });
         },

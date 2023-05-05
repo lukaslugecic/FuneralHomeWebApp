@@ -14,6 +14,10 @@ export class DeathService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj`);
   }
 
+  public getAllDeathsWithoutFuneral() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj/WithoutFuneral`);
+  }
+
   public addDeath(data: any) : Observable<any> {
     return this.http.post(`${environment.apiUrlHttps}/SmrtniSlucaj`, data);
   }

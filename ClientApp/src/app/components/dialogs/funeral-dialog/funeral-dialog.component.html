@@ -1,1 +1,56 @@
-<p>funeral-dialog works!</p>
+<div mat-dialog-title>
+    <h1>{{data ? 'Uredi smrtni slučaj': 'Dodaj smrtni slučaj'}}</h1>
+</div>
+<form [formGroup]="funeralForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        
+    
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Datum pogreba</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="datumPogreba">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Vrsta sahrane</mat-label>
+                <mat-select formControlName="kremacija">
+                    <mat-option *ngFor="let val of types" [value]="val.value">{{val.naziv}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Smrtni slučaj</mat-label>
+                <mat-select formControlName="smrtniSlucajId">
+                    <mat-option *ngFor="let val of slucajevi" [value]="val.smrtniSlucajId">{{val.imeIprezime}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-raised-button type="button" (click)="openAddDeathForm()"> Novi smrtni slučaj </button>
+        </div>
+
+        <div class="row">
+            <mat-form-field *ngIf="data" appearance="outline">
+                <mat-label>Naručitelj</mat-label>
+                <mat-select formControlName="korisnikId">
+                    <mat-option *ngFor="let val of korisnici" [value]="val.korisnikId">{{val.imeIprezime}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Cijena</mat-label>
+                <input matInput type="number" placeholder="Npr. 120" formControlName="ukupnaCijena">
+                <mat-hint>U eurima</mat-hint>
+            </mat-form-field>
+        </div>
+        
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">Spremi</button>
+    </div>
+</form>
+
