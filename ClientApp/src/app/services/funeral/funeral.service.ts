@@ -42,6 +42,10 @@ export class FuneralService {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/AddOprema/${id}`, data);
   }
 
+  public removeEquipment(id: number, data : any) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/RemoveOprema/${id}`, data);
+  }
+
   public incrementEquipment(id: number, opremaId : number) : Observable<any> {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/IncrementOprema/${id}?opremaId=${opremaId}`, null);
   }
@@ -50,4 +54,11 @@ export class FuneralService {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/DecrementOprema/${id}?opremaId=${opremaId}`, null);
   }
   
+  public addService(id: number, data : any) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/AddUsluga/${id}`, data);
+  }
+
+  public removeService(id: number, data : any) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/RemoveUsluga/${id}`, data);
+  }
 }

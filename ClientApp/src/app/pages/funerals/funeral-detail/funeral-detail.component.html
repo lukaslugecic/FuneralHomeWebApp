@@ -138,7 +138,7 @@
         </ng-container>
     
           
-        <ng-container matColumnDef="action">
+        <ng-container matColumnDef="add">
           <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
             <button mat-icon-button (click)="incrementEquipment(row.oprema.id)">
@@ -146,6 +146,15 @@
             </button>
             <button mat-icon-button (click)="decrementEquipment(row.oprema.id)">
               <mat-icon>remove_circle_outline</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
+          <td mat-cell *matCellDef="let row">
+            <button mat-icon-button color="warn" (click)="removeEquipment(row.oprema)">
+              <mat-icon>delete</mat-icon>
             </button>
           </td>
         </ng-container>
@@ -184,10 +193,10 @@
         </ng-container>
     
         <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef><b>Uredi</b></th>
+          <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
             <td mat-cell *matCellDef="let row">
-              <button mat-icon-button>
-                  <mat-icon>remove_circle_outline</mat-icon>
+              <button mat-icon-button color="warn" (click)="removeService(row)">
+                  <mat-icon>delete</mat-icon>
               </button>
             </td>
         </ng-container>
