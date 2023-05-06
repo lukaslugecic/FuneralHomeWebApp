@@ -38,6 +38,8 @@ public class Pogreb : AggregateRoot<int>
         _smrtniSlucaj = smrtniSlucaj;
         _pogrebOprema = pogrebOprema?.ToList() ?? new List<PogrebOprema>();
         _pogrebUsluga = pogrebUsluga?.ToList() ?? new List<Usluga>();
+        if(_pogrebOprema.Any() || _pogrebUsluga.Any())
+            CalculateUkupnaCijena();
     }
 
 
@@ -126,6 +128,18 @@ public class Pogreb : AggregateRoot<int>
         return false;
     }
 
+    public void CalculateUkupnaCijena()
+    {
+        _ukupnaCijena = 0;
+        foreach (var pogrebOprema in _pogrebOprema)
+        {
+            _ukupnaCijena += pogrebOprema.Oprema.Cijena * pogrebOprema.Kolicina;
+        }
+        foreach (var usluga in _pogrebUsluga)
+        {
+            _ukupnaCijena += usluga.Cijena;
+        }
+    }
 
     public override bool Equals(object? obj)
     {

@@ -32,6 +32,17 @@ public class PogrebController : ControllerBase
             : Problem(pogrebResults.Message, statusCode: 500);
     }
 
+    // GET: api/Pogreb/Aggregates
+    [HttpGet("Aggregates")]
+    public ActionResult<IEnumerable<PogrebAggregate>> GetAllPogrebAggregate()
+    {
+        var pogrebResults = _pogrebRepository.GetAllAggregates()
+            .Map(p => p.Select(DtoMapping.ToAggregateDto));
+        return pogrebResults
+            ? Ok(pogrebResults.Data)
+            : Problem(pogrebResults.Message, statusCode: 500);
+    }
+
     // GET: api/Pogreb/PogrebSmrtniSlucaj
     [HttpGet("PogrebSmrtniSlucaj")]
     public ActionResult<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj()
@@ -62,7 +73,7 @@ public class PogrebController : ControllerBase
     public ActionResult<PogrebAggregate> GetPogrebAggregate(int id)
     {
         var pogrebResult = _pogrebRepository.GetAggregate(id).Map(DtoMapping.ToAggregateDto);
-
+        
         return pogrebResult switch
         {
             { IsSuccess: true } => Ok(pogrebResult.Data),

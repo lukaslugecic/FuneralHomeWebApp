@@ -58,7 +58,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.VrstaOpreme)
                     .WithMany(p => p.Oprema)
                     .HasForeignKey(d => d.VrstaOpremeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Oprema_VrstaOpreme");
             });
 
@@ -76,15 +75,14 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.SmrtniSlucaj)
                     .WithOne(p => p.Pogreb)
                     .HasForeignKey<Pogreb>(d => d.SmrtniSlucajId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Pogreb_SmrtniSlucaj");
 
                 entity.HasMany(d => d.Usluga)
                     .WithMany(p => p.Pogreb)
                     .UsingEntity<Dictionary<string, object>>(
                         "PogrebUsluga",
-                        l => l.HasOne<Usluga>().WithMany().HasForeignKey("UslugaId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_PogrebUsluga_Usluga1"),
-                        r => r.HasOne<Pogreb>().WithMany().HasForeignKey("PogrebId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("FK_PogrebUsluga_Pogreb1"),
+                        l => l.HasOne<Usluga>().WithMany().HasForeignKey("UslugaId").HasConstraintName("FK_PogrebUsluga_Usluga1"),
+                        r => r.HasOne<Pogreb>().WithMany().HasForeignKey("PogrebId").HasConstraintName("FK_PogrebUsluga_Pogreb1"),
                         j =>
                         {
                             j.HasKey("PogrebId", "UslugaId");
@@ -100,13 +98,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.Oprema)
                     .WithMany(p => p.PogrebOprema)
                     .HasForeignKey(d => d.OpremaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PogrebOprema_Oprema");
 
                 entity.HasOne(d => d.Pogreb)
                     .WithMany(p => p.PogrebOprema)
                     .HasForeignKey(d => d.PogrebId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PogrebOprema_Pogreb");
             });
 
@@ -124,7 +120,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.VrstaUsluge)
                     .WithMany(p => p.Usluga)
                     .HasForeignKey(d => d.VrstaUslugeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Usluga_VrstaUsluge");
             });
 
