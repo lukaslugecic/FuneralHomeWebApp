@@ -49,7 +49,7 @@ public class Oprema : AggregateRoot<int>
                 obj is Oprema oprema &&
                _id == oprema._id &&
                _naziv == oprema._naziv &&
-               _slika == oprema._slika &&
+              // _slika == oprema._slika &&
                _zalihaOpreme == oprema._zalihaOpreme &&
                _cijena == oprema._cijena &&
                _vrstaOpremeId == oprema._vrstaOpremeId &&

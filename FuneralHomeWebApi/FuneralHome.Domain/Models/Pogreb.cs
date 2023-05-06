@@ -40,10 +40,28 @@ public class Pogreb : AggregateRoot<int>
         _pogrebUsluga = pogrebUsluga?.ToList() ?? new List<Usluga>();
     }
 
+
+    public bool AddUkupnaCijena(decimal cijena)
+    {
+        if (cijena < 0)
+            return false;
+        _ukupnaCijena += cijena;
+        return true;
+    }
+
     public bool AddOprema(Oprema oprema, int kolicina)
     {
-        var PogrebOprema = new PogrebOprema(oprema, kolicina);
-        _pogrebOprema.Add(PogrebOprema);
+        // provjeri da li je oprema vec dodana, ako je, zbroji kolicine
+        var pogrebOprema = _pogrebOprema.FirstOrDefault(po => po.Oprema.Equals(oprema));
+        if (pogrebOprema is null)
+        {
+            _pogrebOprema.Add(new PogrebOprema(oprema, kolicina));
+            _ukupnaCijena += oprema.Cijena * kolicina;
+            return true;
+        }
+        pogrebOprema.Kolicina += kolicina;
+        // povecaj ukupnu cijenu
+        _ukupnaCijena += oprema.Cijena * kolicina;
         return true;
     }
 
@@ -58,6 +76,7 @@ public class Pogreb : AggregateRoot<int>
         if (pogrebOprema is null)
             return false;
         pogrebOprema.Kolicina++;
+        _ukupnaCijena += pogrebOprema.Oprema.Cijena;
         return true;
     }
 
@@ -67,6 +86,7 @@ public class Pogreb : AggregateRoot<int>
         if (pogrebOprema is null)
             return false;
         pogrebOprema.Kolicina--;
+        _ukupnaCijena -= pogrebOprema.Oprema.Cijena;
         if (pogrebOprema.Kolicina == 0)
             _pogrebOprema.Remove(pogrebOprema);
         return true;
@@ -80,19 +100,30 @@ public class Pogreb : AggregateRoot<int>
     public bool RemoveOprema(Oprema oprema)
     {
         var pogrebOprema = _pogrebOprema.FirstOrDefault(po => po.Oprema.Equals(oprema));
-        return pogrebOprema != null
-            && _pogrebOprema.Remove(pogrebOprema);
+        // smanji ukupnu cijenu
+        if(pogrebOprema is not null && _pogrebOprema.Remove(pogrebOprema))
+        {
+            _ukupnaCijena -= oprema.Cijena * pogrebOprema.Kolicina;
+            return true;
+        }
+        return false;
     }
 
     public bool AddUsluga(Usluga usluga)
     {
         _pogrebUsluga.Add(usluga);
+        _ukupnaCijena += usluga.Cijena;
         return true;
     }
 
     public bool RemoveUsluga(Usluga usluga)
     {
-        return _pogrebUsluga.Remove(usluga);
+        if (_pogrebUsluga.Remove(usluga))
+        {
+            _ukupnaCijena -= usluga.Cijena;
+            return true;
+        }
+        return false;
     }
 
 

@@ -109,6 +109,7 @@ public class PogrebController : ControllerBase
             }
         };
 
+
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));

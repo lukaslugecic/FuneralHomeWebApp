@@ -320,7 +320,7 @@ public class PogrebRepository : IPogrebRepository
             dbModel.SmrtniSlucajId = model.SmrtniSlucajId;
             dbModel.DatumPogreb = model.DatumPogreba;
             dbModel.Kremacija = model.Kremacija;
-
+            dbModel.UkupnaCijena = model.UkupnaCijena;
             
             foreach (var pogrebOprema in model.PogrebOprema)
             {
