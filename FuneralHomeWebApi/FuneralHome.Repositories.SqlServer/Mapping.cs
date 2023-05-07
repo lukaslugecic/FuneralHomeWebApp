@@ -74,6 +74,9 @@ public static class Mapping
     public static Osiguranje ToDomain(this DbModels.Osiguranje osiguranje)
        => new Osiguranje(
            osiguranje.IdOsiguranje,
+           osiguranje.KorisnikId,
+           osiguranje.Korisnik.Ime,
+           osiguranje.Korisnik.Prezime,
            osiguranje.DatumUgovaranja,
            osiguranje.PlacanjeNaRate
        );
@@ -82,6 +85,7 @@ public static class Mapping
         => new DbModels.Osiguranje()
         {
             IdOsiguranje = osiguranje.Id,
+            KorisnikId = osiguranje.KorisnikId,
             DatumUgovaranja = osiguranje.DatumUgovaranja,
             PlacanjeNaRate = osiguranje.PlacanjeNaRate,
         };

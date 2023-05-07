@@ -48,6 +48,7 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         try
         {
             var model = _dbContext.Osiguranje
+                                 .Include(o => o.Korisnik)
                                  .AsNoTracking()
                                  .FirstOrDefault(o => o.IdOsiguranje.Equals(id))?
                                  .ToDomain();
@@ -69,6 +70,7 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         {
             var models =
                 _dbContext.Osiguranje
+                          .Include(o => o.Korisnik)
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
             return Results.OnSuccess(models);

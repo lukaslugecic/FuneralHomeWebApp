@@ -29,4 +29,7 @@ export class UserService {
     return this.http.delete<IKorisnik>(`${environment.apiUrlHttps}/${this.url}/${id}`);
   }
   
+  public getAllUsersWithoutInsurance() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Korisnik/WithoutInsurance`);
+  }
 }

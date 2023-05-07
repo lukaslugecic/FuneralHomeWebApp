@@ -139,6 +139,27 @@ public class KorisnikRepository : IKorisnikRepository
         }
     }
 
+    public Result<IEnumerable<Korisnik>> GetAllWithoutInsurance()
+    {
+        try
+        {
+            // dohvatiti one korisnike ciji id ne postoji u tabeli osiguranje
+            var models = _dbContext.Korisnik
+                           .AsNoTracking()
+                           .Where(k => !_dbContext.Osiguranje
+                           .AsNoTracking()
+                           .Select(o => o.KorisnikId)
+                           .Contains(k.IdKorisnik))
+                           .Where(k => k.VrstaKorisnika.Equals("K"))
+                           .Select(Mapping.ToDomain);
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Korisnik>>(e);
+        }
+    }
+
     public Result<IEnumerable<Korisnik>> GetAllAggregates()
     {
         try

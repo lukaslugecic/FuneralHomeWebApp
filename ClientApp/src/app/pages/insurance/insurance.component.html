@@ -1,0 +1,70 @@
+<app-main-navigation></app-main-navigation>
+
+<div class="main-body">
+    <h1>Osiguranja</h1>
+      <div class="filter">
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+        </mat-form-field>
+        <button mat-raised-button (click)="openAddForm()"> Dodaj osiguranje </button>
+      </div>
+  
+    
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+    
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="korisnikId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Osiguranik </th>
+            <td mat-cell *matCellDef="let row"> {{row.korisnikId}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="ime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime osiguranika </th>
+            <td mat-cell *matCellDef="let row"> {{row.ime}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="prezime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime osiguranika </th>
+            <td mat-cell *matCellDef="let row"> {{row.prezime}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="datumUgovaranja">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum ugovaranja </th>
+            <td mat-cell *matCellDef="let row"> {{row.datumUgovaranja | date}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="placanjeNaRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Način plačanja </th>
+            <td mat-cell *matCellDef="let row"> {{row.placanjeNaRate ? 'Na rate' : 'Jednokratno'}}</td>
+          </ng-container>
+          
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Uredi/Obiši </th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="openEditForm(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteEquipment(row.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+    
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+          
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Nema odgovarajućih podataka s "{{input.value}}"</td>
+          </tr>
+        </table>
+    
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Odaberi stranicu"></mat-paginator>
+      </div>
+    </div>

@@ -32,6 +32,17 @@ public class KorisnikController : ControllerBase
             ? Ok(korisnikResults.Data)
             : Problem(korisnikResults.Message, statusCode: 500);
     }
+    // GET: api/Korisnik/WithoutInsurance
+    [HttpGet("/api/[controller]/WithoutInsurance")]
+    public ActionResult<IEnumerable<Korisnik>> GetAllWithoutInsurance()
+    {
+        var korisnikResults = _korisnikRepository.GetAllWithoutInsurance()
+            .Map(k => k.Select(DtoMapping.ToDto));
+        return korisnikResults
+            ? Ok(korisnikResults.Data)
+            : Problem(korisnikResults.Message, statusCode: 500);
+    }
+
 
     // GET: api/Korisnik/5
     [HttpGet("{id}")]

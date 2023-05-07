@@ -13,8 +13,9 @@ public interface IKorisnikRepository
     : IRepository<int, Korisnik>,
       IAggregateRepository<int, Korisnik>
 {
-    public bool Exists(string mail);
-    public Result<Korisnik> GetByMail(string mail);
+    bool Exists(string mail);
+    Result<Korisnik> GetByMail(string mail);
 
-    public string CreateToken(Korisnik korisnik);
+    Result<IEnumerable<Korisnik>> GetAllWithoutInsurance();
+    string CreateToken(Korisnik korisnik);
 }

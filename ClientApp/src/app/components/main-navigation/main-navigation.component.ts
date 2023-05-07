@@ -29,6 +29,7 @@ export class MainNavigationComponent implements OnDestroy{
       { title: 'Usluge', path: '/services' },
       { title: 'Pogrebi', path: '/funerals' },
       { title: 'Smrtni slučajevi', path: '/deaths' },
+      { title: 'Osiguranja', path: '/insurances' },
     ],
     customer: [
       { title: 'Naslovna', path: '/' },
