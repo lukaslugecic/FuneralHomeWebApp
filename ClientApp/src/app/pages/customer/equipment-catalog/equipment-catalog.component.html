@@ -1,0 +1,18 @@
+<app-main-navigation></app-main-navigation>
+<div class="product-gallery">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4" *ngFor="let e of equipment; let i = index">
+        <div class="product-item">
+        <img [src]="'data:image/jpeg;base64,' + e.slika" />
+          <div class="product-description">
+            <h4>{{ e.naziv }}</h4>
+            <p>{{ e.cijena }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-main-footer></app-main-footer>

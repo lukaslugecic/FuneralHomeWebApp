@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IKorisnik } from 'src/app/interfaces/korisnik-data';
 import { AuthService } from 'src/app/services/auth/auth.service';
 
@@ -12,13 +12,10 @@ export class HomeComponent implements OnInit {
   korisnici: IKorisnik[] = [];
   constructor(private readonly authService: AuthService) {}
 
-  ngOnInit() : void{
-    this.authService
-    .getKorisnici()
-    .subscribe((result : IKorisnik[]) => (this.korisnici = result));
+  
+  ngOnInit(){
+    console.log(this.user$);
   }
 
-  fun() : void{
-    console.log(this.korisnici);
-  }
+  
 }

@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from './home.component';
+import { EquipmentCatalogComponent } from './equipment-catalog.component';
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
-import { AuthNavigationModule } from 'src/app/components/auth-navigation/auth-navigation.module';
+
 
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [EquipmentCatalogComponent],
   imports: [
     CommonModule,
-    MainNavigationModule,
     MainFooterModule,
-    AuthNavigationModule
-  ],
-  exports: [HomeComponent]
+    MainNavigationModule,
+  ]
 })
-export class HomeModule { }
+export class EquipmentCatalogModule { }
