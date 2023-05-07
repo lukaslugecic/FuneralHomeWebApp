@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISmrtniSlucajData } from 'src/app/interfaces/smrtnislucaj-data';
@@ -30,13 +31,15 @@ export class DeathDialogComponent implements OnInit {
   korisnici : Korisnik[] = [];
 
   constructor(
-    private _fb: FormBuilder,
     private _deathService: DeathService,
     private _userService: UserService,
     private _dialogRef: MatDialogRef<DeathDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly snackBar: MatSnackBar
-  ) {}
+    private readonly snackBar: MatSnackBar,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('hr');
+  }
 
   ngOnInit() {
     // dohvati sve korisnike i spremi njihov id i ime u polje

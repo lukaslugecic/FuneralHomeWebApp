@@ -1,5 +1,5 @@
 <div mat-dialog-title>
-    <h1>{{data ? 'Uredi smrtni slučaj': 'Dodaj smrtni slučaj'}}</h1>
+    <h1>{{data ? 'Uredi pogreb': 'Dodaj pogreb'}}</h1>
 </div>
 <form [formGroup]="funeralForm" (ngSubmit)="onFormSubmit()">
     <div mat-dialog-content class="content">
@@ -8,7 +8,7 @@
         <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Datum pogreba</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="datumPogreba">
+                <input matInput [matDatepicker]="picker" placeholder="dd.mm.yyyy." formControlName="datumPogreba">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>

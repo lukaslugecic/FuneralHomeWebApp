@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
 import { DeathService } from 'src/app/services/death/death.service';
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-deaths',

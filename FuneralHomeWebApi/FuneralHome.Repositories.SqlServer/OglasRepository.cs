@@ -66,7 +66,6 @@ public class OglasRepository : IOglasRepository
         try
         {
             var model = _dbContext.Oglas
-                          .Include(o => o.Osmrtnica)
                           .Include(o => o.SmrtniSlucaj)
                           .AsNoTracking()
                           .FirstOrDefault(o => o.IdOglas.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
@@ -104,7 +103,6 @@ public class OglasRepository : IOglasRepository
         try
         {
             var models = _dbContext.Oglas
-                           .Include(o => o.Osmrtnica)
                            .Include(o => o.SmrtniSlucaj)
                            .Select(Mapping.ToDomain);
 

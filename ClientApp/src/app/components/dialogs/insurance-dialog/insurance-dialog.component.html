@@ -17,7 +17,7 @@
         <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Datum ugovaranja</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="datumUgovaranja">
+                <input matInput [matDatepicker]="picker" placeholder="dd.mm.yyyy." formControlName="datumUgovaranja">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>

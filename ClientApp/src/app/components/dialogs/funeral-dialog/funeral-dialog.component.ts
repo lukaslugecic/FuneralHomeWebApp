@@ -9,6 +9,7 @@ import { DeathDialogComponent } from '../death-dialog/death-dialog.component';
 import { IPogrebData } from 'src/app/interfaces/pogreb-data';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
 import { IPogrebSmrtniSlucajData } from 'src/app/interfaces/pogreb-smrtnislucaj-data';
+import { DateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-funeral-dialog',
@@ -43,8 +44,11 @@ export class FuneralDialogComponent implements OnInit {
     private _dialog: MatDialog,
     private _dialogRef: MatDialogRef<FuneralDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly snackBar: MatSnackBar
-  ) {}
+    private readonly snackBar: MatSnackBar,
+    private dateAdapter: DateAdapter<Date>
+  ) {
+    this.dateAdapter.setLocale('hr');
+  }
 
   ngOnInit() {
     // dohvati sve korisnike i spremi njihov id i ime u polje

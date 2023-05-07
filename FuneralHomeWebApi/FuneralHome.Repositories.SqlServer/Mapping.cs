@@ -53,22 +53,7 @@ public static class Mapping
            ObjavaNaStranici = oglas.ObjavaNaStranici
         };
 
-    public static Osmrtnica ToDomain(this DbModels.Osmrtnica osmrtnica)
-       => new Osmrtnica(
-           osmrtnica.IdOsmrtnica,
-           osmrtnica.Naziv,
-           osmrtnica.Slika,
-           osmrtnica.Cijena
-       );
-
-    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
-        => new DbModels.Osmrtnica()
-        {
-           IdOsmrtnica = osmrtnica.Id,
-           Naziv = osmrtnica.Naziv,
-           Slika = osmrtnica.Slika,
-           Cijena = osmrtnica.Cijena
-        };
+    
 
 
     public static Osiguranje ToDomain(this DbModels.Osiguranje osiguranje)
