@@ -3,7 +3,7 @@ using FuneralHome.Commons;
 using System.Data;
 
 namespace FuneralHome.Domain.Models;
-public class Oglas : AggregateRoot<int>
+public class Osmrtnica : Entity<int>
 {
     private byte[]? _slikaPok;
     private string _opis;
@@ -15,7 +15,7 @@ public class Oglas : AggregateRoot<int>
     public bool ObjavaNaStranici { get => _objavaNaStranici; set => _objavaNaStranici = value; }
 
 
-    public Oglas(int id, byte[]? slikaPok, string opis, bool objavaNaStranici) : base(id)
+    public Osmrtnica(int id, byte[]? slikaPok, string opis, bool objavaNaStranici) : base(id)
     {
         _slikaPok = slikaPok;
         _opis = opis;
@@ -25,11 +25,11 @@ public class Oglas : AggregateRoot<int>
     public override bool Equals(object? obj)
     {
         return obj is not null &&
-                obj is Oglas oglas &&
-               _id == oglas._id &&
-               _slikaPok == oglas._slikaPok &&
-               _opis == oglas._opis &&
-               _objavaNaStranici == oglas._objavaNaStranici;
+                obj is Osmrtnica osmrtnica &&
+               _id == osmrtnica._id &&
+               _slikaPok == osmrtnica._slikaPok &&
+               _opis == osmrtnica._opis &&
+               _objavaNaStranici == osmrtnica._objavaNaStranici;
 
     }
 

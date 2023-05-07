@@ -6,7 +6,7 @@ using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
-public class Oglas
+public class Osmrtnica
 {
     public int Id { get; set; }
     public byte[]? SlikaPok { get; set; }
@@ -21,20 +21,20 @@ public class Oglas
 
 public static partial class DtoMapping
 {
-    public static Oglas ToDto(this DomainModels.Oglas oglas)
-        => new Oglas()
+    public static Osmrtnica ToDto(this DomainModels.Osmrtnica osmrtnica)
+        => new Osmrtnica()
         {
-            Id = oglas.Id,
-            SlikaPok = oglas.SlikaPok,
-            Opis = oglas.Opis,
-            ObjavaNaStranici = oglas.ObjavaNaStranici
+            Id = osmrtnica.Id,
+            SlikaPok = osmrtnica.SlikaPok,
+            Opis = osmrtnica.Opis,
+            ObjavaNaStranici = osmrtnica.ObjavaNaStranici
         };
 
-    public static DomainModels.Oglas ToDomain(this Oglas oglas)
-        => new DomainModels.Oglas(
-            oglas.Id,
-            oglas.SlikaPok,
-            oglas.Opis,
-            oglas.ObjavaNaStranici
+    public static DomainModels.Osmrtnica ToDomain(this Osmrtnica osmrtnica)
+        => new DomainModels.Osmrtnica(
+            osmrtnica.Id,
+            osmrtnica.SlikaPok,
+            osmrtnica.Opis,
+            osmrtnica.ObjavaNaStranici
         );
 }

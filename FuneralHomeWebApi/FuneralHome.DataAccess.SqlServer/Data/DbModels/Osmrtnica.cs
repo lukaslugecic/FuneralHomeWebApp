@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     [Index("SmrtniSlucajId", Name = "IX_Oglas", IsUnique = true)]
-    public partial class Oglas
+    public partial class Osmrtnica
     {
         [Key]
-        public int IdOglas { get; set; }
+        public int IdOsmrtnica { get; set; }
         public int SmrtniSlucajId { get; set; }
         public byte[] SlikaPok { get; set; }
         [Required]
@@ -22,7 +22,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public bool ObjavaNaStranici { get; set; }
 
         [ForeignKey("SmrtniSlucajId")]
-        [InverseProperty("Oglas")]
+        [InverseProperty("Osmrtnica")]
         public virtual SmrtniSlucaj SmrtniSlucaj { get; set; }
     }
 }

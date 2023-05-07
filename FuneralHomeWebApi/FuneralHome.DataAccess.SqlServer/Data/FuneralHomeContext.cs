@@ -20,9 +20,9 @@ namespace FuneralHome.DataAccess.SqlServer.Data
         }
 
         public virtual DbSet<Korisnik> Korisnik { get; set; }
-        public virtual DbSet<Oglas> Oglas { get; set; }
         public virtual DbSet<Oprema> Oprema { get; set; }
         public virtual DbSet<Osiguranje> Osiguranje { get; set; }
+        public virtual DbSet<Osmrtnica> Osmrtnica { get; set; }
         public virtual DbSet<Pogreb> Pogreb { get; set; }
         public virtual DbSet<PogrebOprema> PogrebOprema { get; set; }
         public virtual DbSet<SmrtniSlucaj> SmrtniSlucaj { get; set; }
@@ -35,15 +35,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
             modelBuilder.Entity<Korisnik>(entity =>
             {
                 entity.Property(e => e.VrstaKorisnika).IsFixedLength();
-            });
-
-            modelBuilder.Entity<Oglas>(entity =>
-            {
-                entity.HasOne(d => d.SmrtniSlucaj)
-                    .WithOne(p => p.Oglas)
-                    .HasForeignKey<Oglas>(d => d.SmrtniSlucajId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Oglas_SmrtniSlucaj");
             });
 
             modelBuilder.Entity<Oprema>(entity =>
@@ -61,6 +52,18 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasForeignKey<Osiguranje>(d => d.KorisnikId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Osiguranje_Korisnik");
+            });
+
+            modelBuilder.Entity<Osmrtnica>(entity =>
+            {
+                entity.HasKey(e => e.IdOsmrtnica)
+                    .HasName("PK_Oglas");
+
+                entity.HasOne(d => d.SmrtniSlucaj)
+                    .WithOne(p => p.Osmrtnica)
+                    .HasForeignKey<Osmrtnica>(d => d.SmrtniSlucajId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Oglas_SmrtniSlucaj");
             });
 
             modelBuilder.Entity<Pogreb>(entity =>

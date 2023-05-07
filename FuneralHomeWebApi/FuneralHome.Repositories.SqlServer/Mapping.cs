@@ -36,21 +36,21 @@ public static class Mapping
 
    
 
-    public static Oglas ToDomain(this DbModels.Oglas oglas)
-       => new Oglas(
-           oglas.IdOglas,
-           oglas.SlikaPok,
-           oglas.Opis,
-           oglas.ObjavaNaStranici
+    public static Osmrtnica ToDomain(this DbModels.Osmrtnica osmrtnica)
+       => new Osmrtnica(
+           osmrtnica.IdOsmrtnica,
+           osmrtnica.SlikaPok,
+           osmrtnica.Opis,
+           osmrtnica.ObjavaNaStranici
        );
 
-    public static DbModels.Oglas ToDbModel(this Oglas oglas)
-        => new DbModels.Oglas()
+    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
+        => new DbModels.Osmrtnica()
         {
-           IdOglas = oglas.Id,
-           SlikaPok = oglas.SlikaPok,
-           Opis = oglas.Opis,
-           ObjavaNaStranici = oglas.ObjavaNaStranici
+           IdOsmrtnica = osmrtnica.Id,
+           SlikaPok = osmrtnica.SlikaPok,
+           Opis = osmrtnica.Opis,
+           ObjavaNaStranici = osmrtnica.ObjavaNaStranici
         };
 
     

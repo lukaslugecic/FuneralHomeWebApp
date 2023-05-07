@@ -4,12 +4,11 @@ using System;
 namespace FuneralHome.Repositories;
 
 /// <summary>
-/// Facade interface for a Oglas repository
+/// Facade interface for a Osmrtnica repository
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TDomainModel"></typeparam>
-public interface IOglasRepository
-    : IRepository<int, Oglas>,
-      IAggregateRepository<int, Oglas>
+public interface IOsmrtnicaRepository
+    : IRepository<int, Osmrtnica>
 {
 }

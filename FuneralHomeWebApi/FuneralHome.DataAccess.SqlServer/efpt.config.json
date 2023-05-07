@@ -19,15 +19,15 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Oglas]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Oprema]",
          "ObjectType": 0
       },
       {
          "Name": "[dbo].[Osiguranje]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Osmrtnica]",
          "ObjectType": 0
       },
       {

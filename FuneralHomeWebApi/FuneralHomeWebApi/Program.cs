@@ -25,7 +25,7 @@ builder.Services.AddTransient<IUslugaRepository, UslugaRepository>();
 builder.Services.AddTransient<IVrstaOpremeRepository, VrstaOpremeRepository>();
 builder.Services.AddTransient<IOpremaRepository, OpremaRepository>();
 builder.Services.AddTransient<IKorisnikRepository, KorisnikRepository>();
-builder.Services.AddTransient<IOglasRepository, OglasRepository>();
+builder.Services.AddTransient<IOsmrtnicaRepository, OsmrtnicaRepository>();
 builder.Services.AddTransient<IOsiguranjeRepository, OsiguranjeRepository>();
 builder.Services.AddTransient<IPogrebRepository, PogrebRepository>();
 builder.Services.AddTransient<ISmrtniSlucajRepository, SmrtniSlucajRepository>();

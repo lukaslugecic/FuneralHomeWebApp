@@ -4,20 +4,20 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class OglasRepository : IOglasRepository
+public class OsmrtnicaRepository : IOsmrtnicaRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public OglasRepository(FuneralHomeContext dbContext)
+    public OsmrtnicaRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(Oglas model)
+    public bool Exists(Osmrtnica model)
     {
         try
         {
-            return _dbContext.Oglas
+            return _dbContext.Osmrtnica
                      .AsNoTracking()
                      .Contains(model.ToDbModel());
         }
@@ -31,9 +31,9 @@ public class OglasRepository : IOglasRepository
     {
         try
         {
-            var model = _dbContext.Oglas
+            var model = _dbContext.Osmrtnica
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.IdOglas.Equals(id));
+                          .FirstOrDefault(o => o.IdOsmrtnica.Equals(id));
             return model is not null;
         }
         catch (Exception)
@@ -42,51 +42,30 @@ public class OglasRepository : IOglasRepository
         }
     }
 
-    public Result<Oglas> Get(int id)
+    public Result<Osmrtnica> Get(int id)
     {
         try
         {
-            var model = _dbContext.Oglas
+            var model = _dbContext.Osmrtnica
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.IdOglas.Equals(id))?
+                          .FirstOrDefault(o => o.IdOsmrtnica.Equals(id))?
                           .ToDomain();
 
             return model is not null
             ? Results.OnSuccess(model)
-                : Results.OnFailure<Oglas>($"No announcement with id {id} found");
+                : Results.OnFailure<Osmrtnica>($"No announcement with id {id} found");
         }
         catch (Exception e)
         {
-            return Results.OnException<Oglas>(e);
+            return Results.OnException<Osmrtnica>(e);
         }
     }
 
-    public Result<Oglas> GetAggregate(int id)
+    public Result<IEnumerable<Osmrtnica>> GetAll()
     {
         try
         {
-            var model = _dbContext.Oglas
-                          .Include(o => o.SmrtniSlucaj)
-                          .AsNoTracking()
-                          .FirstOrDefault(o => o.IdOglas.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
-                          ?.ToDomain();
-
-
-            return model is not null
-                ? Results.OnSuccess(model)
-                : Results.OnFailure<Oglas>();
-        }
-        catch (Exception e)
-        {
-            return Results.OnException<Oglas>(e);
-        }
-    }
-
-    public Result<IEnumerable<Oglas>> GetAll()
-    {
-        try
-        {
-            var models = _dbContext.Oglas
+            var models = _dbContext.Osmrtnica
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
 
@@ -94,32 +73,16 @@ public class OglasRepository : IOglasRepository
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<Oglas>>(e);
+            return Results.OnException<IEnumerable<Osmrtnica>>(e);
         }
     }
 
-    public Result<IEnumerable<Oglas>> GetAllAggregates()
-    {
-        try
-        {
-            var models = _dbContext.Oglas
-                           .Include(o => o.SmrtniSlucaj)
-                           .Select(Mapping.ToDomain);
-
-            return Results.OnSuccess(models);
-        }
-        catch (Exception e)
-        {
-            return Results.OnException<IEnumerable<Oglas>>(e);
-        }
-    }
-
-    public Result Insert(Oglas model)
+    public Result Insert(Osmrtnica model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.Oglas.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.Osmrtnica.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -144,13 +107,13 @@ public class OglasRepository : IOglasRepository
     {
         try
         {
-            var model = _dbContext.Oglas
+            var model = _dbContext.Osmrtnica
                           .AsNoTracking()
-                          .FirstOrDefault(o => o.IdOglas.Equals(id));
+                          .FirstOrDefault(o => o.IdOsmrtnica.Equals(id));
 
             if (model is not null)
             {
-                _dbContext.Oglas.Remove(model);
+                _dbContext.Osmrtnica.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -164,13 +127,13 @@ public class OglasRepository : IOglasRepository
         }
     }
 
-    public Result Update(Oglas model)
+    public Result Update(Osmrtnica model)
     {
         try
         {
             var dbModel = model.ToDbModel();
             // detach
-            if (_dbContext.Oglas.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            if (_dbContext.Osmrtnica.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -189,13 +152,6 @@ public class OglasRepository : IOglasRepository
         {
             return Results.OnException(e);
         }
-    }
-
-
-    
-    public Result UpdateAggregate(Oglas model)
-    {
-        return Results.OnFailure();
     }
     
 }

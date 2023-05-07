@@ -34,7 +34,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [InverseProperty("SmrtniSlucaj")]
         public virtual Korisnik Korisnik { get; set; }
         [InverseProperty("SmrtniSlucaj")]
-        public virtual Oglas Oglas { get; set; }
+        public virtual Osmrtnica Osmrtnica { get; set; }
         [InverseProperty("SmrtniSlucaj")]
         public virtual Pogreb Pogreb { get; set; }
     }
