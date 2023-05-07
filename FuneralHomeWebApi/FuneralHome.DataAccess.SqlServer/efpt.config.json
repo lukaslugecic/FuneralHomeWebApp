@@ -31,10 +31,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Osmrtnica]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[Pogreb]",
          "ObjectType": 0
       },

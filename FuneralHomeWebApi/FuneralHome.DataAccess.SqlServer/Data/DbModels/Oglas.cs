@@ -14,7 +14,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int IdOglas { get; set; }
         public int SmrtniSlucajId { get; set; }
-        public int OsmrtnicaId { get; set; }
         public byte[] SlikaPok { get; set; }
         [Required]
         [StringLength(100)]
@@ -22,9 +21,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public string Opis { get; set; }
         public bool ObjavaNaStranici { get; set; }
 
-        [ForeignKey("OsmrtnicaId")]
-        [InverseProperty("Oglas")]
-        public virtual Osmrtnica Osmrtnica { get; set; }
         [ForeignKey("SmrtniSlucajId")]
         [InverseProperty("Oglas")]
         public virtual SmrtniSlucaj SmrtniSlucaj { get; set; }
