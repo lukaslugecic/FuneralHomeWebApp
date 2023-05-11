@@ -34,7 +34,7 @@ export class MainNavigationComponent implements OnDestroy{
     customer: [
       { title: 'Naša oprema', path: '/equipment-catalog' },
       { title: 'Naše usluge', path: '/services-catalog' },
-      { title: 'Prijavi smrtni slučaj', path: '/report-death' },
+      { title: 'Prijavi smrtni slučaj', path: '/report-death/info' },
       { title: 'Organiziraj pogreb', path: '/organize-funeral' },
       { title: 'Osiguraj se', path: '/add-insurance' },
     ]

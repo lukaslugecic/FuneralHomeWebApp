@@ -1,0 +1,47 @@
+<app-main-navigation></app-main-navigation>
+
+<div class="container">
+<form [formGroup]="deathForm" (ngSubmit)="onFormSubmit()">
+    <div class="content">
+        <h1>Prijavi smrtni slučaj</h1>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Ime</mat-label>
+                <input matInput type="text" placeholder="Ime" formControlName="imePok">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Prezime</mat-label>
+                <input matInput type="text" placeholder="Prezime" formControlName="prezimePok">
+            </mat-form-field>
+       
+            <mat-form-field appearance="outline">
+                <mat-label>OIB</mat-label>
+                <input matInput type="text" placeholder="11 brojeva" formControlName="oibpok">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum rođenja</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="dd.mm.yyyy." formControlName="datumRodenjaPok">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum smrti</mat-label>
+                <input matInput [matDatepicker]="picker2" placeholder="dd.mm.yyyy." formControlName="datumSmrtiPok">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+
+   
+    </div>
+    <div  class="action">
+        <button mat-raised-button type="button" >Odustani</button>
+        <button mat-raised-button color="primary" type="submit">Spremi</button>
+    </div>
+
+    <div class="info">
+        <a routerLink="/report-death/info">Već imaš račun? Prijavi se!</a>
+      </div>
+
+</form>
+</div>
+

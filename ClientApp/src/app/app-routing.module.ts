@@ -26,6 +26,8 @@ import { EquipmentCatalogModule } from './pages/customer/equipment-catalog/equip
 import { EquipmentCatalogComponent } from './pages/customer/equipment-catalog/equipment-catalog.component';
 import { ReportDeathComponent } from './pages/customer/report-death/report-death.component';
 import { ReportDeathModule } from './pages/customer/report-death/report-death.module';
+import { DeathCustomerFormComponent } from './pages/forms/death-customer-form/death-customer-form.component';
+import { DeathCustomerFormModule } from './pages/forms/death-customer-form/death-customer-form.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -43,7 +45,8 @@ const routes: Routes = [
       { path: 'deaths', component: DeathsComponent},
       { path: 'insurances', component: InsuranceComponent},
       { path: 'equipment-catalog', component: EquipmentCatalogComponent},
-      { path: 'report-death', component: ReportDeathComponent}
+      { path: 'report-death/info', component: ReportDeathComponent},
+      { path: 'report-death/form', component: DeathCustomerFormComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -71,7 +74,8 @@ const routes: Routes = [
     AllUsersModule,
     InsuranceModule,
     EquipmentCatalogModule,
-    ReportDeathModule
+    ReportDeathModule,
+    DeathCustomerFormModule
   ],
   exports: [RouterModule]
 })
