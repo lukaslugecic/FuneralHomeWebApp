@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-report-death',
@@ -7,12 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportDeathComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _router: Router) { }
 
   ngOnInit(): void {
   }
 
   openAddForm() {
-    console.log("openAddDialog");
+    // preusmjeri na "/report-death/form" s Routerom
+    this._router.navigate(['/report-death/form']);
   }
 }
