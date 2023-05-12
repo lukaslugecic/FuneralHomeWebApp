@@ -28,6 +28,8 @@ import { ReportDeathComponent } from './pages/customer/report-death/report-death
 import { ReportDeathModule } from './pages/customer/report-death/report-death.module';
 import { DeathCustomerFormComponent } from './pages/forms/death-customer-form/death-customer-form.component';
 import { DeathCustomerFormModule } from './pages/forms/death-customer-form/death-customer-form.module';
+import { OrganizeFuneralComponent } from './pages/customer/organize-funeral/organize-funeral.component';
+import { OrganizeFuneralModule } from './pages/customer/organize-funeral/organize-funeral.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -46,7 +48,8 @@ const routes: Routes = [
       { path: 'insurances', component: InsuranceComponent},
       { path: 'equipment-catalog', component: EquipmentCatalogComponent},
       { path: 'report-death/info', component: ReportDeathComponent},
-      { path: 'report-death/form', component: DeathCustomerFormComponent}
+      { path: 'report-death/form', component: DeathCustomerFormComponent},
+      { path: 'organize-funeral', component: OrganizeFuneralComponent} 
     ],
     canActivate: [AuthGuard],
   },
@@ -75,7 +78,8 @@ const routes: Routes = [
     InsuranceModule,
     EquipmentCatalogModule,
     ReportDeathModule,
-    DeathCustomerFormModule
+    DeathCustomerFormModule,
+    OrganizeFuneralModule
   ],
   exports: [RouterModule]
 })

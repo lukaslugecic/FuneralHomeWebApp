@@ -1,1 +1,39 @@
-<p>organize-funeral works!</p>
+<app-main-navigation></app-main-navigation>
+<div class="container">
+    <h1 class="title">Kompletna organizacija pogreba</h1>
+    <p>
+        Uz veliko iskustvo i ljubazne djelatnike specijalizirali smo se za obavljanje pogrebničke djelatnosti na
+        području cijele Hrvatske, zemalja EU i svijeta,
+        stoga kod nas u uredu, dolaskom naših djelatnika u vaš dom ili koristeći našu internetsku aplikaciju možete organizirati kompletnu organizaciju
+        i ugovaranje pogreba, kremacije i ispraćaja na svim gradskim grobljima kao i prijevoz umrlih osoba specijalnim
+        pogrebnim vozilima.
+    </p>
+    <p>
+        Za više pitanja slobodno Nas nazovite ili pošaljite mail,
+        tu smo za Vas da Vam pomognemo u svim segmentima organizacije dostojanstvenog ispraćaja Vaših najmilijih.
+    </p>
+    <div class="img">
+        <img
+          src="assets\img\funeral5.jpg"
+          width="40%"
+          draggable="false"
+          (dragstart)="(false)"
+          class="unselectable"
+        />
+        <img
+          src="assets\img\funeral4.jpg"
+          width="40%"
+          draggable="false"
+          (dragstart)="(false)"
+          class="unselectable"
+        />
+    </div>
+    <div class="add">
+        <p>
+            Ukoliko želite da Vam mi organiziramo posljednji ispraćaj Vašeg najmilijeg, molimo Vas da ispunite obrazac pritiskom na dugme.
+        </p>
+        <button mat-raised-button (click)="openAddForm()"> Organiziraj pogreb </button>
+    </div>
+    
+
+<app-main-footer></app-main-footer>

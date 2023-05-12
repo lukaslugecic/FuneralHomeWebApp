@@ -3,7 +3,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { ISmrtniSlucajData } from 'src/app/interfaces/smrtnislucaj-data';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -23,18 +25,16 @@ export class DeathCustomerFormComponent implements OnInit {
     ]),
     datumRodenjaPok: new FormControl('', [Validators.required]),
     datumSmrtiPok: new FormControl('', [Validators.required]),
-    korisnikId: new FormControl('', [Validators.required]),
   });
   
   toUpdate: ISmrtniSlucajData = {} as ISmrtniSlucajData;
-
-  korisnici : Korisnik[] = [];
-
+  
   constructor(
     private _deathService: DeathService,
-    private _userService: UserService,
+    private _authService: AuthService,
     private readonly snackBar: MatSnackBar,
-    private dateAdapter: DateAdapter<Date>
+    private dateAdapter: DateAdapter<Date>,
+    private _router: Router
   ) {
     this.dateAdapter.setLocale('hr');
   }
@@ -72,31 +72,27 @@ export class DeathCustomerFormComponent implements OnInit {
             - new Date(this.deathForm.value.datumRodenjaPok).getTimezoneOffset() * 60000),
           DatumSmrtiPok: new Date(new Date(this.deathForm.value.datumSmrtiPok).getTime()
             - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
-          KorisnikId: this.deathForm.value.korisnikId,
+          KorisnikId: this._authService.userValue?.id as number,
         }
         this._deathService.addDeath(this.toUpdate).subscribe({
           next: (val: any) => {
-            this.snackBar.open('Smrtni slučaj uspješno dodan!', 'U redu', {
+            this.snackBar.open('Smrtni slučaj uspješno prijavljen.', 'U redu', {
               duration: 3000,
             });
+            this._router.navigate(['/report-death/info']);
           },
           error: (err: any) => {
             console.error(err);
-            this.snackBar.open('Greška prilikom dodavanja smrtnog slučaja!', 'Zatvori', {
+            this.snackBar.open('Greška prilikom prijave smrtnog slučaja!', 'Zatvori', {
               duration: 3000,
             });
+            this._router.navigate(['/report-death/info']);
           },
         });
-        console.log(this.toUpdate);
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {
         duration: 3000,
       });
     }
   }
-}
-
-type Korisnik = {
-  korisnikId: number;
-  imeIprezime: string;
 }

@@ -5,7 +5,6 @@ import { MainNavigationModule } from 'src/app/components/main-navigation/main-na
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { AuthNavigationModule } from 'src/app/components/auth-navigation/auth-navigation.module';
 
-
 @NgModule({
   declarations: [HomeComponent],
   imports: [

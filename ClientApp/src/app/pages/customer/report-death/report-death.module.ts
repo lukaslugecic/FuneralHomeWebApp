@@ -4,6 +4,7 @@ import { ReportDeathComponent } from './report-death.component';
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
 import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -13,7 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MainFooterModule,
     MainNavigationModule,
-    MatButtonModule
+    MatButtonModule,
+    RouterModule
   ]
 })
 export class ReportDeathModule { }
