@@ -30,6 +30,8 @@ import { DeathCustomerFormComponent } from './pages/forms/death-customer-form/de
 import { DeathCustomerFormModule } from './pages/forms/death-customer-form/death-customer-form.module';
 import { OrganizeFuneralComponent } from './pages/customer/organize-funeral/organize-funeral.component';
 import { OrganizeFuneralModule } from './pages/customer/organize-funeral/organize-funeral.module';
+import { FuneralCustomerFormComponent } from './pages/forms/funeral-customer-form/funeral-customer-form.component';
+import { FuneralCustomerFormModule } from './pages/forms/funeral-customer-form/funeral-customer-form.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -49,7 +51,8 @@ const routes: Routes = [
       { path: 'equipment-catalog', component: EquipmentCatalogComponent},
       { path: 'report-death/info', component: ReportDeathComponent},
       { path: 'report-death/form', component: DeathCustomerFormComponent},
-      { path: 'organize-funeral', component: OrganizeFuneralComponent} 
+      { path: 'organize-funeral', component: OrganizeFuneralComponent},
+      { path: 'organize-funeral/form', component: FuneralCustomerFormComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -79,7 +82,8 @@ const routes: Routes = [
     EquipmentCatalogModule,
     ReportDeathModule,
     DeathCustomerFormModule,
-    OrganizeFuneralModule
+    OrganizeFuneralModule,
+    FuneralCustomerFormModule
   ],
   exports: [RouterModule]
 })

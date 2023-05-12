@@ -118,8 +118,28 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             return Results.OnException<IEnumerable<SmrtniSlucaj>>(e);
         }
-    }   
+    }
 
+    public Result<IEnumerable<SmrtniSlucaj>> GetAllWithoutFuneralByKorisnikId(int id)
+    {
+        try
+        {
+            // ako u pogrebima nema pogreba sa smrtnim slucajem, onda vrati smrtne slucajeve
+            var models = _dbContext.SmrtniSlucaj
+                           .AsNoTracking()
+                           .Where(ss => !_dbContext.Pogreb
+                                   .AsNoTracking()
+                                   .Any(p => p.SmrtniSlucaj.IdSmrtniSlucaj.Equals(ss.IdSmrtniSlucaj)))
+                            .Where(ss => ss.Korisnik.IdKorisnik.Equals(id))
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<SmrtniSlucaj>>(e);
+        }
+    }
 
     public Result<IEnumerable<SmrtniSlucaj>> GetAllAggregates()
     {

@@ -41,6 +41,18 @@ public class SmrtniSlucajController : ControllerBase
             : Problem(slucajResults.Message, statusCode: 500);
     }
 
+    // GET: api/SmrtniSlucaj/WithoutFuneral/5
+    [HttpGet("/api/[controller]/WithoutFuneral/{id}")]
+    public ActionResult<IEnumerable<SmrtniSlucaj>> GetAllWithoutFuneral(int id)
+    {
+        var slucajResults = _smrtniSlucajRepository.GetAllWithoutFuneralByKorisnikId(id)
+            .Map(ss => ss.Select(DtoMapping.ToDto));
+
+        return slucajResults
+            ? Ok(slucajResults.Data)
+            : Problem(slucajResults.Message, statusCode: 500);
+    }
+
     // GET: api/SmrtniSlucaj/5
     [HttpGet("{id}")]
     public ActionResult<SmrtniSlucaj> GetSmrtniSlucaj(int id)

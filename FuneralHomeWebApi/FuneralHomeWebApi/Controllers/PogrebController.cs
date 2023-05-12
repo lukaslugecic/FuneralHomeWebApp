@@ -399,7 +399,7 @@ public class PogrebController : ControllerBase
     // POST: api/Pogreb
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public ActionResult<Pogreb> CreatePogreb(Pogreb pogreb)
+    public ActionResult<Pogreb> CreatePogreb(PogrebAggregate pogreb)
     {
         if (!ModelState.IsValid)
         {

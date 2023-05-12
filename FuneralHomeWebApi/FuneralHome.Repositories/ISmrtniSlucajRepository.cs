@@ -14,4 +14,5 @@ public interface ISmrtniSlucajRepository
       IAggregateRepository<int, SmrtniSlucaj>
 {
     Result<IEnumerable<SmrtniSlucaj>> GetAllWithoutFuneral();
+    Result<IEnumerable<SmrtniSlucaj>> GetAllWithoutFuneralByKorisnikId(int id);
 }

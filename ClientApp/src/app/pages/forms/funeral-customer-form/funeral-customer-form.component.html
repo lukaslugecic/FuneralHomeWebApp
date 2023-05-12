@@ -1,1 +1,106 @@
-<p>funeral-customer-form works!</p>
+<app-main-navigation></app-main-navigation>
+
+<div class="container">
+<h1>Organizirajte pogreb</h1>
+</div>
+<div class="multipart">
+<form [formGroup]="deathForm" (ngSubmit)="onFormSubmit()">
+    <mat-stepper [linear]="isLinear" #stepper>
+        <mat-step [stepControl]="smrtniSlucajForm">
+          <div formGroupName="smrtniSlucaj">
+            <ng-template matStepLabel>Informacije o pogrebu</ng-template>
+            <h2>Odaberite smrtni slučaj ili prijavite novi</h2>
+            <div class="deathCase">
+                <mat-form-field appearance="outline">
+                    <mat-label>Smrtni slučaj</mat-label>
+                    <mat-select formControlName="smrtniSlucajId">
+                      <mat-option *ngFor="let val of userDeaths" [value]="val.id">
+                          {{val.imePok}} {{val.prezimePok}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div>
+                    <button mat-raised-button color="primary" (click)="openAddForm()"> Prijavite novi smrtni slučaj </button>
+                  </div>
+            </div>
+            <h2>Ispunite podatke o pogrebu</h2>
+            <mat-form-field appearance="outline">
+                <mat-label>Datum pogreba</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="dd.mm.yyyy." formControlName="datumPogreba">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Vrsta sahrane</mat-label>
+                <mat-select formControlName="kremacija">
+                    <mat-option *ngFor="let val of typesOfFuneral" [value]="val.value">
+                        {{val.naziv}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div>
+              <button mat-raised-button color="primary" matStepperNext>Next</button>
+            </div>
+        </div>
+        </mat-step>
+        <mat-step [stepControl]="uslugeForm" label="Odaberite usluge">
+          <div formGroupName="usluge">
+            <h2>Za svaku vrstu odaberite uslugu po želji.</h2>
+            <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
+            <div *ngFor="let type of typesOfService">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{type.naziv}}</mat-label>
+                    <mat-select formControlName="{{type.naziv}}">
+                        <mat-option value=""> Bez usluge </mat-option>
+                        <mat-option *ngFor="let service of getServices(type.id)" [value]="service.id">
+                            {{service.naziv}} - {{service.opis}} - {{service.cijena | currency:'EUR'}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div>
+              <button mat-raised-button color="primary" matStepperPrevious>Back</button> | 
+              <button mat-raised-button color="primary" matStepperNext>Next</button>
+            </div>
+        </div>
+        </mat-step>
+        <mat-step [stepControl]="opremaForm" label="Odaberite opremu">
+            <div formGroupName="oprema">
+                <div>
+                    <h2>Za svaku vrstu odaberite opremu po želji</h2>
+                    <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
+                </div>
+                <mat-accordion>
+                    <div *ngFor="let type of typesOfEquipment">
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            {{ type.naziv }}
+                          </mat-expansion-panel-header>
+                          <mat-list>
+                            <mat-list-item *ngFor="let e of getEquipment(type.id)">
+                                <img *ngIf="e.slika" mat-list-avatar [src]="'data:image/jpeg;base64,' + e.slika">
+                                <div mat-line>{{ e.naziv }}</div>
+                                <div mat-line>Cijena: €{{ e.cijena }}</div>
+                                <div mat-list-item>
+                                    Količina: {{ getEquipmentQuantity(e.id) }}
+                                    <button mat-icon-button type="button" (click)="addEquipment(e.id)">
+                                        <mat-icon>add_circle</mat-icon>
+                                    </button>
+                                    <button mat-icon-button type="button" (click)="removeEquipment(e.id)">
+                                        <mat-icon>remove_circle</mat-icon>
+                                    </button>
+                                </div>
+                            </mat-list-item>
+                          </mat-list>
+                        </mat-expansion-panel>
+                      </div>
+                </mat-accordion>
+              <div>
+                <button mat-raised-button color="primary" matStepperPrevious>Back</button> | 
+                <button mat-raised-button color="accent" >Submit</button>
+              </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </form>
+</div>

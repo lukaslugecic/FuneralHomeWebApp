@@ -14,7 +14,6 @@ export class OrganizeFuneralComponent implements OnInit {
   }
 
   openAddForm() {
-    // preusmjeri na "/report-death/form" s Routerom
-    this._router.navigate(['/report-death/form']);
+    this._router.navigate(['/organize-funeral/form']);
   }
 }
