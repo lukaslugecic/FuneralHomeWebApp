@@ -98,8 +98,6 @@ export class FuneralDialogComponent implements OnInit {
       });
     }
 
-    //console.log(this.slucajevi);
-
   }
 
   onFormSubmit() {

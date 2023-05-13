@@ -41,7 +41,6 @@ export class LoginComponent implements OnDestroy {
       lozinka: this.form.get('password')?.value as string,
     };
 
-    console.log(data);
 
     const loginSubscription = this.authService
       .login(data)

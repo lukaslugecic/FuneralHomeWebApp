@@ -75,7 +75,6 @@ export class RegisterComponent implements OnDestroy {
       VrstaKorisnika: "K"
     };
 
-    console.log(data);
 
     
     const registerSubscription = this.authService
@@ -99,9 +98,5 @@ export class RegisterComponent implements OnDestroy {
     this.subscription.unsubscribe();
   }
   
-
-  public test() {
-    console.log(this.form.value);
-  }
   
 }

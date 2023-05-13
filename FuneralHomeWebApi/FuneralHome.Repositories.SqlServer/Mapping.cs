@@ -96,9 +96,9 @@ public static class Mapping
             DatumPogreb = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
             UkupnaCijena = pogreb.UkupnaCijena,
-            PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
-            Usluga = pogreb.PogrebUsluga.Select(pu => pu.ToDbModel()).ToList(),
-            SmrtniSlucaj = pogreb.SmrtniSlucaj?.ToDbModel()
+           // PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
+           // Usluga = pogreb.PogrebUsluga.Select(pu => pu.ToDbModel()).ToList(),
+           // SmrtniSlucaj = pogreb.SmrtniSlucaj?.ToDbModel()
         };
 
     public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)

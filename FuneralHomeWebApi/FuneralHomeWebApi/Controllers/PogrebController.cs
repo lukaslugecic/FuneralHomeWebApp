@@ -68,7 +68,21 @@ public class PogrebController : ControllerBase
         };
     }
 
-    
+    // GET: api/Pogreb/5
+    [HttpGet("SmrtniSlucaj/{id}")]
+    public ActionResult<Pogreb> GetPogrebBySmrtniSlucajId(int id)
+    {
+        var pogrebResult = _pogrebRepository.GetBySmrtniSlucajId(id).Map(DtoMapping.ToDto);
+
+        return pogrebResult switch
+        {
+            { IsSuccess: true } => Ok(pogrebResult.Data),
+            { IsFailure: true } => NotFound(),
+            { IsException: true } or _ => Problem(pogrebResult.Message, statusCode: 500)
+        };
+    }
+
+
     [HttpGet("/api/[controller]/Aggregate/{id}")]
     public ActionResult<PogrebAggregate> GetPogrebAggregate(int id)
     {
@@ -399,7 +413,7 @@ public class PogrebController : ControllerBase
     // POST: api/Pogreb
     // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public ActionResult<Pogreb> CreatePogreb(PogrebAggregate pogreb)
+    public ActionResult<Pogreb> CreatePogreb(Pogreb pogreb)
     {
         if (!ModelState.IsValid)
         {

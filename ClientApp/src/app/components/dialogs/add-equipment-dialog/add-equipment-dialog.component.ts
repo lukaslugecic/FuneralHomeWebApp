@@ -87,8 +87,6 @@ export class AddEquipmentDialogComponent implements OnInit {
             });
           },
         });
-       console.log(this.data);
-       console.log(this.toAdd);
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {
         duration: 3000,

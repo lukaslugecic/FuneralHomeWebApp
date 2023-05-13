@@ -51,7 +51,6 @@ export class EquipmentDialogComponent implements OnInit {
   }
 
   onFormSubmit() {
-    console.log(this.equipmentForm.value);
     if (this.equipmentForm.valid) {
       if (this.data) {
         this.toUpdate = {
@@ -63,7 +62,6 @@ export class EquipmentDialogComponent implements OnInit {
           VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
           VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
         }
-        console.log(this.toUpdate);
         this._equipmentService
           .updateEquipment(this.data.id, this.toUpdate)
           .subscribe({
@@ -104,7 +102,6 @@ export class EquipmentDialogComponent implements OnInit {
             });
           },
         });
-        console.log(this.toUpdate);
       }
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {

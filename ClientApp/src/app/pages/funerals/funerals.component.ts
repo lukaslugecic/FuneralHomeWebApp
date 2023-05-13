@@ -46,7 +46,6 @@ export class FuneralsComponent implements OnInit {
   getAllFunerals() {
     this._funeralService.getAllFunereals().subscribe({
       next: (res) => {
-        console.log(res);
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;

@@ -3,10 +3,14 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { DateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
+import { IKorisnik } from 'src/app/interfaces/korisnik-data';
 import { IPogrebAggretageData } from 'src/app/interfaces/pogreb-aggretage-data';
+import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
+import { IPogrebUslugeData } from 'src/app/interfaces/pogreb-usluge-data';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
+import { FuneralService } from 'src/app/services/funeral/funeral.service';
 import { ServiceService } from 'src/app/services/service/service.service';
 
 @Component({
@@ -17,8 +21,6 @@ import { ServiceService } from 'src/app/services/service/service.service';
 export class FuneralCustomerFormComponent implements OnInit {
  
   userDeaths: any[] = [];
-  toInsert: IPogrebAggretageData = {} as IPogrebAggretageData;
-
   typesOfFuneral = [
     { value: true, naziv: 'Kremiranje' },
     { value: false, naziv: 'Ukop' },
@@ -33,6 +35,7 @@ export class FuneralCustomerFormComponent implements OnInit {
     private _deathService: DeathService,
     private _serviceService: ServiceService,
     private _equipmentService: EquipmentService,
+    private _funeralService: FuneralService,
     private _authService: AuthService,
     private readonly _snackBar: MatSnackBar,
     private _dateAdapter: DateAdapter<Date>,
@@ -41,7 +44,7 @@ export class FuneralCustomerFormComponent implements OnInit {
   ) {
     this._dateAdapter.setLocale('hr');
   }
-  isLinear: boolean = false;
+  isLinear: boolean = true;
 
   ngOnInit() {
     this._deathService.getAllDeathsWithoutFuneralByUserId(this._authService.userValue?.id as number).subscribe({
@@ -122,8 +125,86 @@ export class FuneralCustomerFormComponent implements OnInit {
 
   onFormSubmit() {
     if (this.deathForm.valid) {
-      console.log(this.deathForm.value);
+      const pogrebOprema : IPogrebOpremaData[] = [];
+      this.equipmentQuantity.forEach((eq: any) => {
+        if(eq.kolicina > 0){
+          pogrebOprema.push({
+            oprema: this.equipment.find((e: any) => e.id === eq.id),
+            kolicina: eq.kolicina
+          });
+        }
+      });
+
+      const pogrebUsluge : IPogrebUslugeData[] = [];
+      for (const type of this.typesOfService) {
+        const formControl = this.deathForm.controls.usluge.get(type.naziv);
+        const serviceId = formControl?.value;
+        if (serviceId) {
+          const service = this.services.find((s: any) => s.id === serviceId);
+          const pu : IPogrebUslugeData = {
+            id : service.id,
+            naziv : service.naziv,
+            vrstaUslugeId : service.vrstaUslugeId,
+            vrstaUslugeNaziv : service.vrstaUslugeNaziv,
+            opis : service.opis,
+            cijena : service.cijena
+          }
+          pogrebUsluge.push(pu);
+        }
+      }
+
+      const pogreb = {
+        id: 0,
+        smrtniSlucajId: this.smrtniSlucajForm.value.smrtniSlucajId,
+        datumPogreba: this.smrtniSlucajForm.value.datumPogreba,
+        kremacija: this.smrtniSlucajForm.value.kremacija,
+        ukupnaCijena: this.getTotalPrice(),
+      };
+      /*
+      const toInsert: IPogrebAggretageData = {
+        id: 0,
+        smrtniSlucajId: this.smrtniSlucajForm.value.smrtniSlucajId,
+        datumPogreba: this.smrtniSlucajForm.value.datumPogreba,
+        kremacija: this.smrtniSlucajForm.value.kremacija,
+        pogrebOprema: pogrebOprema,
+        pogrebUsluga: pogrebUsluge,
+        ukupnaCijena: this.getTotalPrice(),
+        smrtniSlucaj: this.userDeaths.find((d: any) => d.id === this.smrtniSlucajForm.value.smrtniSlucajId),
+        korisnik: {
+          id: this._authService.userValue?.id as number,
+          ime: this._authService.userValue?.ime as string,
+          prezime: this._authService.userValue?.prezime as string,
+          datumRodenja: this._authService.userValue?.datumRodenja as string,
+          adresa: this._authService.userValue?.adresa as string,
+          oib: this._authService.userValue?.oib as string,
+          mail: this._authService.userValue?.mail as string,
+          lozinka: this._authService.userValue?.lozinka as string,
+          vrstaKorisnika: this._authService.userValue?.vrstaKorisnika as string
+        }
+      };
+      */
       
+      // dodaj funeral i dohvati njegov id iz baze nakon sto je stvoren, zatim za taj id dodaj pogrebOprema i pogrebUsluge
+      this._funeralService.addFuneral(pogreb).subscribe({
+        next: (res) => {
+          this._funeralService.getFuneralByDeathId(this.smrtniSlucajForm.value.smrtniSlucajId).subscribe({
+            next: (res2) => {
+              console.log(pogrebOprema)
+              for(const po of pogrebOprema){
+                this._funeralService.addEquipment(res2.id, po).subscribe();
+              }
+              console.log(pogrebUsluge)
+              for(const pu of pogrebUsluge){
+                this._funeralService.addService(res2.id, pu).subscribe();
+              }
+              this._snackBar.open('Pogreb uspješno dodan!', 'U redu', {
+                duration: 3000,
+              });
+              this._router.navigate(['/']);
+            }
+          });
+        }
+      });
     } else {
       this._snackBar.open('Popunite sva polja!', 'U redu', {
         duration: 3000,

@@ -42,7 +42,6 @@ export class InsuranceComponent implements OnInit {
   getAllInsurances() {
     this._insuranceService.getAllInsurances().subscribe({
       next: (res) => {
-        console.log(res);
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;

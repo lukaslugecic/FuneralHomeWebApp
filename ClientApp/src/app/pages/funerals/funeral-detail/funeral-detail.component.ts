@@ -151,7 +151,6 @@ export class FuneralDetailComponent implements OnInit {
   }
 
   removeEquipment(data: any) {
-    console.log(data);
     this._funeralService.removeEquipment(this.funeralId!, data).subscribe({
       next: (res) => {
         this.getAllInfo();

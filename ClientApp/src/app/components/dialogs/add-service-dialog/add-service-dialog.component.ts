@@ -54,9 +54,6 @@ export class AddServiceDialogComponent implements OnInit {
           naziv: "Naziv: " + s.naziv + ", Cijena: " + s.cijena + "€",
         });
       });
-      
-    console.log(this.data);
-    console.log(this.services);
     });
     this.serviceForm.get('vrstaUsluge')?.valueChanges.subscribe(value => {
       this.filteredServicesToShow = this.servicesToShow.filter(e => e.vrstaUsluge === value);
@@ -89,8 +86,6 @@ export class AddServiceDialogComponent implements OnInit {
             });
           },
         });
-       console.log(this.data);
-       console.log(this.toAdd);
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {
         duration: 3000,

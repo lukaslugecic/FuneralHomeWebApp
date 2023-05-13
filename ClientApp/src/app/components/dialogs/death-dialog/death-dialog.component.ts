@@ -95,7 +95,6 @@ export class DeathDialogComponent implements OnInit {
             - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
           KorisnikId: this.deathForm.value.korisnikId,
         }
-        console.log(this.toUpdate);
         this._deathService
           .updateDeath(this.data.id, this.toUpdate)
           .subscribe({
@@ -138,7 +137,6 @@ export class DeathDialogComponent implements OnInit {
             });
           },
         });
-        console.log(this.toUpdate);
       }
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {

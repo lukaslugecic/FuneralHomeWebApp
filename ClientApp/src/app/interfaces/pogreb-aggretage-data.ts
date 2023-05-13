@@ -1,3 +1,4 @@
+import { IKorisnik } from "./korisnik-data";
 import { IPogrebOpremaData } from "./pogreb-oprema-data";
 import { IPogrebUslugeData } from "./pogreb-usluge-data";
 
@@ -22,11 +23,11 @@ export interface IPogrebAggretageData {
         id: number;
         ime: string;
         prezime: string;
-        datumRodenja: Date;
+        datumRodenja: string;
         adresa: string;
         oib: string;
         mail: string;
         lozinka: string;
-        vrstaKorisnika: string;
+        vrstaKorisnika: string
     };
 }
