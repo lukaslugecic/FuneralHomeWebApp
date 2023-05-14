@@ -80,9 +80,10 @@ export class FuneralCustomerFormComponent implements OnInit {
 
     this._equipmentService.getAllEquipment().subscribe({
       next: (res) => {
-        this.equipment = res;
+        // u this.equipment spremi sve opreme kojima je zaliha > 0
+        this.equipment = res.filter((equipment: any) => equipment.zalihaOpreme > 0);
         this.equipment.forEach((equipment: any) => {
-          this.equipmentQuantity.push({id: equipment.id, kolicina: 0});
+          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zalihaOpreme ,kolicina: 0});
         });
       }
     });
@@ -190,6 +191,13 @@ export class FuneralCustomerFormComponent implements OnInit {
 
   addEquipment(id: number) {
     this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina++;
+    // provjeri da li je količina veća od zalihe
+    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > this.equipment.find((e: any) => e.id === id).zalihaOpreme){
+      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
+      this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
+        duration: 3000,
+      });
+    }
   }
 
   removeEquipment(id: number) {
@@ -218,84 +226,3 @@ export class FuneralCustomerFormComponent implements OnInit {
     return totalPrice;
   }
 }
-
-
-
-/*
-      const toInsert: IPogrebAggretageData = {
-        id: 0,
-        smrtniSlucajId: this.smrtniSlucajForm.value.smrtniSlucajId,
-        datumPogreba: this.smrtniSlucajForm.value.datumPogreba,
-        kremacija: this.smrtniSlucajForm.value.kremacija,
-        pogrebOprema: pogrebOprema,
-        pogrebUsluga: pogrebUsluge,
-        ukupnaCijena: this.getTotalPrice(),
-        smrtniSlucaj: this.userDeaths.find((d: any) => d.id === this.smrtniSlucajForm.value.smrtniSlucajId),
-        korisnik: {
-          id: this._authService.userValue?.id as number,
-          ime: this._authService.userValue?.ime as string,
-          prezime: this._authService.userValue?.prezime as string,
-          datumRodenja: this._authService.userValue?.datumRodenja as string,
-          adresa: this._authService.userValue?.adresa as string,
-          oib: this._authService.userValue?.oib as string,
-          mail: this._authService.userValue?.mail as string,
-          lozinka: this._authService.userValue?.lozinka as string,
-          vrstaKorisnika: this._authService.userValue?.vrstaKorisnika as string
-        }
-      };
-      */
-
-
-
-
-      /*
-
-      this._funeralService.addFuneral(pogreb).subscribe({
-        next: (res) => {
-          this._funeralService.getFuneralByDeathId(this.smrtniSlucajForm.value.smrtniSlucajId).subscribe({
-            next: (res2) => {
-              const addEquipmentObservables = [];
-              const addServiceObservables = [];
-      
-              console.log(pogrebOprema);
-              for(const po of pogrebOprema){
-                addEquipmentObservables.push(this._funeralService.addEquipment(res2.id, po));
-              }
-      
-
-              console.log(pogrebUsluge);
-              for(const pu of pogrebUsluge){
-                addServiceObservables.push(this._funeralService.addService(res2.id, pu));
-              }
-      
-              forkJoin(addEquipmentObservables.concat(addServiceObservables)).subscribe(
-                (res3) => {
-                  this._snackBar.open('Pogreb uspješno dodan!', 'U redu', {
-                    duration: 3000,
-                  });
-                  this._router.navigate(['/']);
-                },
-                (err) => {
-                  this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {
-                    duration: 3000,
-                  });
-                }
-              );
-            },
-            error: (err) => {
-              this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {
-                duration: 3000,
-              });
-            }
-
-          });
-        },
-        error: (err) => {
-          this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {
-            duration: 3000,
-          });
-        }
-        
-      });
-
-      */
