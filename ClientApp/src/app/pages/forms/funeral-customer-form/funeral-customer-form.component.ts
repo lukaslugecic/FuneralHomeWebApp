@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -100,7 +100,7 @@ export class FuneralCustomerFormComponent implements OnInit {
   deathForm = this._builder.group({
     smrtniSlucaj: this._builder.group({
       smrtniSlucajId: this._builder.control('',Validators.required),
-      datumPogreba: this._builder.control('',Validators.required),
+      datumPogreba: this._builder.control('', [Validators.required, dateNotInPastValidator()]),
       kremacija: this._builder.control('',Validators.required),
     }),
     usluge: this._builder.group({}),
@@ -127,6 +127,21 @@ export class FuneralCustomerFormComponent implements OnInit {
 
   onFormSubmit() {
     if (this.deathForm.valid) {
+      // provjeriti je li datum pogreba u budućnosti
+      if(new Date(this.smrtniSlucajForm.value.datumPogreba) < new Date()){
+        this._snackBar.open('Datum pogreba ne može biti u prošlosti!', 'U redu', {
+          duration: 3000,
+        });
+        return;
+      }
+      // provjeriti je li datum pogreba prije datuma smrti
+      if(new Date(this.smrtniSlucajForm.value.datumPogreba)
+          < new Date(this.userDeaths.find((d: any) => d.id === this.smrtniSlucajForm.value.smrtniSlucajId).datumSmrtiPok)){
+        this._snackBar.open('Datum pogreba ne može biti prije datuma smrti!', 'U redu', {
+          duration: 3000,
+        });
+        return;
+      }
       const pogrebOprema : IPogrebOpremaData[] = [];
       this.equipmentQuantity.forEach((eq: any) => {
         if(eq.kolicina > 0){
@@ -158,7 +173,8 @@ export class FuneralCustomerFormComponent implements OnInit {
       const pogreb = {
         id: 0,
         smrtniSlucajId: this.smrtniSlucajForm.value.smrtniSlucajId,
-        datumPogreba: this.smrtniSlucajForm.value.datumPogreba,
+        datumPogreba: new Date(new Date(this.smrtniSlucajForm.value.datumPogreba).getTime() 
+        - new Date(this.smrtniSlucajForm.value.datumPogreba).getTimezoneOffset() * 60000),
         kremacija: this.smrtniSlucajForm.value.kremacija,
         ukupnaCijena: 0,
       };
@@ -225,4 +241,10 @@ export class FuneralCustomerFormComponent implements OnInit {
     }
     return totalPrice;
   }
+}
+
+export function dateNotInPastValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    return new Date(control.value) < new Date() ? { dateNotInPast: { value: control.value } } : null;
+  };
 }
