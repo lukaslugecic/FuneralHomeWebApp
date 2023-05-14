@@ -19,7 +19,7 @@ export class AddEquipmentDialogComponent implements OnInit {
   equipmentForm: FormGroup = new FormGroup({
     opremaId: new FormControl('', [Validators.required]),
     vrstaOpreme: new FormControl('', [Validators.required]),
-    kolicina : new FormControl('', [Validators.required]),
+    kolicina : new FormControl('', [Validators.required, Validators.min(1)]),
   });
   
   toAdd: IPogrebOpremaData = {} as IPogrebOpremaData;
@@ -88,9 +88,16 @@ export class AddEquipmentDialogComponent implements OnInit {
           },
         });
     } else {
-      this.snackBar.open('Popunite sva polja!', 'U redu', {
-        duration: 3000,
-      });
+      if(this.equipmentForm.get('kolicina')?.value < 1){
+        this.snackBar.open('Količina mora opreme mora biti veća od 0!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Popunite sva polja!', 'U redu', {
+          duration: 3000,
+        });
+      }
+      
     }
   }
 }

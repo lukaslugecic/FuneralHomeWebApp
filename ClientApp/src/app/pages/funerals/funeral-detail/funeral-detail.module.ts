@@ -22,7 +22,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AddEquipmentDialogModule } from 'src/app/components/dialogs/add-equipment-dialog/add-equipment-dialog.module';
 import { AddServiceDialogModule } from 'src/app/components/dialogs/add-service-dialog/add-service-dialog.module';
-
+import { MatExpansionModule } from '@angular/material/expansion';
 
 
 @NgModule({
@@ -48,7 +48,8 @@ import { AddServiceDialogModule } from 'src/app/components/dialogs/add-service-d
     MatSortModule,
     MatSnackBarModule,
     AddEquipmentDialogModule,
-    AddServiceDialogModule
+    AddServiceDialogModule,
+    MatExpansionModule
   ]
 })
 export class FuneralDetailModule { }

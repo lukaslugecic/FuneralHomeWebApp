@@ -4,41 +4,41 @@
   <h1>Informacije o pogrebu</h1>
 
   <div class="table-container">
-      <table mat-table [dataSource]="dataSourceDeaths" matSort>
+      <table mat-table [dataSource]="dataSourceDeaths">
 
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+          <th mat-header-cell *matHeaderCellDef > ID </th>
           <td mat-cell *matCellDef="let row"> {{row.id}} </td>
         </ng-container>
 
         <ng-container matColumnDef="datumPogreba">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum pogreba </th>
-          <td mat-cell *matCellDef="let row"> {{row.datumPogreba | date}}</td>
+          <th mat-header-cell *matHeaderCellDef> Datum pogreba </th>
+          <td mat-cell *matCellDef="let row"> {{row.datumPogreba | date: 'dd.MM.yyyy.'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="kremacija">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Sahrana </th>
+          <th mat-header-cell *matHeaderCellDef> Sahrana </th>
           <td mat-cell *matCellDef="let row"> {{row.kremacija ? 'Kremacija' : 'Ukop'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ime">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime naručitelja </th>
+          <th mat-header-cell *matHeaderCellDef> Ime naručitelja </th>
           <td mat-cell *matCellDef="let row"> {{row.korisnik.ime}} </td>
         </ng-container>
 
         <ng-container matColumnDef="prezime">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime naručitelja </th>
+          <th mat-header-cell *matHeaderCellDef> Prezime naručitelja </th>
           <td mat-cell *matCellDef="let row"> {{row.korisnik.prezime}} </td>
         </ng-container>
 
         <ng-container matColumnDef="ukupnaCijena">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ukupna cijena </th>
+          <th mat-header-cell *matHeaderCellDef> Ukupna cijena </th>
           <td mat-cell *matCellDef="let row"> {{row.ukupnaCijena | currency:'EUR'}} </td>
         </ng-container>
 
 
         <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header><b>Uredi / Izbriši</b></th>
+          <th mat-header-cell *matHeaderCellDef><b>Uredi / Izbriši</b></th>
             <td mat-cell *matCellDef="let row">
               <button mat-icon-button (click)="openEditFuneralForm(row)">
                 <mat-icon>edit</mat-icon>
@@ -55,155 +55,180 @@
       </table>
   </div>
 
-  <div class="table-container">
-    <h2>Smrtni slučaj</h2>
-      <table mat-table [dataSource]="dataSourceDeaths" matSort>
-
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.id}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="imePok">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime pokojnika </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.imePok}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="prezimePok">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime pokojnika </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.prezimePok}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="oibpok">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> OIB </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.oibpok}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="datumRodenjaPok">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum rođenja </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.datumRodenjaPok | date}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="datumSmrtiPok">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum smrti </th>
-          <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.datumSmrtiPok | date}}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef><b>Uredi</b></th>
-          <td mat-cell *matCellDef="let row">
-            <button mat-icon-button (click)="openEditDeathForm(row.smrtniSlucaj)">
-              <mat-icon>edit</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="deathColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: deathColumns;"></tr>
-
-      </table>
-  </div>
-
-  <div class="table-container">
-    <div class="header">
-      <h2>Popis opreme</h2>
-        <button mat-raised-button (click)="addEquipment()">Dodaj opremu</button>
-      </div>
-      
-      <table mat-table [dataSource]="dataSourceEquipment" matSort>
+  <mat-accordion>
     
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let row"> {{row.oprema.id}} </td>
-        </ng-container>
-    
-        <ng-container matColumnDef="vrstaOpremeNaziv">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Vrsta opreme </th>
-          <td mat-cell *matCellDef="let row"> {{row.oprema.vrstaOpremeNaziv}}</td>
-        </ng-container>
-    
-        <ng-container matColumnDef="naziv">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>  Naziv </th>
-          <td mat-cell *matCellDef="let row"> {{row.oprema.naziv}}</td>
-        </ng-container>
-    
-        <ng-container matColumnDef="cijena">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cijena </th>
-          <td mat-cell *matCellDef="let row"> {{row.oprema.cijena | currency:'EUR'}}</td>
-        </ng-container>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Smrtni slučaj</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+              <h2>Informacije o pokojniku</h2>
+              <table mat-table [dataSource]="dataSourceDeaths">
+        
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef> ID </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.id}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="imePok">
+                  <th mat-header-cell *matHeaderCellDef> Ime pokojnika </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.imePok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="prezimePok">
+                  <th mat-header-cell *matHeaderCellDef> Prezime pokojnika </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.prezimePok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="oibpok">
+                  <th mat-header-cell *matHeaderCellDef> OIB </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.oibpok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="datumRodenjaPok">
+                  <th mat-header-cell *matHeaderCellDef> Datum rođenja </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.datumRodenjaPok | date: 'dd.MM.yyyy.'}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="datumSmrtiPok">
+                  <th mat-header-cell *matHeaderCellDef> Datum smrti </th>
+                  <td mat-cell *matCellDef="let row"> {{row.smrtniSlucaj.datumSmrtiPok | date: 'dd.MM.yyyy.'}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef><b>Uredi</b></th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button (click)="openEditDeathForm(row.smrtniSlucaj)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+        
+                <tr mat-header-row *matHeaderRowDef="deathColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: deathColumns;"></tr>
+        
+              </table>
+          </div>
+        </mat-expansion-panel>
 
-        <ng-container matColumnDef="kolicina">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Kolicina </th>
-          <td mat-cell *matCellDef="let row"> {{row.kolicina}}</td>
-        </ng-container>
-    
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Popis opreme</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+            <div class="header">
+                <h2>Uredi opremu</h2>
+                <button mat-raised-button (click)="addEquipment()">Dodaj opremu</button>
+              </div>
+              
+              <table mat-table [dataSource]="dataSourceEquipment">
+            
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef> ID </th>
+                  <td mat-cell *matCellDef="let row"> {{row.oprema.id}} </td>
+                </ng-container>
+            
+                <ng-container matColumnDef="vrstaOpremeNaziv">
+                  <th mat-header-cell *matHeaderCellDef> Vrsta opreme </th>
+                  <td mat-cell *matCellDef="let row"> {{row.oprema.vrstaOpremeNaziv}}</td>
+                </ng-container>
+            
+                <ng-container matColumnDef="naziv">
+                  <th mat-header-cell *matHeaderCellDef>  Naziv </th>
+                  <td mat-cell *matCellDef="let row"> {{row.oprema.naziv}}</td>
+                </ng-container>
+            
+                <ng-container matColumnDef="cijena">
+                  <th mat-header-cell *matHeaderCellDef> Cijena </th>
+                  <td mat-cell *matCellDef="let row"> {{row.oprema.cijena | currency:'EUR'}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="kolicina">
+                  <th mat-header-cell *matHeaderCellDef> Kolicina </th>
+                  <td mat-cell *matCellDef="let row"> {{row.kolicina}}</td>
+                </ng-container>
+            
+                  
+                <ng-container matColumnDef="add">
+                  <th mat-header-cell *matHeaderCellDef></th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button (click)="incrementEquipment(row.oprema.id)">
+                      <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="decrementEquipment(row.oprema.id)">
+                      <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" (click)="removeEquipment(row.oprema)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+            
+                <tr mat-header-row *matHeaderRowDef="equipmentColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: equipmentColumns;"></tr>
+            
+              </table>
+          </div>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Popis usluga</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+            <div class="header">
+              <h2>Uredi usluge</h2>
+              <button mat-raised-button (click)="addService()">Dodaj uslugu</button>
+            </div>
+            <table mat-table [dataSource]="dataSourceServices">
+              
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+              </ng-container>
+              
+              <ng-container matColumnDef="vrstaUslugeNaziv">
+                <th mat-header-cell *matHeaderCellDef> Vrsta usluge </th>
+                <td mat-cell *matCellDef="let row"> {{row.vrstaUslugeNaziv}}</td>
+              </ng-container>
+              
+              <ng-container matColumnDef="naziv">
+                <th mat-header-cell *matHeaderCellDef> Naziv </th>
+                <td mat-cell *matCellDef="let row"> {{row.naziv}}</td>
+              </ng-container>
+              
+              <ng-container matColumnDef="cijena">
+                <th mat-header-cell *matHeaderCellDef> Cijena </th>
+                <td mat-cell *matCellDef="let row"> {{row.cijena | currency:'EUR'}}</td>
+              </ng-container>
           
-        <ng-container matColumnDef="add">
-          <th mat-header-cell *matHeaderCellDef></th>
-          <td mat-cell *matCellDef="let row">
-            <button mat-icon-button (click)="incrementEquipment(row.oprema.id)">
-              <mat-icon>add_circle_outline</mat-icon>
-            </button>
-            <button mat-icon-button (click)="decrementEquipment(row.oprema.id)">
-              <mat-icon>remove_circle_outline</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" (click)="removeService(row)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+              </ng-container>
+              
+              <tr mat-header-row *matHeaderRowDef="serviceColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: serviceColumns;"></tr>
+              
+          </table>
+        </div>
+        </mat-expansion-panel>
 
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
-          <td mat-cell *matCellDef="let row">
-            <button mat-icon-button color="warn" (click)="removeEquipment(row.oprema)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          </td>
-        </ng-container>
-    
-        <tr mat-header-row *matHeaderRowDef="equipmentColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: equipmentColumns;"></tr>
-    
-      </table>
-  </div>
+  </mat-accordion>
 
-    <div class="table-container">
-      <div class="header">
-        <h2>Popis usluga</h2>
-        <button mat-raised-button (click)="addService()">Dodaj uslugu</button>
-      </div>
-      <table mat-table [dataSource]="dataSourceServices" matSort>
-        
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-          <td mat-cell *matCellDef="let row"> {{row.id}} </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="vrstaUslugeNaziv">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Vrsta usluge </th>
-          <td mat-cell *matCellDef="let row"> {{row.vrstaUslugeNaziv}}</td>
-        </ng-container>
-        
-        <ng-container matColumnDef="naziv">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Naziv </th>
-          <td mat-cell *matCellDef="let row"> {{row.naziv}}</td>
-        </ng-container>
-        
-        <ng-container matColumnDef="cijena">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cijena </th>
-          <td mat-cell *matCellDef="let row"> {{row.cijena | currency:'EUR'}}</td>
-        </ng-container>
+  
+
+  
     
-        <ng-container matColumnDef="action">
-          <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
-            <td mat-cell *matCellDef="let row">
-              <button mat-icon-button color="warn" (click)="removeService(row)">
-                  <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-        </ng-container>
-        
-        <tr mat-header-row *matHeaderRowDef="serviceColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: serviceColumns;"></tr>
-        
-    </table>
-  </div>
 </div>
