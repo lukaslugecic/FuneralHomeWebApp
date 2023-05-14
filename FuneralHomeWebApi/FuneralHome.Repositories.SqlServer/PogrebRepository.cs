@@ -407,42 +407,4 @@ public class PogrebRepository : IPogrebRepository
             return Results.OnException(e);
         }
     }
-
-
-    public Result InsertThenUpdateAggregate(Pogreb model)
-    {
-        // dodaj novi Pogreb u bazu i njegov SmrtniSlucaj.KorisnikId postavi na model.KorisnikId
-        try
-        {
-            var dbModel = model.ToDbModel();
-            if (_dbContext.Pogreb.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
-            {
-                var isSuccess = _dbContext.SaveChanges() > 0;
-                if (isSuccess)
-                {
-                    for (int i = 0; i < model.PogrebOprema.Count; i++)
-                    {
-                        model.AddOprema(model.PogrebOprema[i].Oprema, model.PogrebOprema[i].Kolicina);
-                    }
-                    for (int i = 0; i < model.PogrebUsluga.Count; i++)
-                    {
-                        model.AddUsluga(model.PogrebUsluga[i]);
-                    }
-                    isSuccess = UpdateAggregate(model).IsSuccess;
-                }
-                // every Add attaches the entity object and EF begins tracking
-                // we detach the entity object from tracking, because this can cause problems when a repo is not set as a transient service
-                _dbContext.Entry(dbModel).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-                return isSuccess
-                    ? Results.OnSuccess()
-                    : Results.OnFailure();
-            }
-            return Results.OnFailure();
-        }
-        catch (Exception e)
-        {
-            return Results.OnException(e);
-        }
-    }
-
 }

@@ -476,4 +476,89 @@ public class PogrebController : ControllerBase
             ? NoContent()
             : Problem(deleteResult.Message, statusCode: 500);
     }
+
+    [HttpPut("AddPogreb")]
+    public IActionResult AddPogreb(AddPogreb addPogreb)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var domainPogreb = addPogreb.Pogreb.ToDomain();
+
+        var validationResult = domainPogreb.IsValid();
+        if (!validationResult)
+        {
+            return Problem(validationResult.Message, statusCode: 500);
+        }
+
+        var result =
+            domainPogreb.IsValid()
+            .Bind(() => _pogrebRepository.Insert(domainPogreb));
+
+        if(!result)
+        {
+            return Problem(result.Message, statusCode: 500);
+        }
+
+        int id = _pogrebRepository.GetBySmrtniSlucajId(addPogreb.Pogreb.SmrtniSlucajId).Data.Id;
+
+        addPogreb.Pogreb.Id = id;
+
+        var domainPogrebWithId = addPogreb.Pogreb.ToDomain();
+
+        var validationResulWithId = domainPogreb.IsValid();
+        if (!validationResulWithId)
+        {
+            var deleteResult = _pogrebRepository.Remove(id);
+            return Problem(validationResulWithId.Message, statusCode: 500);
+        }
+
+        foreach (PogrebOprema pogrebOprema in addPogreb.Oprema)
+        {
+            var domainPogrebOprema = pogrebOprema.ToDomain(id);
+            var pogrebOpremavalidationResult = domainPogrebOprema.IsValid();
+            if (!pogrebOpremavalidationResult)
+            {
+                return Problem(pogrebOpremavalidationResult.Message, statusCode: 500);
+            }
+
+            if (domainPogrebWithId.AddOprema(domainPogrebOprema))
+            {
+                var opremaResult = _opremaRepository.DecreaseZaliha(domainPogrebOprema.Oprema, domainPogrebOprema.Kolicina);
+                if (!opremaResult)
+                {
+                    var deleteResult = _pogrebRepository.Remove(id);
+                    return Problem(opremaResult.Message, statusCode: 500);
+                }
+            };   
+        }
+
+        foreach(Usluga usluga in addPogreb.Usluga)
+        {
+            var domainUsluga = usluga.ToDomain();
+            var uslugaValidationResult = domainUsluga.IsValid();
+            if (!uslugaValidationResult)
+            {
+                var deleteResult = _pogrebRepository.Remove(id);
+                return Problem(uslugaValidationResult.Message, statusCode: 500);
+            }
+            domainPogrebWithId.AddUsluga(domainUsluga);
+        }
+
+
+        var updateResult = domainPogrebWithId.IsValid()
+                .Bind(() => _pogrebRepository.UpdateAggregate(domainPogrebWithId));
+
+        if (!updateResult)
+        {
+            // obriši pogreb
+            var deleteResult = _pogrebRepository.Remove(id);
+            return Problem(updateResult.Message, statusCode: 500);
+        }
+
+        return CreatedAtAction("GetPogreb", new { id = id }, addPogreb);
+    }
+    
 }

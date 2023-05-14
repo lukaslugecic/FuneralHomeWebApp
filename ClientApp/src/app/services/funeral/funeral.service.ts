@@ -65,4 +65,8 @@ export class FuneralService {
   public removeService(id: number, data : any) : Observable<any> {
     return this.http.post<any>(`${environment.apiUrlHttps}/Pogreb/RemoveUsluga/${id}`, data);
   }
+
+  public addFuneralWithEquipmentAndServices(data : any) : Observable<any> {
+    return this.http.put<any>(`${environment.apiUrlHttps}/Pogreb/AddPogreb`, data);
+  }
 }

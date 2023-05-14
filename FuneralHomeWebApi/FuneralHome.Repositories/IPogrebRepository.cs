@@ -16,8 +16,5 @@ public interface IPogrebRepository
     Result<IEnumerable<PogrebSmrtniSlucaj>> GetAllPogrebSmrtniSlucaj();
     Result Update(PogrebSmrtniSlucaj model);
     Result Insert(PogrebSmrtniSlucaj model);
-
-    Result InsertThenUpdateAggregate(Pogreb model);
-
     Result<Pogreb> GetBySmrtniSlucajId(int smrtniSlucajId);
 }
