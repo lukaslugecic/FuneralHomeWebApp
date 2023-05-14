@@ -17,8 +17,8 @@ export class EquipmentDialogComponent implements OnInit {
 
   equipmentForm: FormGroup = new FormGroup({
     naziv: new FormControl('', [Validators.required]),
-    zalihaOpreme: new FormControl('', [Validators.required]),
-    cijena: new FormControl('', [Validators.required]),
+    zalihaOpreme: new FormControl('', [Validators.required, Validators.min(0)]),
+    cijena: new FormControl('', [Validators.required, Validators.min(0)]),
     vrstaOpreme: new FormControl('', [Validators.required]),
     slika: new FormControl('')
   });
@@ -104,9 +104,19 @@ export class EquipmentDialogComponent implements OnInit {
         });
       }
     } else {
-      this.snackBar.open('Popunite sva polja!', 'U redu', {
-        duration: 3000,
-      });
+      if(this.equipmentForm.value.cijena < 0){
+        this.snackBar.open('Cijena ne može biti manja od 0!', 'U redu', {
+          duration: 3000,
+        });
+      } else if(this.equipmentForm.value.zalihaOpreme < 0){
+        this.snackBar.open('Zaliha ne može biti manja od 0!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Popunite sva polja!', 'U redu', {
+          duration: 3000,
+        });
+    }
     }
   }
 
