@@ -32,6 +32,8 @@ import { OrganizeFuneralComponent } from './pages/customer/organize-funeral/orga
 import { OrganizeFuneralModule } from './pages/customer/organize-funeral/organize-funeral.module';
 import { FuneralCustomerFormComponent } from './pages/forms/funeral-customer-form/funeral-customer-form.component';
 import { FuneralCustomerFormModule } from './pages/forms/funeral-customer-form/funeral-customer-form.module';
+import { AddInsuranceComponent } from './pages/customer/add-insurance/add-insurance.component';
+import { AddInsuranceModule } from './pages/customer/add-insurance/add-insurance.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -52,7 +54,8 @@ const routes: Routes = [
       { path: 'report-death/info', component: ReportDeathComponent},
       { path: 'report-death/form', component: DeathCustomerFormComponent},
       { path: 'organize-funeral', component: OrganizeFuneralComponent},
-      { path: 'organize-funeral/form', component: FuneralCustomerFormComponent}
+      { path: 'organize-funeral/form', component: FuneralCustomerFormComponent},
+      { path: 'add-insurance', component: AddInsuranceComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -83,7 +86,8 @@ const routes: Routes = [
     ReportDeathModule,
     DeathCustomerFormModule,
     OrganizeFuneralModule,
-    FuneralCustomerFormModule
+    FuneralCustomerFormModule,
+    AddInsuranceModule
   ],
   exports: [RouterModule]
 })

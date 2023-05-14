@@ -1,0 +1,37 @@
+<app-main-navigation></app-main-navigation>
+<div class="container">
+    <h1 class="title">Ugovorite pogrebno osiguranje</h1>
+    <p>
+        Ugovaranjem pogrebnog osiguranja, Vas i Vaše najmilije oslobađa financijskih briga oko pogreba.
+        Plaćanjem određenog iznosa, prilagođenog vašim financijskim mogućnostima osigurali ste novčana sredstva koja
+        su dovoljna za pokrivanje cjelokupnih troškova visoko dostojanstvenog pogreba.
+    </p>
+    <p>
+        Za više pitanja slobodno Nas nazovite ili pošaljite mail,
+        tu smo za Vas da Vam pomognemo u svim segmentima organizacije dostojanstvenog ispraćaja Vaših najmilijih.
+    </p>
+    <div class="img">
+        <img
+          src="assets\img\funeral5.jpg"
+          width="40%"
+          draggable="false"
+          (dragstart)="(false)"
+          class="unselectable"
+        />
+        <img
+          src="assets\img\funeral4.jpg"
+          width="40%"
+          draggable="false"
+          (dragstart)="(false)"
+          class="unselectable"
+        />
+    </div>
+    <div class="add">
+        <p>
+            Ukoliko želite kod nas ugovoriti pogrebno osiguranje, molimo Vas da ispunite obrazac pritiskom na dugme.
+        </p>
+        <button mat-raised-button (click)="openAddForm()"> Ugovori osigurane </button>
+    </div>
+    
+
+<app-main-footer></app-main-footer>
