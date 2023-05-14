@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AddEquipmentDialogComponent } from 'src/app/components/dialogs/add-equipment-dialog/add-equipment-dialog.component';
 import { AddServiceDialogComponent } from 'src/app/components/dialogs/add-service-dialog/add-service-dialog.component';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
@@ -59,6 +59,7 @@ export class FuneralDetailComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private _dialog: MatDialog,
     private readonly _funeralService: FuneralService,
+    private _router: Router,
     private readonly route: ActivatedRoute,
   ) { }
 
@@ -105,17 +106,16 @@ export class FuneralDetailComponent implements OnInit {
   }
 
   deleteFuneral(id: number) {
-    if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
+    if (confirm('Jeste li sigurni da želite obrisati pogreb?')) {
       this._funeralService.deleteFuneral(id).subscribe({
         next: (res) => {
-          this._snackBar.open('Oprema je uspješno obrisana!', 'U redu', {
+          this._snackBar.open('Pogreb je uspješno obrisan!', 'U redu', {
             duration: 3000,
           });
-          // redirect to /funerals
-          
+          this._router.navigate(['/funerals']);
         },
         error: (err) => {
-          this._snackBar.open('Greška prilikom brisanja opreme!', 'Zatvori', {
+          this._snackBar.open('Greška prilikom brisanja pogreba!', 'Zatvori', {
             duration: 3000,
           });
         },
