@@ -15,6 +15,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./death-customer-form.component.scss']
 })
 export class DeathCustomerFormComponent implements OnInit {
+  redirectRoute: any = '';
   hide = true;
   deathForm: FormGroup = new FormGroup({
     imePok: new FormControl('', [Validators.required]),
@@ -39,9 +40,7 @@ export class DeathCustomerFormComponent implements OnInit {
     this.dateAdapter.setLocale('hr');
   }
 
-  ngOnInit() {
-   
-  }
+  ngOnInit() {}
 
   onFormSubmit() {
     if (this.deathForm.valid) {

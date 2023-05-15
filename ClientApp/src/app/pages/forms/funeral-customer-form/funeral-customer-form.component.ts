@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
+import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
 import { IKorisnik } from 'src/app/interfaces/korisnik-data';
 import { IPogrebAggretageData } from 'src/app/interfaces/pogreb-aggretage-data';
 import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
@@ -42,6 +44,7 @@ export class FuneralCustomerFormComponent implements OnInit {
     private _dateAdapter: DateAdapter<Date>,
     private _router: Router,
     private _builder: FormBuilder,
+    private _dialog: MatDialog,
   ) {
     this._dateAdapter.setLocale('hr');
   }
@@ -120,8 +123,17 @@ export class FuneralCustomerFormComponent implements OnInit {
     return this.deathForm.get('oprema') as FormGroup;
   }
 
-  openAddForm() { 
-    this._router.navigate(['/report-death/form']);
+  openAddForm() {
+    const dialogRef = this._dialog.open(DeathDialogComponent, {
+      data: { userId : this._authService.userValue?.id as number },
+      });
+    dialogRef.afterClosed().subscribe(() => {
+      this._deathService.getAllDeathsWithoutFuneralByUserId(this._authService.userValue?.id as number).subscribe({
+        next: (res) => {
+          this.userDeaths = res;
+        }
+      });
+    });
   }
   
 

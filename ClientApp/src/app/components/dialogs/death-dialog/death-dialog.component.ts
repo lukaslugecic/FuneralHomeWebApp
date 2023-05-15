@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./death-dialog.component.scss']
 })
 export class DeathDialogComponent implements OnInit {
-  hide = true;
+  hide = false;
   deathForm: FormGroup = new FormGroup({
     imePok: new FormControl('', [Validators.required]),
     prezimePok: new FormControl('', [Validators.required]),
@@ -39,6 +39,9 @@ export class DeathDialogComponent implements OnInit {
     private dateAdapter: DateAdapter<Date>
   ) {
     this.dateAdapter.setLocale('hr');
+    if(this.data.userId){
+      this.hide = true;
+    }
   }
 
   ngOnInit() {
@@ -51,7 +54,7 @@ export class DeathDialogComponent implements OnInit {
         }
       });
     });
-    if (this.data) {
+    if (this.data.userId === undefined) {
       this.deathForm.patchValue({
         imePok: this.data.imePok,
         prezimePok: this.data.prezimePok,
@@ -59,6 +62,10 @@ export class DeathDialogComponent implements OnInit {
         datumRodenjaPok: this.data.datumRodenjaPok,
         datumSmrtiPok: this.data.datumSmrtiPok,
         korisnikId: this.data.korisnikId,
+      });
+    } else {
+      this.deathForm.patchValue({
+        korisnikId: this.data.userId,
       });
     }
   }
@@ -83,7 +90,7 @@ export class DeathDialogComponent implements OnInit {
         });
         return;
       }
-      if (this.data) {
+      if (this.data.userId === undefined) {
         this.toUpdate = {
           Id: this.data.id,
           ImePok: this.deathForm.value.imePok,
@@ -112,31 +119,32 @@ export class DeathDialogComponent implements OnInit {
             },
           });
       } else {
-        this.toUpdate = {
-          Id: 0,
-          ImePok: this.deathForm.value.imePok,
-          PrezimePok: this.deathForm.value.prezimePok,
-          Oibpok: this.deathForm.value.oibpok,
-          DatumRodenjaPok: new Date(new Date(this.deathForm.value.datumRodenjaPok).getTime() 
-            - new Date(this.deathForm.value.datumRodenjaPok).getTimezoneOffset() * 60000),
-          DatumSmrtiPok: new Date(new Date(this.deathForm.value.datumSmrtiPok).getTime()
-            - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
-          KorisnikId: this.deathForm.value.korisnikId,
-        }
-        this._deathService.addDeath(this.toUpdate).subscribe({
-          next: (val: any) => {
-            this.snackBar.open('Smrtni slučaj uspješno dodan!', 'U redu', {
-              duration: 3000,
-            });
-            this._dialogRef.close(true);
-          },
-          error: (err: any) => {
-            console.error(err);
-            this.snackBar.open('Greška prilikom dodavanja smrtnog slučaja!', 'Zatvori', {
-              duration: 3000,
-            });
-          },
-        });
+          this.toUpdate = {
+            Id: 0,
+            ImePok: this.deathForm.value.imePok,
+            PrezimePok: this.deathForm.value.prezimePok,
+            Oibpok: this.deathForm.value.oibpok,
+            DatumRodenjaPok: new Date(new Date(this.deathForm.value.datumRodenjaPok).getTime() 
+              - new Date(this.deathForm.value.datumRodenjaPok).getTimezoneOffset() * 60000),
+            DatumSmrtiPok: new Date(new Date(this.deathForm.value.datumSmrtiPok).getTime()
+              - new Date(this.deathForm.value.datumSmrtiPok).getTimezoneOffset() * 60000),
+            KorisnikId: this.data.userId === 0 ? this.deathForm.value.korisnikId : this.data.userId,
+          }
+          console.log(this.toUpdate);
+          this._deathService.addDeath(this.toUpdate).subscribe({
+            next: (val: any) => {
+              this.snackBar.open('Smrtni slučaj uspješno dodan!', 'U redu', {
+                duration: 3000,
+              });
+              this._dialogRef.close(true);
+            },
+            error: (err: any) => {
+              console.error(err);
+              this.snackBar.open('Greška prilikom dodavanja smrtnog slučaja!', 'Zatvori', {
+                duration: 3000,
+              });
+            },
+          });
       }
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {

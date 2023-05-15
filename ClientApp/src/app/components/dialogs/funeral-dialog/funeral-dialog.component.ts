@@ -177,7 +177,9 @@ export class FuneralDialogComponent implements OnInit {
 
   openAddDeathForm() {
     // nakon zatvranja vrati se na ovu komponentu
-    const dialogRef = this._dialog.open(DeathDialogComponent);
+    const dialogRef = this._dialog.open(DeathDialogComponent, {
+      data: null,
+    });
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
         this._deathService.getAllDeathsWithoutFuneral().subscribe((res) => {

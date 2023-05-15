@@ -80,7 +80,7 @@ export class DeathsComponent implements OnInit {
 
   openEditForm(data: any) {
     const dialogRef = this._dialog.open(DeathDialogComponent, {
-      data,
+      data : data,
     });
 
     dialogRef.afterClosed().subscribe({
@@ -93,7 +93,9 @@ export class DeathsComponent implements OnInit {
   }
 
   openAddForm() {
-    const dialogRef = this._dialog.open(DeathDialogComponent);
+    const dialogRef = this._dialog.open(DeathDialogComponent, {
+      data: {userId: 0},
+    });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
