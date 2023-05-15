@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     [Index("Mail", Name = "IX_Korisnik", IsUnique = true)]
+    [Index("Mail", Name = "IX_Korisnik_1", IsUnique = true)]
     [Index("Oib", Name = "IX_Korisnik_OIB", IsUnique = true)]
     public partial class Korisnik
     {

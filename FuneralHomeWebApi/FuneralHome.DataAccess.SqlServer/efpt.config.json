@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[PaketOsiguranja]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Pogreb]",
          "ObjectType": 0
       },
