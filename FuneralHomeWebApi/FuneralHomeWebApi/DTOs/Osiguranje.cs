@@ -14,6 +14,13 @@ public class Osiguranje
     public string Prezime { get; set; } = string.Empty;
     public DateTime DatumUgovaranja { get; set; }
     public bool PlacanjeNaRate { get; set; }
+    public int? BrojRata { get; set; }
+    public int PaketOsiguranjaId { get; set; }
+
+    [Required(ErrorMessage = "Name can't be null")]
+    [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
+    public string NazivPaketa { get; set; } = string.Empty;
+    public decimal CijenaPaketa { get; set; }
 }
 
 
@@ -27,7 +34,12 @@ public static partial class DtoMapping
             Prezime = osiguranje.Prezime,
             KorisnikId = osiguranje.KorisnikId,
             DatumUgovaranja = osiguranje.DatumUgovaranja,
-            PlacanjeNaRate = osiguranje.PlacanjeNaRate
+            PlacanjeNaRate = osiguranje.PlacanjeNaRate,
+            BrojRata = osiguranje.BrojRata,
+            PaketOsiguranjaId = osiguranje.PaketOsiguranjaId,
+            NazivPaketa = osiguranje.NazivPaketa,
+            CijenaPaketa = osiguranje.CijenaPaketa
+
         };
 
     public static DomainModels.Osiguranje ToDomain(this Osiguranje osiguranje)
@@ -37,6 +49,10 @@ public static partial class DtoMapping
             osiguranje.Ime,
             osiguranje.Prezime,
             osiguranje.DatumUgovaranja,
-            osiguranje.PlacanjeNaRate
+            osiguranje.PlacanjeNaRate,
+            osiguranje.BrojRata,
+            osiguranje.PaketOsiguranjaId,
+            osiguranje.NazivPaketa,
+            osiguranje.CijenaPaketa
         );
 }

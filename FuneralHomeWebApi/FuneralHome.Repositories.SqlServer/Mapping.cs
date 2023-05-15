@@ -63,7 +63,11 @@ public static class Mapping
            osiguranje.Korisnik.Ime,
            osiguranje.Korisnik.Prezime,
            osiguranje.DatumUgovaranja,
-           osiguranje.PlacanjeNaRate
+           osiguranje.PlacanjeNaRate,
+           osiguranje.BrojRata,
+           osiguranje.PaketOsiguranjaId,
+           osiguranje.PaketOsiguranja.Naziv,
+           osiguranje.PaketOsiguranja.Cijena
        );
 
     public static DbModels.Osiguranje ToDbModel(this Osiguranje osiguranje)
@@ -73,6 +77,23 @@ public static class Mapping
             KorisnikId = osiguranje.KorisnikId,
             DatumUgovaranja = osiguranje.DatumUgovaranja,
             PlacanjeNaRate = osiguranje.PlacanjeNaRate,
+            BrojRata = osiguranje.BrojRata,
+            PaketOsiguranjaId = osiguranje.PaketOsiguranjaId
+        };
+
+    public static PaketOsiguranja ToDomain(this DbModels.PaketOsiguranja paket)
+        => new PaketOsiguranja(
+                paket.IdPaketOsiguranja,
+                paket.Naziv,
+                paket.Cijena
+           );
+
+    public static DbModels.PaketOsiguranja ToDbModel(this PaketOsiguranja paket)
+        => new DbModels.PaketOsiguranja()
+        {
+            IdPaketOsiguranja = paket.Id,
+            Naziv = paket.Naziv,
+            Cijena = paket.Cijena
         };
 
     public static Pogreb ToDomain(this DbModels.Pogreb pogreb)

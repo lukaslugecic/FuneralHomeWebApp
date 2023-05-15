@@ -10,7 +10,8 @@ namespace FuneralHome.Repositories;
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TDomainModel"></typeparam>
 public interface IOsiguranjeRepository
-    : IRepository<int, Osiguranje>
+    : IRepository<int, Osiguranje>,
+    IAggregateRepository<int, Osiguranje>
 {
     Result<IEnumerable<Osiguranje>> GetByKorisnikId(int id);
 }
