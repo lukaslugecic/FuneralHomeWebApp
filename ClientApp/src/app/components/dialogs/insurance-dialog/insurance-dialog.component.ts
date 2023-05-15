@@ -79,7 +79,6 @@ export class InsuranceDialogComponent implements OnInit {
           KorisnikId: this.insuranceForm.value.korisnikId,
           PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
         }
-        console.log(this.toUpdate);
         this._insuranceService
           .updateInsurance(this.data.id, this.toUpdate)
           .subscribe({
@@ -120,7 +119,6 @@ export class InsuranceDialogComponent implements OnInit {
             });
           },
         });
-        console.log(this.toUpdate);
       }
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {

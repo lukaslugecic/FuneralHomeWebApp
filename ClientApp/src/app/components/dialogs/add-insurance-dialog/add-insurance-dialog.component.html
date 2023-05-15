@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+    <h1>Ugovorite osiguranje</h1>
+</div>
+<form [formGroup]="insuranceForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Način plačanja</mat-label>
+                <mat-select formControlName="placanjeNaRate">
+                    <mat-option *ngFor="let val of types" [value]="val.value">{{val.naziv}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">Spremi</button>
+    </div>
+</form>
+

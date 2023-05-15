@@ -77,7 +77,10 @@ export class ProfileComponent implements OnInit {
   }
 
   getAllData(){
-
+    this.userData = [];
+    this.deathData = [];
+    this.funeralData  = [];
+    this.insuranceData = [];
     this._userService.getUserById(this.id).subscribe({
       next: (res) => {
         this.userData.push(res);
@@ -116,8 +119,20 @@ export class ProfileComponent implements OnInit {
   }
 
   removeInsurance(id: number){
-    console.log(id);
+    if(confirm("Jeste li sigurni da želite obrisati osiguranje?")){
+      this._insuranceService.deleteInsurance(id).subscribe({
+        next: (res) => {
+          this._snackBar.open('Osiguranje uspješno obrisano!', 'U redu', {
+            duration: 3000,
+          });
+          this.getAllData();
+        },
+        error: (err) => {
+          this._snackBar.open('Greška prilikom brisanja osiguranja!', 'U redu', {
+            duration: 3000,
+          });
+        }
+      });
+    }
   }
-
-  
 }
