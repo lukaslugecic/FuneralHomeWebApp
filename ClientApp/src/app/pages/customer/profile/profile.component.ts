@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
+import { UserDialogComponent } from 'src/app/components/dialogs/user-dialog/user-dialog.component';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
@@ -100,7 +101,6 @@ export class ProfileComponent implements OnInit {
 
     this._insuranceService.getInsurancesByUserId(this.id).subscribe({
       next: (res) => {
-        console.log(res);
         this.insuranceData = res;
         this.dataSourceInsurance = new MatTableDataSource(this.insuranceData);
       }
@@ -109,7 +109,10 @@ export class ProfileComponent implements OnInit {
 
 
   openEditUserData(data : any){
-    console.log('edit user data');
+    const dialogRef = this._dialog.open(UserDialogComponent, {
+      data: data
+    }); 
+    
   }
 
   removeInsurance(id: number){

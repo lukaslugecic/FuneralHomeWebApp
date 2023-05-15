@@ -12,6 +12,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class UserDialogComponent implements OnInit {
   hide = true;
+  admin = false;
   userForm: FormGroup = new FormGroup({
     ime: new FormControl('', [Validators.required]),
     prezime: new FormControl('', [Validators.required]),
@@ -41,21 +42,39 @@ export class UserDialogComponent implements OnInit {
     private _dialogRef: MatDialogRef<UserDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly snackBar: MatSnackBar
-  ) {}
+  ) {
+    if(this.data.admin){
+      this.admin = true;
+    }
+  }
 
   ngOnInit() {
-      if (this.data) {
-        this.userForm.patchValue({
-          ime: this.data.ime,
-          prezime: this.data.prezime,
-          oib: this.data.oib,
-          datumRodenja: this.data.datumRodenja,
-          adresa: this.data.adresa,
-          mail: this.data.mail,
-          lozinka: "",
-          vrstaKorisnika: this.data.vrstaKorisnika,
-        });
-      }
+      if (this.data.id) {
+        if(this.data.admin){
+          this.userForm.patchValue({
+            ime: this.data.ime,
+            prezime: this.data.prezime,
+            oib: this.data.oib,
+            datumRodenja: this.data.datumRodenja,
+            adresa: this.data.adresa,
+            mail: this.data.mail,
+            lozinka: "",
+            vrstaKorisnika: this.data.vrstaKorisnika,
+          });
+        } else {
+          this.userForm.patchValue({
+            ime: this.data.ime,
+            prezime: this.data.prezime,
+            oib: this.data.oib,
+            datumRodenja: this.data.datumRodenja,
+            adresa: this.data.adresa,
+            mail: this.data.mail,
+            lozinka: "",
+            vrstaKorisnika: 'K',
+          });
+        }
+        
+      } 
   }
 
   onFormSubmit() {
@@ -69,7 +88,7 @@ export class UserDialogComponent implements OnInit {
         });
         return;
       }
-      if (this.data) {
+      if (this.data.id) {
         this.toUpdate = {
           Id: this.data.id,
           Ime: this.userForm.value.ime,
@@ -79,9 +98,8 @@ export class UserDialogComponent implements OnInit {
           Adresa: this.userForm.value.adresa,
           Mail: this.userForm.value.mail,
           Lozinka : this.userForm.value.lozinka,
-          VrstaKorisnika: this.userForm.value.vrstaKorisnika,
+          VrstaKorisnika: this.data.admin ? this.userForm.value.vrstaKorisnika : 'K',
         }
-        console.log(this.toUpdate);
         this._userService
           .updateUser(this.data.id, this.toUpdate)
           .subscribe({
@@ -108,7 +126,7 @@ export class UserDialogComponent implements OnInit {
           Adresa: this.userForm.value.adresa,
           Mail: this.userForm.value.mail,
           Lozinka : this.userForm.value.lozinka,
-          VrstaKorisnika: this.userForm.value.vrstaKorisnika,
+          VrstaKorisnika: this.data.admin ? this.userForm.value.vrstaKorisnika : 'K',
         }
         this._userService.addUser(this.toUpdate).subscribe({
           next: (val: any) => {
@@ -124,7 +142,6 @@ export class UserDialogComponent implements OnInit {
             });
           },
         });
-        console.log(this.toUpdate);
       }
     } else {
       this.snackBar.open('Popunite sva polja!', 'U redu', {

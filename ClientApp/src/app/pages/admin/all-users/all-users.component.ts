@@ -91,6 +91,7 @@ export class AllUsersComponent implements OnInit, OnChanges {
   }
 
   openEditForm(data: any) {
+    data.admin = true;
     const dialogRef = this._dialog.open(UserDialogComponent, {
       data,
     });
@@ -105,7 +106,9 @@ export class AllUsersComponent implements OnInit, OnChanges {
   }
 
   openAddForm() {
-    const dialogRef = this._dialog.open(UserDialogComponent);
+    const dialogRef = this._dialog.open(UserDialogComponent , {
+      data: { admin: true },
+    });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
