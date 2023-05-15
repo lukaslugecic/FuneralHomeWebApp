@@ -173,6 +173,10 @@
             
                 <tr mat-header-row *matHeaderRowDef="equipmentColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: equipmentColumns;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Nema opreme</td>
+                </tr>
             
               </table>
           </div>
@@ -220,7 +224,9 @@
               
               <tr mat-header-row *matHeaderRowDef="serviceColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: serviceColumns;"></tr>
-              
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">Nema usluga</td>
+              </tr>
           </table>
         </div>
         </mat-expansion-panel>
