@@ -28,11 +28,11 @@ export class RegisterComponent implements OnDestroy {
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(6),
+      Validators.minLength(8),
     ]),
     repeatedPassword: new FormControl('', [
       Validators.required,
-      Validators.minLength(6),
+      Validators.minLength(8),
     ]),
     name: new FormControl('', [Validators.required]),
     surname: new FormControl('', [Validators.required]),
@@ -56,13 +56,13 @@ export class RegisterComponent implements OnDestroy {
       return;
     }
 
-    if (this.form.invalid) {
-      this.snackBar.open('Unesite sve potrebne podatke', 'Zatvori', {
+    if(this.form.value.dateOfBirth > new Date()){
+      this.snackBar.open('Datum rođenja ne može biti u budućnosti', 'Zatvori', {
         duration: 2000,
       });
       return;
     }
-
+    
     const data: IRegisterData = {
       Id: 0,
       Mail: this.form.get('email')?.value,
@@ -76,22 +76,34 @@ export class RegisterComponent implements OnDestroy {
     };
 
 
-    
-    const registerSubscription = this.authService
-      .register(data)
-      .pipe(
-        catchError(() => {
-          this.snackBar.open('Unesite sve potrbene podatke', 'Zatvori', {
-            duration: 2000,
-          });
-          return EMPTY;
-        })
-      )
-      .subscribe(() => {
-        this.router.navigate(['/']);
-      });
-    this.subscription.add(registerSubscription);
-    
+    if(this.form.valid){
+      const registerSubscription = this.authService
+        .register(data)
+        .pipe(
+          catchError(() => {
+            this.snackBar.open('Unesite sve potrbene podatke', 'Zatvori', {
+              duration: 2000,
+            });
+            return EMPTY;
+          })
+        )
+        .subscribe(() => {
+          this.router.navigate(['/']);
+        });
+      this.subscription.add(registerSubscription);
+    } else {
+      if(this.form.value.password.length < 8){
+        this.snackBar.open('Lozinka mora imati minimalno 8 znakova', 'Zatvori', {
+          duration: 2000,
+        });
+        return;
+      } else {
+        this.snackBar.open('Unesite sve potrbene podatke', 'Zatvori', {
+          duration: 2000,
+        });
+        return;
+      }
+    }
   }
 
   ngOnDestroy(): void {

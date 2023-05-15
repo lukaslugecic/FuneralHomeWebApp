@@ -23,8 +23,8 @@ export class UserDialogComponent implements OnInit {
     datumRodenja: new FormControl('', [Validators.required]),
     adresa: new FormControl('', [Validators.required]),
     mail: new FormControl('', [Validators.required]),
-    lozinka: new FormControl('', [Validators.required]),
-    ponovljenaLozinka: new FormControl('', [Validators.required]),
+    lozinka: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    ponovljenaLozinka: new FormControl('', [Validators.required , Validators.minLength(8)]),
     vrstaKorisnika: new FormControl('', [Validators.required])
   });
   
@@ -144,9 +144,15 @@ export class UserDialogComponent implements OnInit {
         });
       }
     } else {
-      this.snackBar.open('Popunite sva polja!', 'U redu', {
-        duration: 3000,
-      });
+      if(this.userForm.value.lozinka.length < 8){
+        this.snackBar.open('Lozinka mora imati minimalno 8 znakova!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Popunite sva polja!', 'U redu', {
+          duration: 3000,
+        });
+      }
     }
   }
 }
