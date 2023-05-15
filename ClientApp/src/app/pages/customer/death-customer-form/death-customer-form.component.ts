@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DateAdapter } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { ISmrtniSlucajData } from 'src/app/interfaces/smrtnislucaj-data';
@@ -35,7 +35,8 @@ export class DeathCustomerFormComponent implements OnInit {
     private _authService: AuthService,
     private readonly snackBar: MatSnackBar,
     private dateAdapter: DateAdapter<Date>,
-    private _router: Router
+    private _router: Router,
+    private _dialog: MatDialog
   ) {
     this.dateAdapter.setLocale('hr');
   }
@@ -75,10 +76,23 @@ export class DeathCustomerFormComponent implements OnInit {
         }
         this._deathService.addDeath(this.toUpdate).subscribe({
           next: (val: any) => {
-            this.snackBar.open('Smrtni slučaj uspješno prijavljen.', 'U redu', {
-              duration: 3000,
+            const dialogRef = this._dialog.open(ToOrganizeFuneralDialog, {
+              width: '400px',
             });
-            this._router.navigate(['/report-death/info']);
+            dialogRef.afterClosed().subscribe((result) => {
+              if(result){
+                this._router.navigate(['/organize-funeral',]);
+                this.snackBar.open('Smrtni slučaj uspješno prijavljen!', 'U redu', {
+                  duration: 3000,
+                });
+              } else {
+                this._router.navigate(['/report-death/info']);
+                this.snackBar.open('Smrtni slučaj uspješno prijavljen!', 'U redu', {
+                  duration: 3000,
+                });
+              }
+            });
+            
           },
           error: (err: any) => {
             console.error(err);
@@ -100,3 +114,27 @@ export class DeathCustomerFormComponent implements OnInit {
   }
 
 }
+
+// definirati dijalog koji ce pitati "Želite li organizorati pogreb?" i ako je odgovor potvrdan, otvoriti pogrebni obrazac
+@Component({
+  selector: 'app-to-organize-funeral-dialog',
+  templateUrl: 'dialogs/to-organize-funeral-dialog.html',
+  styleUrls: ['./death-customer-form.component.scss']
+})
+export class ToOrganizeFuneralDialog{
+  
+    constructor(
+      public dialogRef: MatDialogRef<ToOrganizeFuneralDialog>,
+      @Inject(MAT_DIALOG_DATA) public data: any,
+      private _router: Router
+    ) { }
+  
+    onNoClick(): void {
+      this.dialogRef.close(false);
+    }
+  
+    onYesClick(): void {
+      this.dialogRef.close(true);
+    }
+  
+  }

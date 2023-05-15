@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeathCustomerFormComponent } from './death-customer-form.component';
+import { DeathCustomerFormComponent, ToOrganizeFuneralDialog } from './death-customer-form.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatRadioModule } from '@angular/material/radio';
@@ -16,7 +16,8 @@ import { MainNavigationModule } from 'src/app/components/main-navigation/main-na
 
 @NgModule({
   declarations: [
-    DeathCustomerFormComponent
+    DeathCustomerFormComponent,
+    ToOrganizeFuneralDialog
   ],
   imports: [
     CommonModule,
@@ -29,7 +30,7 @@ import { MainNavigationModule } from 'src/app/components/main-navigation/main-na
     MatNativeDateModule,
     MatSelectModule,
     ReactiveFormsModule,
-    MainNavigationModule
+    MainNavigationModule,
   ]
 })
 export class DeathCustomerFormModule { }

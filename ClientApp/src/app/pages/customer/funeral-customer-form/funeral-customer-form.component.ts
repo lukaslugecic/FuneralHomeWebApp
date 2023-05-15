@@ -202,7 +202,7 @@ export class FuneralCustomerFormComponent implements OnInit {
           this._snackBar.open('Pogreb uspješno dodan!', 'U redu', {
             duration: 3000,
           });
-          this._router.navigate(['/']);
+          this._router.navigate(['/profile']);
         },
         error: (err) => {
           this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {
