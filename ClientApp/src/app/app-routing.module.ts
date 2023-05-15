@@ -26,12 +26,12 @@ import { EquipmentCatalogModule } from './pages/anon/equipment-catalog/equipment
 import { EquipmentCatalogComponent } from './pages/anon/equipment-catalog/equipment-catalog.component';
 import { ReportDeathComponent } from './pages/anon/report-death/report-death.component';
 import { ReportDeathModule } from './pages/anon/report-death/report-death.module';
-import { DeathCustomerFormComponent } from './pages/forms/death-customer-form/death-customer-form.component';
-import { DeathCustomerFormModule } from './pages/forms/death-customer-form/death-customer-form.module';
+import { DeathCustomerFormComponent } from './pages/customer/death-customer-form/death-customer-form.component';
+import { DeathCustomerFormModule } from './pages/customer/death-customer-form/death-customer-form.module';
 import { OrganizeFuneralComponent } from './pages/anon/organize-funeral/organize-funeral.component';
 import { OrganizeFuneralModule } from './pages/anon/organize-funeral/organize-funeral.module';
-import { FuneralCustomerFormComponent } from './pages/forms/funeral-customer-form/funeral-customer-form.component';
-import { FuneralCustomerFormModule } from './pages/forms/funeral-customer-form/funeral-customer-form.module';
+import { FuneralCustomerFormComponent } from './pages/customer/funeral-customer-form/funeral-customer-form.component';
+import { FuneralCustomerFormModule } from './pages/customer/funeral-customer-form/funeral-customer-form.module';
 import { AddInsuranceComponent } from './pages/anon/add-insurance/add-insurance.component';
 import { AddInsuranceModule } from './pages/anon/add-insurance/add-insurance.module';
 
