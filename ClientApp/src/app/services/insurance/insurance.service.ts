@@ -14,6 +14,10 @@ export class InsuranceService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Osiguranje`);
   }
 
+  public getInsurancesByUserId(id: number) : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Osiguranje/Korisnik/${id}`);
+  }
+
   public addInsurance(data: any) : Observable<any> {
     return this.http.post(`${environment.apiUrlHttps}/Osiguranje`, data);
   }

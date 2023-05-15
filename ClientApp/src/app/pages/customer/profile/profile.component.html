@@ -1,0 +1,203 @@
+<app-main-navigation></app-main-navigation>
+
+<div class="main-body">
+  <h1>Moji podatci</h1>
+
+  <div class="table-container">
+      <table mat-table [dataSource]="dataSourceUser">
+
+        <ng-container matColumnDef="ime">
+          <th mat-header-cell *matHeaderCellDef > Ime </th>
+          <td mat-cell *matCellDef="let row"> {{row.ime}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="prezime">
+          <th mat-header-cell *matHeaderCellDef> Prezime </th>
+          <td mat-cell *matCellDef="let row"> {{row.prezime}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="oib">
+          <th mat-header-cell *matHeaderCellDef> OIB </th>
+          <td mat-cell *matCellDef="let row"> {{row.oib}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="datumRodenja">
+          <th mat-header-cell *matHeaderCellDef> Datum rođenja </th>
+          <td mat-cell *matCellDef="let row"> {{row.datumRodenja | date: 'dd.MM.yyyy.'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="adresa">
+          <th mat-header-cell *matHeaderCellDef> Adresa stanovanja </th>
+          <td mat-cell *matCellDef="let row"> {{row.adresa}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> Email </th>
+          <td mat-cell *matCellDef="let row"> {{row.mail}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef><b>Uredi podatke</b></th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="openEditUserData(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="userDataColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: userDataColumns;"></tr>
+
+      </table>
+  </div>
+
+  <mat-accordion>
+    
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Prijavljeni smrtni slučajevi</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+              <h2>Informacije o pokojnicima</h2>
+              <table mat-table [dataSource]="dataSourceDeaths">
+        
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef> ID </th>
+                  <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="imePok">
+                  <th mat-header-cell *matHeaderCellDef> Ime pokojnika </th>
+                  <td mat-cell *matCellDef="let row"> {{row.imePok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="prezimePok">
+                  <th mat-header-cell *matHeaderCellDef> Prezime pokojnika </th>
+                  <td mat-cell *matCellDef="let row"> {{row.prezimePok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="oibpok">
+                  <th mat-header-cell *matHeaderCellDef> OIB </th>
+                  <td mat-cell *matCellDef="let row"> {{row.oibpok}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="datumRodenjaPok">
+                  <th mat-header-cell *matHeaderCellDef> Datum rođenja </th>
+                  <td mat-cell *matCellDef="let row"> {{row.datumRodenjaPok | date: 'dd.MM.yyyy.'}}</td>
+                </ng-container>
+        
+                <ng-container matColumnDef="datumSmrtiPok">
+                  <th mat-header-cell *matHeaderCellDef> Datum smrti </th>
+                  <td mat-cell *matCellDef="let row"> {{row.datumSmrtiPok | date: 'dd.MM.yyyy.'}}</td>
+                </ng-container>
+        
+                <tr mat-header-row *matHeaderRowDef="deathColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: deathColumns;"></tr>
+                
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Nemate prijavljenih smrtnih slučajeva</td>
+                </tr>
+              </table>
+          </div>
+        </mat-expansion-panel>
+
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Organizirani pogrebi</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+                <h2>Informacije o pogrebima</h2>
+               
+              
+              <table mat-table [dataSource]="dataSourceFunerals">
+            
+                <ng-container matColumnDef="imePok">
+                    <th mat-header-cell *matHeaderCellDef> Ime pokojnika </th>
+                    <td mat-cell *matCellDef="let row"> {{row.imePok}}</td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="prezimePok">
+                    <th mat-header-cell *matHeaderCellDef> Prezime pokojnika </th>
+                    <td mat-cell *matCellDef="let row"> {{row.prezimePok}}</td>
+                  </ng-container>
+        
+                  <ng-container matColumnDef="datumPogreba">
+                    <th mat-header-cell *matHeaderCellDef> Datum pogreba </th>
+                    <td mat-cell *matCellDef="let row"> {{row.datumPogreba | date: 'dd.MM.yyyy.'}}</td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="kremacija">
+                    <th mat-header-cell *matHeaderCellDef> Vrsta sahrane </th>
+                    <td mat-cell *matCellDef="let row"> {{row.kremacija ? 'Kremacija' : 'Ukop'}} </td>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="ukupnaCijena">
+                    <th mat-header-cell *matHeaderCellDef> Cijena pogreba </th>
+                    <td mat-cell *matCellDef="let row"> {{row.ukupnaCijena | currency:'EUR'}} </td>
+                  </ng-container>
+            
+            
+                <tr mat-header-row *matHeaderRowDef="funeralColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: funeralColumns;"></tr>
+            
+                <tr class="mat-row" *matNoDataRow>
+                  <td class="mat-cell" colspan="4">Nemate organiziranih pogreba</td>
+                </tr>
+              </table>
+          </div>
+        </mat-expansion-panel>
+
+        
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <b>Osiguranje</b>
+          </mat-expansion-panel-header>
+          <div class="table-container">
+              <h2>Informacije o osiguranju</h2>
+            <table mat-table [dataSource]="dataSourceInsurance">
+
+                <ng-container matColumnDef="id">
+                    <th mat-header-cell *matHeaderCellDef> Broj police </th>
+                    <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="datumUgovaranja">
+                    <th mat-header-cell *matHeaderCellDef> Datum ugovaranja </th>
+                    <td mat-cell *matCellDef="let row"> {{row.datumUgovaranja | date : "dd.MM.yyyy."}}</td>
+                  </ng-container>
+          
+                  <ng-container matColumnDef="placanjeNaRate">
+                    <th mat-header-cell *matHeaderCellDef> Način plačanja </th>
+                    <td mat-cell *matCellDef="let row"> {{row.placanjeNaRate ? 'Na rate' : 'Jednokratno'}}</td>
+                  </ng-container>
+                  
+
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef><b>Ukloni</b></th>
+                  <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="warn" (click)="removeInsurance(row.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+              </ng-container>
+
+              <ng-container matColumnDef="noData">
+                <td mat-cell *matCellDef="let data" colspan="4" class="mat-caption">
+                  {{ !insuranceData.length ? 'Nema dostupnih podataka' : '' }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="insuranceColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: insuranceColumns;"></tr>
+              
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">Nemate ugovoreno osiguranje</td>
+              </tr>
+              
+          </table>
+        </div>
+        </mat-expansion-panel>
+  </mat-accordion>
+</div>

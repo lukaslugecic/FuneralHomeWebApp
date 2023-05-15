@@ -142,6 +142,24 @@ public class PogrebRepository : IPogrebRepository
         }
     }
 
+    public Result<IEnumerable<PogrebSmrtniSlucaj>> GetAllByKorisnikId(int id)
+    {
+        try
+        {
+            var models = _dbContext.Pogreb
+                           .Include(p => p.SmrtniSlucaj)
+                           .ThenInclude(ss => ss.Korisnik)
+                           .AsNoTracking()
+                           .Where(p => p.SmrtniSlucaj.KorisnikId.Equals(id))
+                           .Select(Mapping.ToDomain2);
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<PogrebSmrtniSlucaj>>(e);
+        }
+    }
+
     public Result<IEnumerable<Pogreb>> GetAllAggregates()
     {
         try

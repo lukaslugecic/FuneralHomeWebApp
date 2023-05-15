@@ -18,6 +18,10 @@ export class DeathService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj/WithoutFuneral`);
   }
 
+  public getAllDeathsByUserId(id: number) : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj/Korisnik/${id}`);
+  }
+
   public getAllDeathsWithoutFuneralByUserId(id: number) : Observable<Array<any>> {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/SmrtniSlucaj/WithoutFuneral/${id}`);
   }

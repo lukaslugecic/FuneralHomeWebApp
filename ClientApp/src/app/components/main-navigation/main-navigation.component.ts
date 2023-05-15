@@ -32,11 +32,12 @@ export class MainNavigationComponent implements OnDestroy{
       { title: 'Osiguranja', path: '/insurances' },
     ],
     customer: [
-      { title: 'Naša oprema', path: '/equipment-catalog' },
-      { title: 'Naše usluge', path: '/services-catalog' },
-      { title: 'Prijavite smrtni slučaj', path: '/report-death/info' },
-      { title: 'Organizirajte pogreb', path: '/organize-funeral' },
-      { title: 'Osigurajte se', path: '/add-insurance' },
+      { title: 'Oprema', path: '/equipment-catalog' },
+      { title: 'Usluge', path: '/services-catalog' },
+      { title: 'Prijava smrtnog slučaja', path: '/report-death/info' },
+      { title: 'Organizacija pogreba', path: '/organize-funeral' },
+      { title: 'Osiguranje', path: '/add-insurance' },
+      { title: 'Moji podaci', path: '/profile' },
     ]
   };
 

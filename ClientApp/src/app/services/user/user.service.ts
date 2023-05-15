@@ -17,6 +17,10 @@ export class UserService {
     return this.http.get<IKorisnik[]>(`${environment.apiUrlHttps}/${this.url}`);
   }
 
+  public getUserById(id: number) : Observable<any> {
+    return this.http.get<any>(`${environment.apiUrlHttps}/${this.url}/${id}`);
+  }
+
   public updateUser(id: number, data: IRegisterData) {
     return this.http.put<IRegisterData>(`${environment.apiUrlHttps}/${this.url}/${id}`, data);
   }

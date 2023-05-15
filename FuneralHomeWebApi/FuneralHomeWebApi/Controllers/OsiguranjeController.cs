@@ -43,6 +43,18 @@ namespace FuneralHome.Controllers
             };
         }
 
+        // GET: api/Osiguranje/5
+        [HttpGet("/api/[controller]/Korisnik/{id}")]
+        public ActionResult<IEnumerable<Osiguranje>> GetOsiguranjeByKorisnikId(int id)
+        {
+            var osiguranjeResult = _osiguranjeRepository.GetByKorisnikId(id).
+                                Map(o => o.Select(DtoMapping.ToDto));
+
+            return osiguranjeResult
+                ? Ok(osiguranjeResult.Data)
+                : Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+
         // PUT: api/Osiguranje/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

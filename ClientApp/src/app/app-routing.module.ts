@@ -34,6 +34,8 @@ import { FuneralCustomerFormComponent } from './pages/customer/funeral-customer-
 import { FuneralCustomerFormModule } from './pages/customer/funeral-customer-form/funeral-customer-form.module';
 import { AddInsuranceComponent } from './pages/anon/add-insurance/add-insurance.component';
 import { AddInsuranceModule } from './pages/anon/add-insurance/add-insurance.module';
+import { ProfileComponent } from './pages/customer/profile/profile.component';
+import { ProfileModule } from './pages/customer/profile/profile.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -55,7 +57,8 @@ const routes: Routes = [
       { path: 'report-death/form', component: DeathCustomerFormComponent},
       { path: 'organize-funeral', component: OrganizeFuneralComponent},
       { path: 'organize-funeral/form', component: FuneralCustomerFormComponent},
-      { path: 'add-insurance', component: AddInsuranceComponent}
+      { path: 'add-insurance', component: AddInsuranceComponent},
+      { path: 'profile', component: ProfileComponent}
     ],
     canActivate: [AuthGuard],
   },
@@ -87,7 +90,8 @@ const routes: Routes = [
     DeathCustomerFormModule,
     OrganizeFuneralModule,
     FuneralCustomerFormModule,
-    AddInsuranceModule
+    AddInsuranceModule,
+    ProfileModule
   ],
   exports: [RouterModule]
 })

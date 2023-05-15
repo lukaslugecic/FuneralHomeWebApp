@@ -64,6 +64,23 @@ public class OsiguranjeRepository : IOsiguranjeRepository
 
     }
 
+    public Result<IEnumerable<Osiguranje>> GetByKorisnikId(int id)
+    {
+        try
+        {
+            var models = _dbContext.Osiguranje
+                                 .Include(o => o.Korisnik)
+                                 .AsNoTracking()
+                                 .Where(o => o.KorisnikId.Equals(id))
+                                 .Select(Mapping.ToDomain);
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Osiguranje>>(e);
+        }
+    }   
+
     public Result<IEnumerable<Osiguranje>> GetAll()
     {
         try

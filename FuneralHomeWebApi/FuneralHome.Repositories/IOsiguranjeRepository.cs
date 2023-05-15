@@ -12,5 +12,5 @@ namespace FuneralHome.Repositories;
 public interface IOsiguranjeRepository
     : IRepository<int, Osiguranje>
 {
-
+    Result<IEnumerable<Osiguranje>> GetByKorisnikId(int id);
 }

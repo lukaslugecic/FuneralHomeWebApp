@@ -141,6 +141,24 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         }
     }
 
+    public Result<IEnumerable<SmrtniSlucaj>> GetAllByKorisnikId(int id)
+    {
+        try
+        {
+            
+            var models = _dbContext.SmrtniSlucaj
+                           .AsNoTracking()
+                           .Where(ss => ss.Korisnik.IdKorisnik.Equals(id))
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<SmrtniSlucaj>>(e);
+        }
+    }
+
     public Result<IEnumerable<SmrtniSlucaj>> GetAllAggregates()
     {
         try
