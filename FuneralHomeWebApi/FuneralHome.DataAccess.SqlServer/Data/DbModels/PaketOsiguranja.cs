@@ -19,6 +19,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
 
-        public virtual Osiguranje IdPaketOsiguranjaNavigation { get; set; }
+        [InverseProperty("PaketOsiguranja")]
+        public virtual Osiguranje Osiguranje { get; set; }
     }
 }

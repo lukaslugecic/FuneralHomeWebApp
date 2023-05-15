@@ -23,6 +23,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [ForeignKey("KorisnikId")]
         [InverseProperty("Osiguranje")]
         public virtual Korisnik Korisnik { get; set; }
+        [ForeignKey("PaketOsiguranjaId")]
+        [InverseProperty("Osiguranje")]
         public virtual PaketOsiguranja PaketOsiguranja { get; set; }
     }
 }

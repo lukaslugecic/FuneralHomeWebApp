@@ -53,6 +53,12 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasForeignKey<Osiguranje>(d => d.KorisnikId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Osiguranje_Korisnik");
+
+                entity.HasOne(d => d.PaketOsiguranja)
+                    .WithOne(p => p.Osiguranje)
+                    .HasForeignKey<Osiguranje>(d => d.PaketOsiguranjaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Osiguranje_PaketOsiguranja");
             });
 
             modelBuilder.Entity<Osmrtnica>(entity =>
@@ -65,18 +71,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasForeignKey<Osmrtnica>(d => d.SmrtniSlucajId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Oglas_SmrtniSlucaj");
-            });
-
-            modelBuilder.Entity<PaketOsiguranja>(entity =>
-            {
-                entity.Property(e => e.IdPaketOsiguranja).ValueGeneratedOnAdd();
-
-                entity.HasOne(d => d.IdPaketOsiguranjaNavigation)
-                    .WithOne(p => p.PaketOsiguranja)
-                    .HasPrincipalKey<Osiguranje>(p => p.PaketOsiguranjaId)
-                    .HasForeignKey<PaketOsiguranja>(d => d.IdPaketOsiguranja)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PaketOsiguranja_Osiguranje");
             });
 
             modelBuilder.Entity<Pogreb>(entity =>
