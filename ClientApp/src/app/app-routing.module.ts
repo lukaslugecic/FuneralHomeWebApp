@@ -22,18 +22,18 @@ import { AllUsersModule } from './pages/admin/all-users/all-users.module';
 import { FuneralDetailComponent } from './pages/funerals/funeral-detail/funeral-detail.component';
 import { InsuranceComponent } from './pages/insurance/insurance.component';
 import { InsuranceModule } from './pages/insurance/insurance.module';
-import { EquipmentCatalogModule } from './pages/customer/equipment-catalog/equipment-catalog.module';
-import { EquipmentCatalogComponent } from './pages/customer/equipment-catalog/equipment-catalog.component';
-import { ReportDeathComponent } from './pages/customer/report-death/report-death.component';
-import { ReportDeathModule } from './pages/customer/report-death/report-death.module';
+import { EquipmentCatalogModule } from './pages/anon/equipment-catalog/equipment-catalog.module';
+import { EquipmentCatalogComponent } from './pages/anon/equipment-catalog/equipment-catalog.component';
+import { ReportDeathComponent } from './pages/anon/report-death/report-death.component';
+import { ReportDeathModule } from './pages/anon/report-death/report-death.module';
 import { DeathCustomerFormComponent } from './pages/forms/death-customer-form/death-customer-form.component';
 import { DeathCustomerFormModule } from './pages/forms/death-customer-form/death-customer-form.module';
-import { OrganizeFuneralComponent } from './pages/customer/organize-funeral/organize-funeral.component';
-import { OrganizeFuneralModule } from './pages/customer/organize-funeral/organize-funeral.module';
+import { OrganizeFuneralComponent } from './pages/anon/organize-funeral/organize-funeral.component';
+import { OrganizeFuneralModule } from './pages/anon/organize-funeral/organize-funeral.module';
 import { FuneralCustomerFormComponent } from './pages/forms/funeral-customer-form/funeral-customer-form.component';
 import { FuneralCustomerFormModule } from './pages/forms/funeral-customer-form/funeral-customer-form.module';
-import { AddInsuranceComponent } from './pages/customer/add-insurance/add-insurance.component';
-import { AddInsuranceModule } from './pages/customer/add-insurance/add-insurance.module';
+import { AddInsuranceComponent } from './pages/anon/add-insurance/add-insurance.component';
+import { AddInsuranceModule } from './pages/anon/add-insurance/add-insurance.module';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
