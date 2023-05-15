@@ -94,4 +94,9 @@ export class DeathCustomerFormComponent implements OnInit {
       });
     }
   }
+
+  return(){
+    this._router.navigate(['/report-death/info']);
+  }
+
 }
