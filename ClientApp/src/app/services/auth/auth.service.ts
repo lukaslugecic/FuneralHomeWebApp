@@ -24,6 +24,10 @@ export class AuthService {
     return this._user$.value;
   }
 
+  public isLoggedIn() {
+    return this.userValue !== null;
+  }
+
   public getKorisnici() : Observable<IKorisnik[]> {
     return this.http.get<IKorisnik[]>(`${environment.apiUrlHttps}/${this.url}`);
   }
