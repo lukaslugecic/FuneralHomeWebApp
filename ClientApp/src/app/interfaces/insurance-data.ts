@@ -5,4 +5,8 @@ export interface IInsuranceData {
     Prezime: string
     DatumUgovaranja: Date;
     PlacanjeNaRate: boolean;
+    BrojRata: number;
+    PaketOsiguranjaId: number;
+    NazivPaketa: string;
+    CijenaPaketa: number;
 }

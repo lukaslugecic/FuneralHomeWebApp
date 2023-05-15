@@ -18,6 +18,8 @@ export class InsuranceDialogComponent implements OnInit {
     datumUgovaranja: new FormControl('', [Validators.required]),
     korisnikId: new FormControl('', [Validators.required]),
     placanjeNaRate: new FormControl('', [Validators.required]),
+    paketOsiguranjaId: new FormControl('', [Validators.required]),
+    brojRata: new FormControl('', [Validators.required]),
   });
   
   toUpdate: IInsuranceData = {} as IInsuranceData;
@@ -28,6 +30,8 @@ export class InsuranceDialogComponent implements OnInit {
     { value: true, naziv: 'Na rate' },
     { value: false, naziv: 'Jednokratno' },
   ];
+
+  packages: any[] = [];
 
   constructor(
     private _fb: FormBuilder,
@@ -52,6 +56,11 @@ export class InsuranceDialogComponent implements OnInit {
           });
       });
     });
+
+    this._insuranceService.getInsurancePackages().subscribe((res) => {
+      this.packages = res;
+    });
+
     if (this.data) {
       this.korisnici.push({
         korisnikId : this.data.korisnikId,
@@ -63,11 +72,18 @@ export class InsuranceDialogComponent implements OnInit {
         datumUgovaranja: this.data.datumUgovaranja,
         korisnikId: this.data.korisnikId,
         placanjeNaRate: this.data.placanjeNaRate,
+        paketOsiguranjaId: this.data.paketOsiguranjaId,
+        brojRata: this.data.brojRata,
       });
     }
   }
 
   onFormSubmit() {
+    if(!this.insuranceForm.value.placanjeNaRate){
+      this.insuranceForm.patchValue({
+        brojRata: 1
+      });
+    }
     if (this.insuranceForm.valid) {
       if (this.data) {
         this.toUpdate = {
@@ -78,6 +94,10 @@ export class InsuranceDialogComponent implements OnInit {
             - new Date(this.insuranceForm.value.datumUgovaranja).getTimezoneOffset() * 60000),
           KorisnikId: this.insuranceForm.value.korisnikId,
           PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
+          BrojRata: this.insuranceForm.value.brojRata,
+          PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
+          NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
+          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
         }
         this._insuranceService
           .updateInsurance(this.data.id, this.toUpdate)
@@ -104,6 +124,10 @@ export class InsuranceDialogComponent implements OnInit {
             - new Date(this.insuranceForm.value.datumUgovaranja).getTimezoneOffset() * 60000),
           KorisnikId: this.insuranceForm.value.korisnikId,
           PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
+          BrojRata: this.insuranceForm.value.placanjeNaRate ? this.insuranceForm.value.brojRata : null,
+          PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
+          NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
+          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
         }
         this._insuranceService.addInsurance(this.toUpdate).subscribe({
           next: (val: any) => {

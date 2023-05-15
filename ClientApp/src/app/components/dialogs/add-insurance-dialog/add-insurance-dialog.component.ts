@@ -20,7 +20,7 @@ export class AddInsuranceDialogComponent implements OnInit {
     placanjeNaRate: new FormControl('', [Validators.required]),
   });
   
-  toAdd: IInsuranceData = {} as IInsuranceData;
+  toAdd: any;
 
   types = [
     { value: true, naziv: 'Na rate' },

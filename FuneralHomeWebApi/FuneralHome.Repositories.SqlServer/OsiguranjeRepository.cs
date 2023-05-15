@@ -49,6 +49,7 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         {
             var model = _dbContext.Osiguranje
                                  .Include(o => o.Korisnik)
+                                 .Include(o => o.PaketOsiguranja)
                                  .AsNoTracking()
                                  .FirstOrDefault(o => o.IdOsiguranje.Equals(id))?
                                  .ToDomain();
@@ -70,6 +71,7 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         {
             var models = _dbContext.Osiguranje
                                  .Include(o => o.Korisnik)
+                                 .Include(o => o.PaketOsiguranja)
                                  .AsNoTracking()
                                  .Where(o => o.KorisnikId.Equals(id))
                                  .Select(Mapping.ToDomain);
@@ -88,6 +90,7 @@ public class OsiguranjeRepository : IOsiguranjeRepository
             var models =
                 _dbContext.Osiguranje
                           .Include(o => o.Korisnik)
+                          .Include(o => o.PaketOsiguranja)
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
             return Results.OnSuccess(models);

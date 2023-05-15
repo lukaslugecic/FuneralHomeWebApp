@@ -12,22 +12,37 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-        </div>
-
-        <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Datum ugovaranja</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="dd.mm.yyyy." formControlName="datumUgovaranja">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+        </div>
 
+        <div class="row">
+            <mat-form-field appearance="outline">
+                <mat-label>Paket osiguranja</mat-label>
+                <mat-select formControlName="paketOsiguranjaId">
+                    <mat-option *ngFor="let val of packages" [value]="val.id">
+                        {{val.naziv + ' - ' + val.cijena + '€'}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Način plačanja</mat-label>
                 <mat-select formControlName="placanjeNaRate">
                     <mat-option *ngFor="let val of types" [value]="val.value">{{val.naziv}}
                     </mat-option>
                 </mat-select>
+            </mat-form-field>
+            <!-- ako je odabrano na rate prikazati odabir broja rata -->
+            <mat-form-field appearance="outline" *ngIf="insuranceForm.value.placanjeNaRate">
+                <mat-label>Broj rata</mat-label>
+                <input matInput type="number" placeholder="Npr. 12" formControlName="brojRata">
             </mat-form-field>
         </div>
         

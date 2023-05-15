@@ -30,4 +30,7 @@ export class InsuranceService {
     return this.http.delete(`${environment.apiUrlHttps}/Osiguranje/${id}`);
   }
 
+  public getInsurancePackages() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/PaketOsiguranja`);
+  }
 }
