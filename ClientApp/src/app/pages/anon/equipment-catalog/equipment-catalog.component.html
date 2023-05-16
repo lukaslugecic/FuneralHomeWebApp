@@ -1,18 +1,49 @@
 <app-main-navigation></app-main-navigation>
-<div class="product-gallery">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm-4" *ngFor="let e of equipment; let i = index">
-        <div class="product-item">
-        <img [src]="'data:image/jpeg;base64,' + e.slika" />
-          <div class="product-description">
-            <h4>{{ e.naziv }}</h4>
-            <p>{{ e.cijena }}</p>
+
+<!-- app.component.html -->
+<div class="header">
+  <h1><b>Ponuda opreme</b></h1>
+</div>
+<div class="container">
+  <div class="gallery">
+    <ng-container *ngFor="let type of types">
+      <div class="type">
+        <h2>{{ type.naziv }}</h2>
+        <div class="equipment-list">
+          <div *ngFor="let item of equipment | equipmentFilter:type.id" class="equipment-item">
+            <img [src]="'data:image/jpeg;base64,' + item.slika" alt="{{ item.naziv }}" class="equipment-image" />
+            <h3 class="equipment-name">{{ item.naziv }}</h3>
+            <p class="equipment-price">{{ item.cijena | currency: 'EUR'}}</p>
           </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+
+<app-main-footer></app-main-footer>
+
+<!--
+   <div *ngFor="let item of equipment | equipmentFilter:type.id" class="equipment-item">
+
+
+
+
+
+<div class="container">
+  <h1>Ponuda opreme</h1>
+  <div class="gallery">
+    <div *ngFor="let type of types" class="type">
+      <h2>{{ type.naziv }}</h2>
+      <div class="equipment-list">
+        <div *ngFor="let item of equipment | equipmentFilter:type.id" class="equipment-item">
+          <img  [src]="'data:image/jpeg;base64,' + item.slika" alt="{{ item.naziv }}" class="equipment-image" />
+          <h3 class="equipment-name">{{ item.naziv }}</h3>
+          <p class="equipment-price">{{ item.cijena | currency: 'EUR' }}</p>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-<app-main-footer></app-main-footer>
+-->

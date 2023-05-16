@@ -628,10 +628,9 @@ public class PogrebController : ControllerBase
             var deleteResult = _pogrebRepository.Remove(id);
             return Problem(osiguranjeResult.Message, statusCode: 500);
         }
-        if(osiguranjeResult.Data != null)
-        {
-            domainPogrebWithId.CalculateDiscount(osiguranjeResult.Data.First());
-        }
+        if (osiguranjeResult.Data != null)
+            if (osiguranjeResult.Data.Count() > 0)
+                domainPogrebWithId.CalculateDiscount(osiguranjeResult.Data.First());
 
         var updateResult = domainPogrebWithId.IsValid()
                 .Bind(() => _pogrebRepository.UpdateAggregate(domainPogrebWithId));

@@ -11,6 +11,7 @@
             <ng-template matStepLabel>Informacije o pogrebu</ng-template>
             <h2>Odaberite smrtni slučaj ili prijavite novi</h2>
             <div class="deathCase">
+              <ng-container *ngIf="userDeaths.length > 0">
                 <mat-form-field appearance="outline">
                     <mat-label>Smrtni slučaj</mat-label>
                     <mat-select formControlName="smrtniSlucajId">
@@ -19,9 +20,15 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <div>
-                    <button mat-raised-button color="primary" type="button" (click)="openAddForm()"> Prijavite novi smrtni slučaj </button>
-                  </div>
+                  
+                </ng-container>
+                <ng-container *ngIf="userDeaths.length === 0">
+                  <h3>Kliknite na dugme za prijavu novog smrtnog slučaja.</h3>
+                </ng-container>
+                
+                <div>
+                  <button mat-raised-button color="primary" type="button" (click)="openAddForm()"> Prijavite novi smrtni slučaj </button>
+                </div>
             </div>
             <h2>Ispunite podatke o pogrebu</h2>
             <mat-form-field appearance="outline">
