@@ -13,11 +13,15 @@ public class PogrebController : ControllerBase
 {
     private readonly IPogrebRepository _pogrebRepository;
     private readonly IOpremaRepository _opremaRepository;
+    private readonly IOsiguranjeRepository _osiguranjeRepository;
 
-    public PogrebController(IPogrebRepository repository, IOpremaRepository opremaRepository)
+    public PogrebController(IPogrebRepository repository,
+        IOpremaRepository opremaRepository,
+        IOsiguranjeRepository osiguranjeRepository)
     {
         _pogrebRepository = repository;
         _opremaRepository = opremaRepository;
+        _osiguranjeRepository = osiguranjeRepository;
     }
 
     // GET: api/Pogreb
@@ -146,6 +150,14 @@ public class PogrebController : ControllerBase
             }
         };
 
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if(osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
 
         var updateResult =
             pogreb.IsValid()
@@ -198,7 +210,16 @@ public class PogrebController : ControllerBase
         {
             return Problem(opremaResult.Message, statusCode: 500);
         }
-        
+
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if (osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
+
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
@@ -238,6 +259,15 @@ public class PogrebController : ControllerBase
             }
         };
 
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if (osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
+
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
@@ -274,6 +304,16 @@ public class PogrebController : ControllerBase
                 return Problem(opremaResult.Message, statusCode: 500);
             }
         };
+
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if (osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
+
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
@@ -313,6 +353,15 @@ public class PogrebController : ControllerBase
 
         pogreb.AddUsluga(domainPogrebUsluga);
 
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if(osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
+
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
@@ -349,6 +398,15 @@ public class PogrebController : ControllerBase
         {
             return NotFound($"Couldn't find service {usluga.Naziv}");
         }
+
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if (osiguranjeResult.Data != null)
+            if (osiguranjeResult.Data.Count() > 0)
+                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
 
         var updateResult =
             pogreb.IsValid()
@@ -514,7 +572,12 @@ public class PogrebController : ControllerBase
             return Problem(result.Message, statusCode: 500);
         }
 
-        int id = _pogrebRepository.GetBySmrtniSlucajId(addPogreb.Pogreb.SmrtniSlucajId).Data.Id;
+        var idResult = _pogrebRepository.GetBySmrtniSlucajId(addPogreb.Pogreb.SmrtniSlucajId);
+        if (!idResult)
+        {
+            return Problem(idResult.Message, statusCode: 500);
+        }
+        int id = idResult.Data.Id;
 
         addPogreb.Pogreb.Id = id;
 
@@ -559,6 +622,16 @@ public class PogrebController : ControllerBase
             domainPogrebWithId.AddUsluga(domainUsluga);
         }
 
+        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(domainPogrebWithId.SmrtniSlucajId);
+        if (!osiguranjeResult)
+        {
+            var deleteResult = _pogrebRepository.Remove(id);
+            return Problem(osiguranjeResult.Message, statusCode: 500);
+        }
+        if(osiguranjeResult.Data != null)
+        {
+            domainPogrebWithId.CalculateDiscount(osiguranjeResult.Data.First());
+        }
 
         var updateResult = domainPogrebWithId.IsValid()
                 .Bind(() => _pogrebRepository.UpdateAggregate(domainPogrebWithId));

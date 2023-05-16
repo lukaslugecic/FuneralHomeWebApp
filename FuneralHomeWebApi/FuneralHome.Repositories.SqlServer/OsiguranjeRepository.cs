@@ -81,7 +81,33 @@ public class OsiguranjeRepository : IOsiguranjeRepository
         {
             return Results.OnException<IEnumerable<Osiguranje>>(e);
         }
-    }   
+    }
+
+    public Result<IEnumerable<Osiguranje>> GetBySmrtniSlucajId(int id)
+    {
+        try
+        {
+            var smrtniSlucajOIB = _dbContext.SmrtniSlucaj
+                                            .AsNoTracking()
+                                            .FirstOrDefault(s => s.IdSmrtniSlucaj.Equals(id))?
+                                            .Oibpok;
+            if(smrtniSlucajOIB is null)
+            {
+                return Results.OnFailure<IEnumerable<Osiguranje>>($"No death case with such id {id}");
+            }
+            var models = _dbContext.Osiguranje
+                                 .Include(o => o.Korisnik)
+                                 .Where(k => k.Korisnik.Oib.Equals(smrtniSlucajOIB))
+                                 .Include(o => o.PaketOsiguranja)
+                                 .AsNoTracking()
+                                 .Select(Mapping.ToDomain);
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Osiguranje>>(e);
+        }
+    }
 
     public Result<IEnumerable<Osiguranje>> GetAll()
     {

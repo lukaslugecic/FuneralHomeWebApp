@@ -20,15 +20,16 @@ public class Pogreb : AggregateRoot<int>
     public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
     public IReadOnlyList<PogrebOprema> PogrebOprema => _pogrebOprema.ToList();
     public IReadOnlyList<Usluga> PogrebUsluga => _pogrebUsluga.ToList();
-    public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value;}
+    public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value; }
     public Korisnik? Korisnik { get => _korisnik; set => _korisnik = value; }
-    
+
 
     public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija, decimal ukupnaCijena,
         Korisnik? korisnik = null,
         SmrtniSlucaj? smrtniSlucaj = null,
         IEnumerable<PogrebOprema>? pogrebOprema = null,
-        IEnumerable<Usluga>? pogrebUsluga = null) : base(id)
+        IEnumerable<Usluga>? pogrebUsluga = null
+        ) : base(id)
     {
         _smrtniSlucajId = smrtniSlucajId;
         _datumPogreba = datumPogreba;
@@ -38,8 +39,6 @@ public class Pogreb : AggregateRoot<int>
         _smrtniSlucaj = smrtniSlucaj;
         _pogrebOprema = pogrebOprema?.ToList() ?? new List<PogrebOprema>();
         _pogrebUsluga = pogrebUsluga?.ToList() ?? new List<Usluga>();
-        if(_pogrebOprema.Any() || _pogrebUsluga.Any())
-            CalculateUkupnaCijena();
     }
 
 
@@ -103,7 +102,7 @@ public class Pogreb : AggregateRoot<int>
     {
         var pogrebOprema = _pogrebOprema.FirstOrDefault(po => po.Oprema.Equals(oprema));
         // smanji ukupnu cijenu
-        if(pogrebOprema is not null && _pogrebOprema.Remove(pogrebOprema))
+        if (pogrebOprema is not null && _pogrebOprema.Remove(pogrebOprema))
         {
             _ukupnaCijena -= oprema.Cijena * pogrebOprema.Kolicina;
             return true;
@@ -140,6 +139,44 @@ public class Pogreb : AggregateRoot<int>
             _ukupnaCijena += usluga.Cijena;
         }
     }
+
+
+    public void CalculateUkupnaCijena(decimal popust, string paket)
+    {
+        _ukupnaCijena = 0;
+        foreach (var pogrebOprema in _pogrebOprema)
+        {
+            if (!paket.Equals("Usluga"))
+                _ukupnaCijena += pogrebOprema.Oprema.Cijena * pogrebOprema.Kolicina * popust;
+            else
+                _ukupnaCijena += pogrebOprema.Oprema.Cijena * pogrebOprema.Kolicina;
+        }
+        foreach (var usluga in _pogrebUsluga)
+        {
+            if (!paket.Equals("Oprema"))
+                _ukupnaCijena += usluga.Cijena * popust;
+            else
+                _ukupnaCijena += usluga.Cijena;
+        }
+
+    }
+
+
+    public void CalculateDiscount(Osiguranje osiguranje)
+    {
+        /*
+         * postotak popusta se racuna kao
+         * broj rata - (danasnji datum - datum ugovaranja).broj mjeseci
+         * kroz broj rata
+         */
+        var brojMjeseci = (DateTime.Now - osiguranje.DatumUgovaranja).Days / 30;
+        var brojNeOtplacenihRata = osiguranje.BrojRata - brojMjeseci;
+        if(brojNeOtplacenihRata < 0)
+            brojNeOtplacenihRata = 0;
+        var postotak = (decimal) brojNeOtplacenihRata / osiguranje.BrojRata;
+        CalculateUkupnaCijena(postotak, osiguranje.NazivPaketa);
+    }
+
 
     public override bool Equals(object? obj)
     {

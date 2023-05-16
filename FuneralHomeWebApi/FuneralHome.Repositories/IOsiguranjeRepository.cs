@@ -14,4 +14,5 @@ public interface IOsiguranjeRepository
     IAggregateRepository<int, Osiguranje>
 {
     Result<IEnumerable<Osiguranje>> GetByKorisnikId(int id);
+    Result<IEnumerable<Osiguranje>> GetBySmrtniSlucajId(int id);
 }
