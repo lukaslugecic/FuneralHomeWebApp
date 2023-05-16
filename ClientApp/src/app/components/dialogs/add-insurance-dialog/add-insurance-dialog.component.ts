@@ -22,7 +22,8 @@ export class AddInsuranceDialogComponent implements OnInit {
     paketOsiguranjaId: new FormControl('', [Validators.required]),
     brojRata: new FormControl('',[
       Validators.required,
-      Validators.min(1)]),
+      Validators.min(1),
+      Validators.max(36)]),
   });
   
   toAdd: IInsuranceData = {} as IInsuranceData;
@@ -82,9 +83,15 @@ export class AddInsuranceDialogComponent implements OnInit {
           },
         });
     } else {
-      this.snackBar.open('Popunite sva polja!', 'U redu', {
-        duration: 3000,
-      });
+      if(this.insuranceForm.value.brojRata < 1 || this.insuranceForm.value.brojRata > 36){
+        this.snackBar.open('Broj rata mora biti između 1 i 36!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Popunite sva polja!', 'U redu', {
+          duration: 3000,
+        });
+    }
     }
   }
 }

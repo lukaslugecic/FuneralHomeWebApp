@@ -40,9 +40,13 @@ export class AddInsuranceComponent implements OnInit {
   openAddForm() {
     if(!this.anon){
       if(this.hasInsurance){
-        this._router.navigate(['/profile']);
+          this._router.navigate(['/profile'])
       } else {
-        const dialogRef = this._dialog.open(AddInsuranceDialogComponent);
+        if(this._authService.userValue?.vrstaKorisnika === 'K'){
+          const dialogRef = this._dialog.open(AddInsuranceDialogComponent);
+        } else {
+          this._router.navigate(['/']);
+        }
       }
     } else {
       this._router.navigate(['/register']);

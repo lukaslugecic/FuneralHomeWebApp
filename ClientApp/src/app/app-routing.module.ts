@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard } from './guards/admin/admin.guard';
 import { AnonGuard } from './guards/anon/anon.guard';
-import { AuthGuard } from './guards/auth/auth.guard';
 import { HomeComponent } from './pages/home/home.component';
 import { HomeModule } from './pages/home/home.module';
 import { LoginComponent } from './pages/login/login.component';
@@ -36,9 +35,20 @@ import { AddInsuranceComponent } from './pages/anon/add-insurance/add-insurance.
 import { AddInsuranceModule } from './pages/anon/add-insurance/add-insurance.module';
 import { ProfileComponent } from './pages/customer/profile/profile.component';
 import { ProfileModule } from './pages/customer/profile/profile.module';
+import { CustomerGuard } from './guards/customer/customer.guard';
+import { EmployeeGuard } from './guards/employee/employee.guard';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  {
+    path: '',
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'report-death/info', component: ReportDeathComponent},
+      { path: 'organize-funeral', component: OrganizeFuneralComponent},
+      { path: 'equipment-catalog', component: EquipmentCatalogComponent},
+      { path: 'add-insurance', component: AddInsuranceComponent},
+    ],
+  },
   {
     path: '',
     children: [
@@ -46,21 +56,23 @@ const routes: Routes = [
         path: 'users', component: AllUsersComponent,
         canActivate: [AdminGuard],
       },
+      { path: 'report-death/form', component: DeathCustomerFormComponent},
+      { path: 'organize-funeral/form', component: FuneralCustomerFormComponent},
+      { path: 'profile', component: ProfileComponent}
+    ],
+    canActivate: [CustomerGuard],
+  },
+  {
+    path: '',
+    children: [
       { path: 'services', component: ServicesComponent},
       { path: 'equipment', component: EquipmentComponent},
       { path: 'funerals', component: FuneralsComponent},
       { path: 'funerals/:id', component: FuneralDetailComponent},
       { path: 'deaths', component: DeathsComponent},
       { path: 'insurances', component: InsuranceComponent},
-      { path: 'equipment-catalog', component: EquipmentCatalogComponent},
-      { path: 'report-death/info', component: ReportDeathComponent},
-      { path: 'report-death/form', component: DeathCustomerFormComponent},
-      { path: 'organize-funeral', component: OrganizeFuneralComponent},
-      { path: 'organize-funeral/form', component: FuneralCustomerFormComponent},
-      { path: 'add-insurance', component: AddInsuranceComponent},
-      { path: 'profile', component: ProfileComponent}
     ],
-    canActivate: [AuthGuard],
+    canActivate: [EmployeeGuard],
   },
   {
     path: '',

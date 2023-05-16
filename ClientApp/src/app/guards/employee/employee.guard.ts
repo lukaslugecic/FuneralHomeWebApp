@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard implements CanActivate {
+export class EmployeeGuard implements CanActivate {
   constructor(
     private router: Router,
     private authService: AuthService
@@ -21,7 +21,7 @@ export class AdminGuard implements CanActivate {
     | boolean
     | UrlTree {
       const user = this.authService.userValue;
-      if(user?.vrstaKorisnika === 'A') {
+      if(user?.vrstaKorisnika === 'Z') {
         return true;
       }
       if(!user){
@@ -29,6 +29,7 @@ export class AdminGuard implements CanActivate {
       } else {
         this.router.navigate(['/']);
       }
+      
       return false;
   }
   

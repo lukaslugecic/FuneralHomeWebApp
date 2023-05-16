@@ -24,7 +24,11 @@ export class AnonGuard implements CanActivate {
       if(!user) {
         return true;
       }
-      this.router.navigate(['/login'], { queryParams: {returnUrl: state.url}});
+      if(!user){
+        this.router.navigate(['/login'], { queryParams: {returnUrl: state.url}});
+      } else {
+        this.router.navigate(['/']);
+      }
       return false;
   }
   

@@ -24,6 +24,7 @@ export class AuthService {
     return this._user$.value;
   }
 
+
   public isLoggedIn() {
     return this.userValue !== null;
   }
