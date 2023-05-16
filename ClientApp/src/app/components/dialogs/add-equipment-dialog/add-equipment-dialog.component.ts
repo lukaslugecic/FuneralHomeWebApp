@@ -44,12 +44,13 @@ export class AddEquipmentDialogComponent implements OnInit {
       this._equipmentService.getAllEquipment(),
     ]).subscribe(([types, equipment]) => {
       this.types = types;
-      this.equipment = equipment;
-      equipment.forEach((e: any) => {
+      this.equipment = equipment.filter(e => e.zalihaOpreme > 0);
+      this.equipment.forEach((e: any) => {
         this.equipmentToShow.push({
           id: e.id,
           vrstaOpreme: e.vrstaOpremeId,
           naziv: "Naziv: " + e.naziv + ", Cijena: " + e.cijena + "€",
+          zalihaOpreme: e.zalihaOpreme
         });
       });
     });
@@ -60,6 +61,14 @@ export class AddEquipmentDialogComponent implements OnInit {
   }
 
   onFormSubmit() {
+    // provjeri je li kolicina veca od zalihe opreme
+    const kolicina = this.equipmentForm.get('kolicina')?.value;
+    const zaliha = this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.zalihaOpreme;
+    if(kolicina > zaliha){
+          this.snackBar.open(`Količina odabrane opreme (${kolicina}) veća je od zalihe (${zaliha})!`, 'U redu', {
+          duration: 3000,
+      });
+    } else
     if (this.equipmentForm.valid) {
         this.toAdd = {
           oprema: {
@@ -106,4 +115,5 @@ type Oprema = {
   id: number;
   naziv: string;
   vrstaOpreme: string;
+  zalihaOpreme: number;
 };
