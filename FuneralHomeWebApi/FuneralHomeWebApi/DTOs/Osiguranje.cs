@@ -14,7 +14,7 @@ public class Osiguranje
     public string Prezime { get; set; } = string.Empty;
     public DateTime DatumUgovaranja { get; set; }
     public bool PlacanjeNaRate { get; set; }
-    public int? BrojRata { get; set; }
+    public int BrojRata { get; set; }
     public int PaketOsiguranjaId { get; set; }
 
     [Required(ErrorMessage = "Name can't be null")]

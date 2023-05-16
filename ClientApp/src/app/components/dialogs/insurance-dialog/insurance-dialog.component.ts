@@ -19,7 +19,9 @@ export class InsuranceDialogComponent implements OnInit {
     korisnikId: new FormControl('', [Validators.required]),
     placanjeNaRate: new FormControl('', [Validators.required]),
     paketOsiguranjaId: new FormControl('', [Validators.required]),
-    brojRata: new FormControl('', [Validators.required]),
+    brojRata: new FormControl('',[
+      Validators.required,
+      Validators.min(1)]),
   });
   
   toUpdate: IInsuranceData = {} as IInsuranceData;
@@ -93,7 +95,7 @@ export class InsuranceDialogComponent implements OnInit {
           DatumUgovaranja: new Date(new Date(this.insuranceForm.value.datumUgovaranja).getTime() 
             - new Date(this.insuranceForm.value.datumUgovaranja).getTimezoneOffset() * 60000),
           KorisnikId: this.insuranceForm.value.korisnikId,
-          PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
+          PlacanjeNaRate: this.insuranceForm.value.brojRata !== 1,
           BrojRata: this.insuranceForm.value.brojRata,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
@@ -123,8 +125,8 @@ export class InsuranceDialogComponent implements OnInit {
           DatumUgovaranja: new Date(new Date(this.insuranceForm.value.datumUgovaranja).getTime() 
             - new Date(this.insuranceForm.value.datumUgovaranja).getTimezoneOffset() * 60000),
           KorisnikId: this.insuranceForm.value.korisnikId,
-          PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
-          BrojRata: this.insuranceForm.value.placanjeNaRate,
+          PlacanjeNaRate: this.insuranceForm.value.brojRata !== 1,
+          BrojRata: this.insuranceForm.value.brojRata,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
           CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,

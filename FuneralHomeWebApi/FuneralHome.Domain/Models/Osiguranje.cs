@@ -8,7 +8,7 @@ public class Osiguranje : AggregateRoot<int>
     private DateTime _datumUgoravaranja;
     private bool _placanjeNaRate;
     private int _korisnikId;
-    private int? _brojRata;
+    private int _brojRata;
     private string _ime;
     private string _prezime;
     private int _paketOsiguranjaId;
@@ -20,7 +20,7 @@ public class Osiguranje : AggregateRoot<int>
     public int KorisnikId { get => _korisnikId; set => _korisnikId = value; }
     public string Ime { get => _ime; set => _ime = value; }
     public string Prezime { get => _prezime; set => _prezime = value; }
-    public int? BrojRata { get => _brojRata; set => _brojRata = value; }
+    public int BrojRata { get => _brojRata; set => _brojRata = value; }
     public int PaketOsiguranjaId { get => _paketOsiguranjaId; set => _paketOsiguranjaId = value; }
     public string NazivPaketa { get => _nazivPaketa; set => _nazivPaketa = value; }
     public decimal CijenaPaketa { get => _cijenaPaketa; set => _cijenaPaketa = value; }
@@ -28,7 +28,7 @@ public class Osiguranje : AggregateRoot<int>
 
 
     public Osiguranje(int id, int korisnikId, string ime, string prezime, DateTime datumUgovaranja, bool placanjeNaRate,
-        int? brojRata, int paketOsiguranjaId, string nazivPaketa, decimal cijenaPaketa) : base(id)
+        int brojRata, int paketOsiguranjaId, string nazivPaketa, decimal cijenaPaketa) : base(id)
     {
         _ime = ime;
         _prezime = prezime;

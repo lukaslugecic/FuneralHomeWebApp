@@ -17,10 +17,16 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class AddInsuranceDialogComponent implements OnInit {
   insuranceForm: FormGroup = new FormGroup({
+    datumUgovaranja: new FormControl('', [Validators.required]),
     placanjeNaRate: new FormControl('', [Validators.required]),
+    paketOsiguranjaId: new FormControl('', [Validators.required]),
+    brojRata: new FormControl('',[
+      Validators.required,
+      Validators.min(1)]),
   });
   
-  toAdd: any;
+  toAdd: IInsuranceData = {} as IInsuranceData;
+  packages: any[] = [];
 
   types = [
     { value: true, naziv: 'Na rate' },
@@ -37,10 +43,16 @@ export class AddInsuranceDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-   
+    this._insuranceService.getInsurancePackages().subscribe((res) => {
+      this.packages = res;
+    });
   }
 
   onFormSubmit() {
+    this.insuranceForm.patchValue({
+      datumUgovaranja: new Date(),
+      korisnikId: this._authService.userValue?.id,
+    });
     if (this.insuranceForm.valid) {
         this.toAdd = {
           Id: 0,
@@ -48,7 +60,11 @@ export class AddInsuranceDialogComponent implements OnInit {
           Prezime: this._authService.userValue?.prezime as string,
           DatumUgovaranja: new Date(),
           KorisnikId: this._authService.userValue?.id as number,
-          PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
+          PlacanjeNaRate: this.insuranceForm.value.brojRata !== 1,
+          PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
+          NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
+          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
+          BrojRata: this.insuranceForm.value.brojRata
         }
         this._insuranceService.addInsurance(this.toAdd).subscribe({
           next: (val: any) => {

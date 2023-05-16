@@ -172,6 +172,21 @@
                     <th mat-header-cell *matHeaderCellDef> Način plačanja </th>
                     <td mat-cell *matCellDef="let row"> {{row.placanjeNaRate ? 'Na rate' : 'Jednokratno'}}</td>
                   </ng-container>
+
+                  <ng-container matColumnDef="brojRata">
+                    <th mat-header-cell *matHeaderCellDef> Broj rata </th>
+                    <td mat-cell *matCellDef="let row"> {{row.brojRata}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="nazivPaketa">
+                    <th mat-header-cell *matHeaderCellDef> Naziv paketa </th>
+                    <td mat-cell *matCellDef="let row"> {{row.nazivPaketa}}</td>
+                  </ng-container>
+
+                  <ng-container matColumnDef="cijenaPaketa">
+                    <th mat-header-cell *matHeaderCellDef> Cijena paketa </th>
+                    <td mat-cell *matCellDef="let row"> {{row.cijenaPaketa | currency : 'EUR'}}</td>
+                  </ng-container>
                   
 
               <ng-container matColumnDef="action">

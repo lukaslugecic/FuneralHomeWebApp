@@ -47,6 +47,9 @@ export class ProfileComponent implements OnInit {
     'id',
     'datumUgovaranja',
     'placanjeNaRate',
+    'brojRata',
+    'nazivPaketa',
+    'cijenaPaketa',
     'action'
   ];
 

@@ -23,7 +23,7 @@
         <p>
             Ukoliko želite kod nas ugovoriti pogrebno osiguranje, molimo Vas da ispunite obrazac pritiskom na dugme.
         </p>
-        <button mat-raised-button (click)="openAddForm()"> {{ anon ? 'Registrirajte se' : 'Ugovori osiguranje'}} </button>
+        <button mat-raised-button (click)="openAddForm()"> {{ anon ? 'Registrirajte se' : hasInsurance ? 'Vaše osiguranje' : 'Ugovori osiguranje'}} </button>
     </div>
     
 
