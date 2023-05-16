@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./report-death.component.scss']
 })
 export class ReportDeathComponent implements OnInit {
+  public user$ = this._authService.user$;
   anon = true;
   constructor(
     private _router: Router,

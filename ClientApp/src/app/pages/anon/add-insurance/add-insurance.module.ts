@@ -5,6 +5,7 @@ import { MainNavigationModule } from 'src/app/components/main-navigation/main-na
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { MatButtonModule } from '@angular/material/button';
 import { AddInsuranceDialogModule } from 'src/app/components/dialogs/add-insurance-dialog/add-insurance-dialog.module';
+import { AuthNavigationModule } from 'src/app/components/auth-navigation/auth-navigation.module';
 
 
 
@@ -15,7 +16,8 @@ import { AddInsuranceDialogModule } from 'src/app/components/dialogs/add-insuran
     MainNavigationModule,
     MainFooterModule,
     MatButtonModule,
-    AddInsuranceDialogModule
+    AddInsuranceDialogModule,
+    AuthNavigationModule
   ]
 })
 export class AddInsuranceModule { }

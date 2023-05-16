@@ -12,6 +12,7 @@ import { InsuranceService } from 'src/app/services/insurance/insurance.service';
   styleUrls: ['./add-insurance.component.scss']
 })
 export class AddInsuranceComponent implements OnInit {
+  public user$ = this._authService.user$;
   anon = true;
   hasInsurance = false;
   constructor(

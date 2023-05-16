@@ -1,6 +1,7 @@
 import { Component, OnInit, Pipe } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin, map } from 'rxjs';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
@@ -9,9 +10,10 @@ import { EquipmentService } from 'src/app/services/equipment/equipment.service';
   styleUrls: ['./equipment-catalog.component.scss']
 })
 export class EquipmentCatalogComponent implements OnInit {
-  
+  public user$ = this._authService.user$;
   constructor(
     private readonly _equipmentService: EquipmentService,
+    private readonly _authService: AuthService,
     private readonly snackBar: MatSnackBar
   ) { }
 

@@ -1,4 +1,9 @@
-<app-main-navigation></app-main-navigation>
+<app-main-navigation
+      *ngIf="user$ | async; else authNavigationTemplate"
+    ></app-main-navigation>
+    <ng-template #authNavigationTemplate>
+      <app-auth-navigation></app-auth-navigation>
+    </ng-template>
 <div class="container">
     <h1 class="title">Kompletna organizacija pogreba</h1>
     <p>

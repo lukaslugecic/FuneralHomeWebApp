@@ -4,6 +4,7 @@ import { OrganizeFuneralComponent } from './organize-funeral.component';
 import { MainFooterModule } from 'src/app/components/main-footer/main-footer.module';
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
 import { MatButtonModule } from '@angular/material/button';
+import { AuthNavigationModule } from 'src/app/components/auth-navigation/auth-navigation.module';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MainFooterModule,
     MainNavigationModule,
-    MatButtonModule
+    MatButtonModule,
+    AuthNavigationModule
   ]
 })
 export class OrganizeFuneralModule { }

@@ -5,6 +5,7 @@ import { MainFooterModule } from 'src/app/components/main-footer/main-footer.mod
 import { MainNavigationModule } from 'src/app/components/main-navigation/main-navigation.module';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
+import { AuthNavigationModule } from 'src/app/components/auth-navigation/auth-navigation.module';
 
 
 
@@ -15,7 +16,8 @@ import { RouterModule } from '@angular/router';
     MainFooterModule,
     MainNavigationModule,
     MatButtonModule,
-    RouterModule
+    RouterModule,
+    AuthNavigationModule
   ]
 })
 export class ReportDeathModule { }
