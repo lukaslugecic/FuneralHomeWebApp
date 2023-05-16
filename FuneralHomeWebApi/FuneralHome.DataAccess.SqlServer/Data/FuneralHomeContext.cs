@@ -55,10 +55,10 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasConstraintName("FK_Osiguranje_Korisnik");
 
                 entity.HasOne(d => d.PaketOsiguranja)
-                    .WithOne(p => p.Osiguranje)
-                    .HasForeignKey<Osiguranje>(d => d.PaketOsiguranjaId)
+                    .WithMany(p => p.Osiguranje)
+                    .HasForeignKey(d => d.PaketOsiguranjaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Osiguranje_PaketOsiguranja");
+                    .HasConstraintName("FK_Osiguranje_PaketOsiguranja1");
             });
 
             modelBuilder.Entity<Osmrtnica>(entity =>

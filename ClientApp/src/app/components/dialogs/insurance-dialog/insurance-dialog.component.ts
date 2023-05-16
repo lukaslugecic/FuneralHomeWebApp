@@ -124,7 +124,7 @@ export class InsuranceDialogComponent implements OnInit {
             - new Date(this.insuranceForm.value.datumUgovaranja).getTimezoneOffset() * 60000),
           KorisnikId: this.insuranceForm.value.korisnikId,
           PlacanjeNaRate: this.insuranceForm.value.placanjeNaRate,
-          BrojRata: this.insuranceForm.value.placanjeNaRate ? this.insuranceForm.value.brojRata : null,
+          BrojRata: this.insuranceForm.value.placanjeNaRate,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
           CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,

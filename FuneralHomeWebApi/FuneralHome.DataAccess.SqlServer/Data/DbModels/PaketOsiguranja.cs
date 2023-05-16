@@ -10,6 +10,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
     public partial class PaketOsiguranja
     {
+        public PaketOsiguranja()
+        {
+            Osiguranje = new HashSet<Osiguranje>();
+        }
+
         [Key]
         public int IdPaketOsiguranja { get; set; }
         [Required]
@@ -20,6 +25,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public decimal Cijena { get; set; }
 
         [InverseProperty("PaketOsiguranja")]
-        public virtual Osiguranje Osiguranje { get; set; }
+        public virtual ICollection<Osiguranje> Osiguranje { get; set; }
     }
 }
