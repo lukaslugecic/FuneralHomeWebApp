@@ -20,11 +20,9 @@ export class MainNavigationComponent implements OnDestroy{
   public links = {
     admin: [
       { title: 'Naslovna', path: '/' },
-      { title: 'Admin', path: '/admin' },
       { title: 'Korisnici', path: '/users' },
     ],
     employee: [
-      { title: 'Naslovna', path: '/' },
       { title: 'Oprema', path: '/equipment' },
       { title: 'Usluge', path: '/services' },
       { title: 'Pogrebi', path: '/funerals' },
@@ -32,7 +30,7 @@ export class MainNavigationComponent implements OnDestroy{
       { title: 'Osiguranja', path: '/insurances' },
     ],
     customer: [
-      { title: 'Oprema', path: '/equipment-catalog' },
+      { title: 'Ponuda opreme', path: '/equipment-catalog' },
      // { title: 'Usluge', path: '/services-catalog' },
       { title: 'Prijava smrtnog slučaja', path: '/report-death/info' },
       { title: 'Organizacija pogreba', path: '/organize-funeral' },

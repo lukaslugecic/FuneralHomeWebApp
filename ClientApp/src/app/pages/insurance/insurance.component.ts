@@ -23,7 +23,7 @@ export class InsuranceComponent implements OnInit {
     'placanjeNaRate',
     'brojRata',
     'nazivPaketa',
-    'cijenaPaketa',
+    //'cijenaPaketa',
     'action'
     ];
 
