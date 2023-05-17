@@ -8,21 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    public partial class VrstaUsluge
+    public partial class VrstaOpremeUsluge
     {
-        public VrstaUsluge()
+        public VrstaOpremeUsluge()
         {
-            Usluga = new HashSet<Usluga>();
+            OpremaUsluga = new HashSet<OpremaUsluga>();
         }
 
         [Key]
-        public int IdVrstaUsluge { get; set; }
+        public int IdVrstaOpremeUsluge { get; set; }
         [Required]
         [StringLength(50)]
         [Unicode(false)]
         public string Naziv { get; set; }
+        public bool JeOprema { get; set; }
 
-        [InverseProperty("VrstaUsluge")]
-        public virtual ICollection<Usluga> Usluga { get; set; }
+        [InverseProperty("VrstaOpremeUsluge")]
+        public virtual ICollection<OpremaUsluga> OpremaUsluga { get; set; }
     }
 }

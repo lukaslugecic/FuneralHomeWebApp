@@ -19,17 +19,16 @@ namespace FuneralHome.DataAccess.SqlServer.Data
         {
         }
 
+        public virtual DbSet<JedinicaMjere> JedinicaMjere { get; set; }
         public virtual DbSet<Korisnik> Korisnik { get; set; }
-        public virtual DbSet<Oprema> Oprema { get; set; }
+        public virtual DbSet<OpremaUsluga> OpremaUsluga { get; set; }
         public virtual DbSet<Osiguranje> Osiguranje { get; set; }
         public virtual DbSet<Osmrtnica> Osmrtnica { get; set; }
         public virtual DbSet<PaketOsiguranja> PaketOsiguranja { get; set; }
         public virtual DbSet<Pogreb> Pogreb { get; set; }
-        public virtual DbSet<PogrebOprema> PogrebOprema { get; set; }
+        public virtual DbSet<PogrebOpremaUsluge> PogrebOpremaUsluge { get; set; }
         public virtual DbSet<SmrtniSlucaj> SmrtniSlucaj { get; set; }
-        public virtual DbSet<Usluga> Usluga { get; set; }
-        public virtual DbSet<VrstaOpreme> VrstaOpreme { get; set; }
-        public virtual DbSet<VrstaUsluge> VrstaUsluge { get; set; }
+        public virtual DbSet<VrstaOpremeUsluge> VrstaOpremeUsluge { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,11 +37,20 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.Property(e => e.VrstaKorisnika).IsFixedLength();
             });
 
-            modelBuilder.Entity<Oprema>(entity =>
+            modelBuilder.Entity<OpremaUsluga>(entity =>
             {
-                entity.HasOne(d => d.VrstaOpreme)
-                    .WithMany(p => p.Oprema)
-                    .HasForeignKey(d => d.VrstaOpremeId)
+                entity.HasKey(e => e.IdOpremaUsluga)
+                    .HasName("PK_Oprema");
+
+                entity.HasOne(d => d.JedinicaMjere)
+                    .WithMany(p => p.OpremaUsluga)
+                    .HasForeignKey(d => d.JedinicaMjereId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_OpremaUsluga_JedinicaMjere");
+
+                entity.HasOne(d => d.VrstaOpremeUsluge)
+                    .WithMany(p => p.OpremaUsluga)
+                    .HasForeignKey(d => d.VrstaOpremeUslugeId)
                     .HasConstraintName("FK_Oprema_VrstaOpreme");
             });
 
@@ -79,32 +87,20 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .WithOne(p => p.Pogreb)
                     .HasForeignKey<Pogreb>(d => d.SmrtniSlucajId)
                     .HasConstraintName("FK_Pogreb_SmrtniSlucaj");
-
-                entity.HasMany(d => d.Usluga)
-                    .WithMany(p => p.Pogreb)
-                    .UsingEntity<Dictionary<string, object>>(
-                        "PogrebUsluga",
-                        l => l.HasOne<Usluga>().WithMany().HasForeignKey("UslugaId").HasConstraintName("FK_PogrebUsluga_Usluga1"),
-                        r => r.HasOne<Pogreb>().WithMany().HasForeignKey("PogrebId").HasConstraintName("FK_PogrebUsluga_Pogreb1"),
-                        j =>
-                        {
-                            j.HasKey("PogrebId", "UslugaId");
-
-                            j.ToTable("PogrebUsluga");
-                        });
             });
 
-            modelBuilder.Entity<PogrebOprema>(entity =>
+            modelBuilder.Entity<PogrebOpremaUsluge>(entity =>
             {
-                entity.HasKey(e => new { e.PogrebId, e.OpremaId });
+                entity.HasKey(e => new { e.PogrebId, e.OpremaUslugaId })
+                    .HasName("PK_PogrebOprema");
 
-                entity.HasOne(d => d.Oprema)
-                    .WithMany(p => p.PogrebOprema)
-                    .HasForeignKey(d => d.OpremaId)
+                entity.HasOne(d => d.OpremaUsluga)
+                    .WithMany(p => p.PogrebOpremaUsluge)
+                    .HasForeignKey(d => d.OpremaUslugaId)
                     .HasConstraintName("FK_PogrebOprema_Oprema");
 
                 entity.HasOne(d => d.Pogreb)
-                    .WithMany(p => p.PogrebOprema)
+                    .WithMany(p => p.PogrebOpremaUsluge)
                     .HasForeignKey(d => d.PogrebId)
                     .HasConstraintName("FK_PogrebOprema_Pogreb");
             });
@@ -118,12 +114,10 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasConstraintName("FK_SmrtniSlucaj_Korisnik");
             });
 
-            modelBuilder.Entity<Usluga>(entity =>
+            modelBuilder.Entity<VrstaOpremeUsluge>(entity =>
             {
-                entity.HasOne(d => d.VrstaUsluge)
-                    .WithMany(p => p.Usluga)
-                    .HasForeignKey(d => d.VrstaUslugeId)
-                    .HasConstraintName("FK_Usluga_VrstaUsluge");
+                entity.HasKey(e => e.IdVrstaOpremeUsluge)
+                    .HasName("PK_VrstaOpreme");
             });
 
             OnModelCreatingPartial(modelBuilder);
