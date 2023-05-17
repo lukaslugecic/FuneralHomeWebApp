@@ -9,6 +9,6 @@ namespace FuneralHome.Repositories;
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TDomainModel"></typeparam>
 public interface IVrstaOpremeRepository
-    : IRepository<int, VrstaOpreme>
+    : IRepository<int, VrstaOpremeUsluge>
 {
 }

@@ -13,7 +13,7 @@ public class VrstaOpremeRepository : IVrstaOpremeRepository
         _dbContext = dbContext;
     }
 
-    public bool Exists(VrstaOpreme model)
+    public bool Exists(VrstaOpremeUsluge model)
     {
         try
         {
@@ -43,7 +43,7 @@ public class VrstaOpremeRepository : IVrstaOpremeRepository
 
     }
 
-    public Result<VrstaOpreme> Get(int id)
+    public Result<VrstaOpremeUsluge> Get(int id)
     {
         try
         {
@@ -54,16 +54,16 @@ public class VrstaOpremeRepository : IVrstaOpremeRepository
 
             return vrsta is not null
             ? Results.OnSuccess(vrsta)
-                : Results.OnFailure<VrstaOpreme>($"No type with such id {id}");
+                : Results.OnFailure<VrstaOpremeUsluge>($"No type with such id {id}");
         }
         catch (Exception e)
         {
-            return Results.OnException<VrstaOpreme>(e);
+            return Results.OnException<VrstaOpremeUsluge>(e);
         }
 
     }
 
-    public Result<IEnumerable<VrstaOpreme>> GetAll()
+    public Result<IEnumerable<VrstaOpremeUsluge>> GetAll()
     {
         try
         {
@@ -75,12 +75,12 @@ public class VrstaOpremeRepository : IVrstaOpremeRepository
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<VrstaOpreme>>(e);
+            return Results.OnException<IEnumerable<VrstaOpremeUsluge>>(e);
         }
     }
 
 
-    public Result Insert(VrstaOpreme model)
+    public Result Insert(VrstaOpremeUsluge model)
     {
         try
         {
@@ -129,7 +129,7 @@ public class VrstaOpremeRepository : IVrstaOpremeRepository
         }
     }
 
-    public Result Update(VrstaOpreme model)
+    public Result Update(VrstaOpremeUsluge model)
     {
         try
         {

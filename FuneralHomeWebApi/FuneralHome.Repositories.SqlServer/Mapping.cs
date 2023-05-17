@@ -122,8 +122,8 @@ public static class Mapping
            // SmrtniSlucaj = pogreb.SmrtniSlucaj?.ToDbModel()
         };
 
-    public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)
-        => new PogrebOprema(
+    public static PogrebOpremaUsluga ToDomain(this DbModels.PogrebOprema pogrebOprema)
+        => new PogrebOpremaUsluga(
             pogrebOprema.Oprema.ToDomain(),
             pogrebOprema.Kolicina
             );
@@ -238,13 +238,13 @@ public static class Mapping
             Cijena = oprema.Cijena
         };
 
-    public static VrstaOpreme ToDomain(this DbModels.VrstaOpreme vrstaOpreme)
+    public static VrstaOpremeUsluge ToDomain(this DbModels.VrstaOpreme vrstaOpreme)
         => new VrstaOpreme(
                 vrstaOpreme.IdVrstaOpreme,
                 vrstaOpreme.Naziv
                 );
 
-    public static DbModels.VrstaOpreme ToDbModel(this VrstaOpreme vrstaOpreme)
+    public static DbModels.VrstaOpreme ToDbModel(this VrstaOpremeUsluge vrstaOpreme)
         => new DbModels.VrstaOpreme()
         {
             IdVrstaOpreme = vrstaOpreme.Id,

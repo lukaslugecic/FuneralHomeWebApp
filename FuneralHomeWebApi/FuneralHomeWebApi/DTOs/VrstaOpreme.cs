@@ -19,15 +19,15 @@ public class VrstaOpreme
 
 public static partial class DtoMapping
 {
-    public static VrstaOpreme ToDto(this DomainModels.VrstaOpreme vrstaOpreme)
+    public static VrstaOpreme ToDto(this DomainModels.VrstaOpremeUsluge vrstaOpreme)
         => new VrstaOpreme()
         {
             Id = vrstaOpreme.Id,
             Naziv = vrstaOpreme.Naziv
         };
 
-    public static DomainModels.VrstaOpreme ToDomain(this VrstaOpreme vrstaOpreme)
-        => new DomainModels.VrstaOpreme(
+    public static DomainModels.VrstaOpremeUsluge ToDomain(this VrstaOpreme vrstaOpreme)
+        => new DomainModels.VrstaOpremeUsluge(
             vrstaOpreme.Id,
             vrstaOpreme.Naziv
        );
