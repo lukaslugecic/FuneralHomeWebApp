@@ -1,5 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { DateAdapter } from '@angular/material/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { BehaviorSubject, EMPTY, Observable, Subscription } from 'rxjs';
@@ -20,7 +21,9 @@ export class RegisterComponent implements OnDestroy {
     private readonly authService: AuthService,
     private readonly snackBar: MatSnackBar,
     private readonly router: Router,
+    private dateAdapter: DateAdapter<Date>
   ) {
+    this.dateAdapter.setLocale('hr');
     this.trigger$.next(null);
   }
 

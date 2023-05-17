@@ -52,10 +52,6 @@ const routes: Routes = [
   {
     path: '',
     children: [
-      {
-        path: 'users', component: AllUsersComponent,
-        canActivate: [AdminGuard],
-      },
       { path: 'report-death/form', component: DeathCustomerFormComponent},
       { path: 'organize-funeral/form', component: FuneralCustomerFormComponent},
       { path: 'profile', component: ProfileComponent}
@@ -73,6 +69,13 @@ const routes: Routes = [
       { path: 'insurances', component: InsuranceComponent},
     ],
     canActivate: [EmployeeGuard],
+  },
+  {
+    path: '',
+    children: [
+      {path: 'users', component: AllUsersComponent}
+    ],
+    canActivate: [AdminGuard],
   },
   {
     path: '',

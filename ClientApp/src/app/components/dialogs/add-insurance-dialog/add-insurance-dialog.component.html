@@ -8,7 +8,7 @@
                 <mat-label>Paket osiguranja</mat-label>
                 <mat-select formControlName="paketOsiguranjaId">
                     <mat-option *ngFor="let val of packages" [value]="val.id">
-                        {{val.naziv + ' - ' + val.cijena + '€'}}
+                        {{val.naziv}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

@@ -49,7 +49,7 @@ export class ProfileComponent implements OnInit {
     'placanjeNaRate',
     'brojRata',
     'nazivPaketa',
-    'cijenaPaketa',
+    //'cijenaPaketa',
     'action'
   ];
 
