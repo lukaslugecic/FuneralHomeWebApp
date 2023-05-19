@@ -16,11 +16,9 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int KorisnikId { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string ImePok { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string PrezimePok { get; set; }
         [Required]
         [Column("OIBPok")]

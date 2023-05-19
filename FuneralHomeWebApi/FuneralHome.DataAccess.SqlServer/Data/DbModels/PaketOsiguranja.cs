@@ -19,7 +19,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int IdPaketOsiguranja { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Naziv { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }

@@ -21,12 +21,10 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int JedinicaMjereId { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Naziv { get; set; }
         public byte[] Slika { get; set; }
         public int? Zaliha { get; set; }
         [StringLength(50)]
-        [Unicode(false)]
         public string Opis { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }

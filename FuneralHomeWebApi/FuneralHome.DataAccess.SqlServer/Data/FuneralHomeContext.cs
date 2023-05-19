@@ -33,6 +33,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data
         {
             modelBuilder.Entity<Korisnik>(entity =>
             {
+                entity.Property(e => e.Oib).IsFixedLength();
+
                 entity.Property(e => e.VrstaKorisnika).IsFixedLength();
             });
 
@@ -94,6 +96,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
             modelBuilder.Entity<SmrtniSlucaj>(entity =>
             {
+                entity.Property(e => e.Oibpok).IsFixedLength();
+
                 entity.HasOne(d => d.Korisnik)
                     .WithMany(p => p.SmrtniSlucaj)
                     .HasForeignKey(d => d.KorisnikId)

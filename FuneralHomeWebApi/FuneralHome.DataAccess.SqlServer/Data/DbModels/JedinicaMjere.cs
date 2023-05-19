@@ -19,7 +19,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int IdJednicaMjere { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Naziv { get; set; }
 
         [InverseProperty("JedinicaMjere")]
