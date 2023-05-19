@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IOpremaData } from 'src/app/interfaces/oprema-usluga-data';
+import { IOpremaUslugaData } from 'src/app/interfaces/oprema-usluga-data';
 import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
@@ -23,7 +23,7 @@ export class EquipmentDialogComponent implements OnInit {
     slika: new FormControl('')
   });
   
-  toUpdate: IOpremaData = {} as IOpremaData;
+  toUpdate: IOpremaUslugaData = {} as IOpremaUslugaData;
 
   types: IVrstaOpremeUslugeData[] = [];
 
@@ -61,6 +61,7 @@ export class EquipmentDialogComponent implements OnInit {
           Slika: this.equipmentForm.value.slika,
           VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          Opis: null
         }
         this._equipmentService
           .updateEquipment(this.data.id, this.toUpdate)
@@ -87,6 +88,7 @@ export class EquipmentDialogComponent implements OnInit {
           Slika: this.equipmentForm.value.slika,
           VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          Opis: null
         }
         this._equipmentService.addEquipment(this.toUpdate).subscribe({
           next: (val: any) => {

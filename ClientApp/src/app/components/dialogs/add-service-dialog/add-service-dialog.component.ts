@@ -3,9 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
-import { IOpremaData } from 'src/app/interfaces/oprema-usluga-data';
-import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
-import { IUslugaData } from 'src/app/interfaces/usluga-data';
+import { IOpremaUslugaData } from 'src/app/interfaces/oprema-usluga-data';
 import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
@@ -22,7 +20,7 @@ export class AddServiceDialogComponent implements OnInit {
     vrstaUsluge: new FormControl('', [Validators.required])
   });
   
-  toAdd: IUslugaData = {} as IUslugaData;
+  toAdd: IOpremaUslugaData = {} as IOpremaUslugaData;
 
   types: IVrstaOpremeUslugeData[] = [];
   services: any[] = [];
@@ -65,10 +63,12 @@ export class AddServiceDialogComponent implements OnInit {
         this.toAdd = {
             Id: this.serviceForm.value.uslugaId,
             Naziv: this.services.find((e: any) => e.id === this.serviceForm.value.uslugaId)?.naziv,
-            VrstaUslugeId: this.serviceForm.value.vrstaUsluge,
-            VrstaUslugeNaziv: this.types.find((t: any) => t.id === this.serviceForm.value.vrstaUsluge)?.naziv as string,
+            VrstaOpremeUslugeId: this.serviceForm.value.vrstaUsluge,
+            VrstaOpremeUslugeNaziv: this.types.find((t: any) => t.id === this.serviceForm.value.vrstaUsluge)?.naziv as string,
             Opis: this.services.find((e: any) => e.id === this.serviceForm.value.uslugaId)?.opis,
             Cijena: this.services.find((e: any) => e.id === this.serviceForm.value.uslugaId)?.cijena,
+            Slika: null,
+            Zaliha: null
         }
         this._funeralService.addService(this.data, this.toAdd).subscribe({
           next: (val: any) => {
