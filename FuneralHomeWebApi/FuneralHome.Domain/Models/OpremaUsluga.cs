@@ -12,7 +12,6 @@ public class OpremaUsluga : AggregateRoot<int>
     private string? _opis;
     private decimal _cijena;
 
-    private int _jedinicaMjereId;
     private int _vrstaOpremeUslugeId;
     private string _vrstaOpremeUslugeNaziv;
 
@@ -23,11 +22,10 @@ public class OpremaUsluga : AggregateRoot<int>
     public string? Opis { get => _opis; set => _opis = value; }
     public decimal Cijena { get => _cijena; set => _cijena = value; }
     public int VrstaOpremeUslugeId { get => _vrstaOpremeUslugeId; set => _vrstaOpremeUslugeId = value; }
-    public int JedinicaMjereId { get => _jedinicaMjereId; set => _jedinicaMjereId = value; }
     public string VrstaOpremeUslugeNaziv { get => _vrstaOpremeUslugeNaziv; set => _vrstaOpremeUslugeNaziv = value; }
 
 
-    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeNaziv, int jedinicnaMjeraId, string naziv,
+    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeNaziv, string naziv,
         byte[]? slika, int? zaliha, string? opis, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
@@ -48,7 +46,6 @@ public class OpremaUsluga : AggregateRoot<int>
         _opis = opis;
         _vrstaOpremeUslugeId = vrstaOpremeId;
         _vrstaOpremeUslugeNaziv = vrstaOpremeNaziv;
-        _jedinicaMjereId = jedinicnaMjeraId;
     }
 
     public override bool Equals(object? obj)
@@ -62,8 +59,7 @@ public class OpremaUsluga : AggregateRoot<int>
                 _opis == ou._opis &&
                 _zaliha == ou._zaliha &&
                 _vrstaOpremeUslugeId == ou._vrstaOpremeUslugeId &&
-                _vrstaOpremeUslugeNaziv == ou._vrstaOpremeUslugeNaziv &&
-                _jedinicaMjereId == ou._jedinicaMjereId;
+                _vrstaOpremeUslugeNaziv == ou._vrstaOpremeUslugeNaziv;
 
 
 
@@ -71,7 +67,7 @@ public class OpremaUsluga : AggregateRoot<int>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _slika, _opis, _zaliha, _cijena, _vrstaOpremeUslugeId, _jedinicaMjereId);
+        return HashCode.Combine(_id, _naziv, _slika, _opis, _zaliha, _cijena, _vrstaOpremeUslugeId);
     }
 
     public override Result IsValid()

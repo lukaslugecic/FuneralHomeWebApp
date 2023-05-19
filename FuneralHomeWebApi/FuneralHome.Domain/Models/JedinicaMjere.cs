@@ -3,41 +3,33 @@ using FuneralHome.Commons;
 using System.Data;
 
 namespace FuneralHome.Domain.Models;
-public class VrstaOpremeUsluge : Entity<int>
+public class JedinicaMjere : Entity<int>
 {
     private string _naziv;
-    private bool _jeOprema;
-    private int _jedinicaMjereId;
     public string Naziv { get => _naziv; set => _naziv = value; }
-    public bool JeOprema { get => _jeOprema; set => _jeOprema = value; }
-    public int JedinicaMjereId { get => _jedinicaMjereId; set => _jedinicaMjereId = value; }
 
 
-    public VrstaOpremeUsluge(int id, string naziv, bool jeOprema, int jedinicaMjereId) : base(id)
+    public JedinicaMjere(int id, string naziv) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
             throw new ArgumentException($"'{nameof(naziv)}' cannot be null or empty.", nameof(naziv));
         }
         _naziv = naziv;
-        _jeOprema = jeOprema;
-        _jedinicaMjereId = jedinicaMjereId;
     }
 
     public override bool Equals(object? obj)
     {
         return obj is not null &&
-                obj is VrstaOpremeUsluge vrsta &&
-               _id == vrsta._id &&
-               _naziv == vrsta._naziv &&
-               _jeOprema == vrsta._jeOprema &&
-               _jedinicaMjereId == vrsta._jedinicaMjereId;
+                obj is JedinicaMjere jedinica &&
+               _id == jedinica._id &&
+               _naziv == jedinica._naziv;
 
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _jeOprema, _jedinicaMjereId);
+        return HashCode.Combine(_id, _naziv);
     }
 
     public override Result IsValid()

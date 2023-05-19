@@ -15,6 +15,7 @@ public class VrstaOpremeUsluge
     public string Naziv { get; set; } = string.Empty;
 
     public bool JeOprema { get; set; }
+    public int JedinicaMjereId { get; set; }
 
 }
 
@@ -26,13 +27,15 @@ public static partial class DtoMapping
         {
             Id = vrstaOpremeUsluge.Id,
             Naziv = vrstaOpremeUsluge.Naziv,
-            JeOprema = vrstaOpremeUsluge.JeOprema
+            JeOprema = vrstaOpremeUsluge.JeOprema,
+            JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId
         };
 
     public static DomainModels.VrstaOpremeUsluge ToDomain(this VrstaOpremeUsluge vrstaOpremeUsluge)
         => new DomainModels.VrstaOpremeUsluge(
             vrstaOpremeUsluge.Id,
             vrstaOpremeUsluge.Naziv,
-            vrstaOpremeUsluge.JeOprema
+            vrstaOpremeUsluge.JeOprema,
+            vrstaOpremeUsluge.JedinicaMjereId
        );
 }

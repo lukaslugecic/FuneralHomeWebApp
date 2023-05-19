@@ -76,6 +76,19 @@ public static class Mapping
             Cijena = paket.Cijena
         };
 
+    public static JedinicaMjere ToDomain(this DbModels.JedinicaMjere jedinicaMjere)
+        => new JedinicaMjere(
+                jedinicaMjere.IdJednicaMjere,
+                jedinicaMjere.Naziv
+           );
+
+    public static DbModels.JedinicaMjere ToDbModel(this JedinicaMjere jedinicaMjere)
+        => new DbModels.JedinicaMjere()
+        {
+            IdJednicaMjere = jedinicaMjere.Id,
+            Naziv = jedinicaMjere.Naziv
+        };
+
     public static Pogreb ToDomain(this DbModels.Pogreb pogreb)
        => new Pogreb(
            pogreb.IdPogreb,
@@ -170,7 +183,6 @@ public static class Mapping
             opremaUsluga.IdOpremaUsluga,
             opremaUsluga.VrstaOpremeUslugeId,
             opremaUsluga.VrstaOpremeUsluge.Naziv,
-            opremaUsluga.JedinicaMjereId,
             opremaUsluga.Naziv,
             opremaUsluga.Slika,
             opremaUsluga.Zaliha,
@@ -183,7 +195,6 @@ public static class Mapping
         {
             IdOpremaUsluga = opremaUsluga.Id,
             VrstaOpremeUslugeId = opremaUsluga.VrstaOpremeUslugeId,
-            JedinicaMjereId = opremaUsluga.JedinicaMjereId,
             Naziv = opremaUsluga.Naziv,
             Slika = opremaUsluga.Slika,
             Zaliha = opremaUsluga.Zaliha,
@@ -196,7 +207,8 @@ public static class Mapping
         => new VrstaOpremeUsluge(
                 vrstaOpremeUsluge.IdVrstaOpremeUsluge,
                 vrstaOpremeUsluge.Naziv,
-                vrstaOpremeUsluge.JeOprema
+                vrstaOpremeUsluge.JeOprema,
+                vrstaOpremeUsluge.JedinicaMjereId
                 );
 
     public static DbModels.VrstaOpremeUsluge ToDbModel(this VrstaOpremeUsluge vrstaOpremeUsluge)
@@ -204,7 +216,8 @@ public static class Mapping
         {
             IdVrstaOpremeUsluge = vrstaOpremeUsluge.Id,
             Naziv = vrstaOpremeUsluge.Naziv,
-            JeOprema = vrstaOpremeUsluge.JeOprema
+            JeOprema = vrstaOpremeUsluge.JeOprema,
+            JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId
         };
 
 }

@@ -11,7 +11,6 @@ public class OpremaUsluga
     public int Id { get; set; }
     public int VrstaOpremeUslugeId { get; set; }
     public string VrstaOpremeUslugeNaziv { get; set; } = string.Empty;
-    public int JedinicaMjereId { get; set; }
 
     [Required(ErrorMessage = "Name can't be null")]
     [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
@@ -43,7 +42,6 @@ public static partial class DtoMapping
             opremaUsluga.Id,
             opremaUsluga.VrstaOpremeUslugeId,
             opremaUsluga.VrstaOpremeUslugeNaziv,
-            opremaUsluga.JedinicaMjereId,
             opremaUsluga.Naziv,
             opremaUsluga.Slika,
             opremaUsluga.Zaliha,
