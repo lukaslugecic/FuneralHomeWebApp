@@ -29,6 +29,30 @@ public class OpremaUslugaController : ControllerBase
             : Problem(opremaUslugaResults.Message, statusCode: 500);
     }
 
+    // GET: api/OpremaUsluga/Oprema
+    [HttpGet("Oprema")]
+    public ActionResult<IEnumerable<OpremaUsluga>> GetAllOprema()
+    {
+        var opremaUslugaResults = _opremaUslugaRepository.GetAllOprema()
+            .Map(o => o.Select(DtoMapping.ToDto));
+
+        return opremaUslugaResults
+            ? Ok(opremaUslugaResults.Data)
+            : Problem(opremaUslugaResults.Message, statusCode: 500);
+    }
+
+    // GET: api/OpremaUsluga/Usluge
+    [HttpGet("Usluge")]
+    public ActionResult<IEnumerable<OpremaUsluga>> GetAllUsluge()
+    {
+        var opremaUslugaResults = _opremaUslugaRepository.GetAllUsluge()
+            .Map(o => o.Select(DtoMapping.ToDto));
+
+        return opremaUslugaResults
+            ? Ok(opremaUslugaResults.Data)
+            : Problem(opremaUslugaResults.Message, statusCode: 500);
+    }
+
     // Get: api/OpremaUsluga/Vrste/1
     [HttpGet("/api/[controller]/Vrste/{id}")]
     public ActionResult<IEnumerable<OpremaUsluga>> GetAllByType(int id)

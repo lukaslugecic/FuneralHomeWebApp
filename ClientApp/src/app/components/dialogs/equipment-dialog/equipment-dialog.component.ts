@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IOpremaData } from 'src/app/interfaces/oprema-data';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
@@ -25,7 +25,7 @@ export class EquipmentDialogComponent implements OnInit {
   
   toUpdate: IOpremaData = {} as IOpremaData;
 
-  types: IVrstaOpremeData[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
 
   constructor(
     private readonly _equipmentService: EquipmentService,

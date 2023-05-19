@@ -5,8 +5,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ServiceDialogComponent } from 'src/app/components/dialogs/service-dialog/service-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
-import { ServiceService } from 'src/app/services/service/service.service';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
+import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
   selector: 'app-services',
@@ -24,8 +24,8 @@ export class ServicesComponent implements OnInit {
   ];
 
   selectedType: any = 0;
-  types: IVrstaUslugeData[] = [
-    { id: 0, naziv: 'Sve usluge'}
+  types: IVrstaOpremeUslugeData[] = [
+    { id: 0, naziv: 'Sve usluge', jeOprema: false}
   ];
 
   dataSource!: MatTableDataSource<any>;
@@ -35,7 +35,7 @@ export class ServicesComponent implements OnInit {
 
   constructor(
     private _dialog: MatDialog,
-    private readonly _serviceService: ServiceService,
+    private readonly _equipmentService: EquipmentService,
     private readonly snackBar: MatSnackBar
   ) { }
 
@@ -45,9 +45,9 @@ export class ServicesComponent implements OnInit {
 
   getAllServices() {
     // najprije dohvatimo sve opreme i vrste opreme zatim filtriramo opremu po vrsti opreme
-    this._serviceService.getAllServices().subscribe({
+    this._equipmentService.getAllServices().subscribe({
       next: (res) => {
-        this._serviceService.getTypesOfServices().subscribe({
+        this._equipmentService.getTypesOfServices().subscribe({
           next: (res2) => {
             //dodaj u types sve vrste opreme koje već nisu u types
             res2.forEach((type: any) => {
@@ -85,7 +85,7 @@ export class ServicesComponent implements OnInit {
 
   deleteService(id: number) {
     if (confirm('Jeste li sigurni da želite obrisati uslugu?')) {
-      this._serviceService.deleteService(id).subscribe({
+      this._equipmentService.deleteEquipment(id).subscribe({
         next: (res) => {
           this.snackBar.open('Usluga je uspješno obrisana!', 'U redu', {
             duration: 3000,

@@ -100,6 +100,42 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         }
     }
 
+    public Result<IEnumerable<OpremaUsluga>> GetAllOprema()
+    {
+        try
+        {
+            var models = _dbContext.OpremaUsluga
+                           .Include(o => o.VrstaOpremeUsluge)
+                           .Where(o => o.VrstaOpremeUsluge.JeOprema == true)
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<OpremaUsluga>>(e);
+        }
+    }
+
+    public Result<IEnumerable<OpremaUsluga>> GetAllUsluge()
+    {
+        try
+        {
+            var models = _dbContext.OpremaUsluga
+                           .Include(o => o.VrstaOpremeUsluge)
+                           .Where(o => o.VrstaOpremeUsluge.JeOprema == false)
+                           .AsNoTracking()
+                           .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<OpremaUsluga>>(e);
+        }
+    }
+
 
     public Result<IEnumerable<OpremaUsluga>> GetAllByType(int id)
     {

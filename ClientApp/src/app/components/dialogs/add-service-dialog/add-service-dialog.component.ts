@@ -6,11 +6,9 @@ import { forkJoin } from 'rxjs';
 import { IOpremaData } from 'src/app/interfaces/oprema-data';
 import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
 import { IUslugaData } from 'src/app/interfaces/usluga-data';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
-import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
-import { ServiceService } from 'src/app/services/service/service.service';
 
 @Component({
   selector: 'app-add-service-dialog',
@@ -26,14 +24,14 @@ export class AddServiceDialogComponent implements OnInit {
   
   toAdd: IUslugaData = {} as IUslugaData;
 
-  types: IVrstaUslugeData[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
   services: any[] = [];
   servicesToShow: Usluga[] = [];
   filteredServicesToShow: Usluga[] = [];
 
 
   constructor(
-    private readonly _serviceService: ServiceService,
+    private readonly _equipmentService: EquipmentService,
     private readonly _funeralService: FuneralService,
     private _dialogRef: MatDialogRef<AddServiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -42,8 +40,8 @@ export class AddServiceDialogComponent implements OnInit {
 
   ngOnInit() {
     forkJoin([
-      this._serviceService.getTypesOfServices(),
-      this._serviceService.getAllServices(),
+      this._equipmentService.getTypesOfServices(),
+      this._equipmentService.getAllServices(),
     ]).subscribe(([types, services]) => {
       this.types = types;
       this.services = services;

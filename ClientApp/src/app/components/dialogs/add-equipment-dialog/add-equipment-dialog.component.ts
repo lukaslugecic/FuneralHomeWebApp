@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
 import { IOpremaData } from 'src/app/interfaces/oprema-data';
 import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
 
@@ -24,7 +24,7 @@ export class AddEquipmentDialogComponent implements OnInit {
   
   toAdd: IPogrebOpremaData = {} as IPogrebOpremaData;
 
-  types: IVrstaOpremeData[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
   equipment: any[] = [];
   equipmentToShow: Oprema[] = [];
   filteredEquipmentToShow: Oprema[] = [];

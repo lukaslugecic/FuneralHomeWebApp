@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EquipmentDialogComponent } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.component';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
@@ -25,8 +25,8 @@ export class EquipmentComponent implements OnInit {
     ];
 
   selectedType: any =  0;
-  types: IVrstaOpremeData[] = [
-    { id: 0, naziv: 'Sva oprema' }
+  types: IVrstaOpremeUslugeData[] = [
+    { id: 0, naziv: 'Sva oprema', jeOprema: true }
   ];
 
   dataSource!: MatTableDataSource<any>;

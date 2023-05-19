@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
-import { ServiceService } from 'src/app/services/service/service.service';
 
 @Component({
   selector: 'app-funeral-customer-form',
@@ -36,7 +35,6 @@ export class FuneralCustomerFormComponent implements OnInit {
 
   constructor(
     private _deathService: DeathService,
-    private _serviceService: ServiceService,
     private _equipmentService: EquipmentService,
     private _funeralService: FuneralService,
     private _authService: AuthService,
@@ -57,7 +55,7 @@ export class FuneralCustomerFormComponent implements OnInit {
       }
     });
 
-    this._serviceService.getTypesOfServices().subscribe({
+    this._equipmentService.getTypesOfServices().subscribe({
       next: (res) => {
         this.typesOfService = res;
         this.typesOfService.forEach((typeOfService: any) => {
@@ -66,7 +64,7 @@ export class FuneralCustomerFormComponent implements OnInit {
       }
     });
 
-    this._serviceService.getAllServices().subscribe({
+    this._equipmentService.getAllServices().subscribe({
       next: (res) => {
         this.services = res;
       }
