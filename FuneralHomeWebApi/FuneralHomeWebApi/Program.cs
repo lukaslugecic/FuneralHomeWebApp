@@ -23,7 +23,6 @@ options.UseSqlServer(configuration.GetConnectionString("FuneralHomeDB")));
 builder.Services.AddTransient<IVrstaOpremeUslugeRepository, VrstaOpremeUslugeRepository>();
 builder.Services.AddTransient<IOpremaUslugaRepository, OpremaUslugaRepository>();
 builder.Services.AddTransient<IKorisnikRepository, KorisnikRepository>();
-builder.Services.AddTransient<IOsmrtnicaRepository, OsmrtnicaRepository>();
 builder.Services.AddTransient<IOsiguranjeRepository, OsiguranjeRepository>();
 builder.Services.AddTransient<IPaketOsiguranjaRepository, PaketOsiguranjaRepository>();
 builder.Services.AddTransient<IPogrebRepository, PogrebRepository>();

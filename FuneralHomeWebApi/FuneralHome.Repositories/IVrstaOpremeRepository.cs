@@ -1,4 +1,5 @@
-﻿using FuneralHome.Domain.Models;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
 using System;
 
 namespace FuneralHome.Repositories;
@@ -11,4 +12,6 @@ namespace FuneralHome.Repositories;
 public interface IVrstaOpremeUslugeRepository
     : IRepository<int, VrstaOpremeUsluge>
 {
+    Result<IEnumerable<VrstaOpremeUsluge>> GetAllOprema();
+    Result<IEnumerable<VrstaOpremeUsluge>> GetAllUsluge();
 }

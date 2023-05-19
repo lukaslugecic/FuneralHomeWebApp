@@ -79,6 +79,40 @@ public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
         }
     }
 
+    public Result<IEnumerable<VrstaOpremeUsluge>> GetAllOprema()
+    {
+        try
+        {
+            var vrsta =
+                _dbContext.VrstaOpremeUsluge
+                          .Where(v => v.JeOprema == true)
+                          .AsNoTracking()
+                          .Select(Mapping.ToDomain);
+            return Results.OnSuccess(vrsta);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<VrstaOpremeUsluge>>(e);
+        }
+    }
+
+    public Result<IEnumerable<VrstaOpremeUsluge>> GetAllUsluge()
+    {
+        try
+        {
+            var vrsta =
+                _dbContext.VrstaOpremeUsluge
+                          .Where(v => v.JeOprema == false)
+                          .AsNoTracking()
+                          .Select(Mapping.ToDomain);
+            return Results.OnSuccess(vrsta);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<VrstaOpremeUsluge>>(e);
+        }
+    }
+
 
     public Result Insert(VrstaOpremeUsluge model)
     {

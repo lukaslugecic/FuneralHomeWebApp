@@ -29,6 +29,30 @@ namespace FuneralHome.Controllers
                 : Problem(vrstaResult.Message, statusCode: 500);
         }
 
+        // GET: api/VrstaOpremeUsluge/Oprema
+        [HttpGet("Oprema")]
+        public ActionResult<IEnumerable<VrstaOpremeUsluge>> GetAllVrstaOpreme()
+        {
+            var vrstaResult = _vrstaOpremeUslugeRepository.GetAllOprema()
+                .Map(o => o.Select(DtoMapping.ToDto));
+
+            return vrstaResult
+                ? Ok(vrstaResult.Data)
+                : Problem(vrstaResult.Message, statusCode: 500);
+        }
+
+        // GET: api/VrstaOpremeUsluge/Usluge
+        [HttpGet("Usluge")]
+        public ActionResult<IEnumerable<VrstaOpremeUsluge>> GetAllVrstaUsluge()
+        {
+            var vrstaResult = _vrstaOpremeUslugeRepository.GetAllUsluge()
+                .Map(o => o.Select(DtoMapping.ToDto));
+
+            return vrstaResult
+                ? Ok(vrstaResult.Data)
+                : Problem(vrstaResult.Message, statusCode: 500);
+        }
+
         // GET: api/VrstaOpremeUsluge/5
         [HttpGet("{id}")]
         public ActionResult<VrstaOpremeUsluge> GetVrstaOpremeUsluge(int id)
@@ -44,6 +68,7 @@ namespace FuneralHome.Controllers
         }
 
         // PUT: api/VrstaOpremeUsluge/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public IActionResult EditVrstaOpremeUsluge(int id, VrstaOpremeUsluge vrsta)
         {
@@ -68,11 +93,12 @@ namespace FuneralHome.Controllers
                 .Bind(() => _vrstaOpremeUslugeRepository.Update(domainVrsta));
 
             return result
-                ? AcceptedAtAction("EditVrstaOpreme", vrsta)
+                ? AcceptedAtAction("EditVrstaOpremeUsluge", vrsta)
                 : Problem(result.Message, statusCode: 500);
         }
 
         // POST: api/VrstaOpremeUsluge
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public ActionResult<VrstaOpremeUsluge> CreateVrstaOpremeUsluge(VrstaOpremeUsluge vrsta)
         {
@@ -88,7 +114,7 @@ namespace FuneralHome.Controllers
                 .Bind(() => _vrstaOpremeUslugeRepository.Insert(domainVrsta));
 
             return result
-                ? CreatedAtAction("GetVrstaOpreme", new { id = vrsta.Id }, vrsta)
+                ? CreatedAtAction("GetVrstaOpremeUsluge", new { id = vrsta.Id }, vrsta)
                 : Problem(result.Message, statusCode: 500);
         }
 

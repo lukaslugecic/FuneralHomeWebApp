@@ -217,7 +217,10 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         try
         {
             var dbModel = model.ToDbModel();
-            dbModel.Zaliha += kolicina;
+            if(dbModel.Zaliha is not null)
+            {
+                dbModel.Zaliha += kolicina;
+            }
             // detach
             if (_dbContext.OpremaUsluga.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
@@ -242,7 +245,10 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         try
         {
             var dbModel = model.ToDbModel();
-            dbModel.Zaliha -= kolicina;
+            if (dbModel.Zaliha is not null)
+            {
+                dbModel.Zaliha -= kolicina;
+            }
             if (dbModel.Zaliha < 0)
             {
                 return Results.OnFailure();

@@ -34,26 +34,6 @@ public static class Mapping
             VrstaKorisnika = korisnik.VrstaKorisnika
         };
 
-   
-
-    public static Osmrtnica ToDomain(this DbModels.Osmrtnica osmrtnica)
-       => new Osmrtnica(
-           osmrtnica.IdOsmrtnica,
-           osmrtnica.SlikaPok,
-           osmrtnica.Opis,
-           osmrtnica.ObjavaNaStranici
-       );
-
-    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
-        => new DbModels.Osmrtnica()
-        {
-           IdOsmrtnica = osmrtnica.Id,
-           SlikaPok = osmrtnica.SlikaPok,
-           Opis = osmrtnica.Opis,
-           ObjavaNaStranici = osmrtnica.ObjavaNaStranici
-        };
-
-    
 
 
     public static Osiguranje ToDomain(this DbModels.Osiguranje osiguranje)
