@@ -18,7 +18,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int IdOpremaUsluga { get; set; }
         public int VrstaOpremeUslugeId { get; set; }
-        public int JedinicaMjereId { get; set; }
         [Required]
         [StringLength(50)]
         public string Naziv { get; set; }
@@ -29,9 +28,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
 
-        [ForeignKey("JedinicaMjereId")]
-        [InverseProperty("OpremaUsluga")]
-        public virtual JedinicaMjere JedinicaMjere { get; set; }
         [ForeignKey("VrstaOpremeUslugeId")]
         [InverseProperty("OpremaUsluga")]
         public virtual VrstaOpremeUsluge VrstaOpremeUsluge { get; set; }

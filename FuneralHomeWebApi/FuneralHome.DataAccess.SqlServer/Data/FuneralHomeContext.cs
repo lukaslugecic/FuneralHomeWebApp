@@ -43,12 +43,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasKey(e => e.IdOpremaUsluga)
                     .HasName("PK_Oprema");
 
-                entity.HasOne(d => d.JedinicaMjere)
-                    .WithMany(p => p.OpremaUsluga)
-                    .HasForeignKey(d => d.JedinicaMjereId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_OpremaUsluga_JedinicaMjere");
-
                 entity.HasOne(d => d.VrstaOpremeUsluge)
                     .WithMany(p => p.OpremaUsluga)
                     .HasForeignKey(d => d.VrstaOpremeUslugeId)
@@ -109,6 +103,12 @@ namespace FuneralHome.DataAccess.SqlServer.Data
             {
                 entity.HasKey(e => e.IdVrstaOpremeUsluge)
                     .HasName("PK_VrstaOpreme");
+
+                entity.HasOne(d => d.JedinicaMjere)
+                    .WithMany(p => p.VrstaOpremeUsluge)
+                    .HasForeignKey(d => d.JedinicaMjereId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_VrstaOpremeUsluge_JedinicaMjere");
             });
 
             OnModelCreatingPartial(modelBuilder);
