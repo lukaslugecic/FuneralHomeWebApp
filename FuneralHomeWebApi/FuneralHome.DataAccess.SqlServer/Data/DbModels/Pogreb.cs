@@ -19,9 +19,9 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Key]
         public int IdPogreb { get; set; }
         public int SmrtniSlucajId { get; set; }
-        public DateOnly DatumPogreba { get; set; }
+        public DateTime DatumPogreba { get; set; }
         public bool Kremacija { get; set; }
-        public DateOnly DatumUgovaranja { get; set; }
+        public DateTime DatumUgovaranja { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal UkupnaCijena { get; set; }
 

@@ -23,7 +23,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
         public virtual DbSet<Korisnik> Korisnik { get; set; }
         public virtual DbSet<OpremaUsluga> OpremaUsluga { get; set; }
         public virtual DbSet<Osiguranje> Osiguranje { get; set; }
-        public virtual DbSet<Osmrtnica> Osmrtnica { get; set; }
         public virtual DbSet<PaketOsiguranja> PaketOsiguranja { get; set; }
         public virtual DbSet<Pogreb> Pogreb { get; set; }
         public virtual DbSet<PogrebOpremaUsluge> PogrebOpremaUsluge { get; set; }
@@ -67,18 +66,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                     .HasForeignKey(d => d.PaketOsiguranjaId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Osiguranje_PaketOsiguranja1");
-            });
-
-            modelBuilder.Entity<Osmrtnica>(entity =>
-            {
-                entity.HasKey(e => e.IdOsmrtnica)
-                    .HasName("PK_Oglas");
-
-                entity.HasOne(d => d.SmrtniSlucaj)
-                    .WithOne(p => p.Osmrtnica)
-                    .HasForeignKey<Osmrtnica>(d => d.SmrtniSlucajId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Oglas_SmrtniSlucaj");
             });
 
             modelBuilder.Entity<Pogreb>(entity =>
