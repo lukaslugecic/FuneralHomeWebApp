@@ -15,11 +15,15 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "[dbo].[JedinicaMjere]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Korisnik]",
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Oprema]",
+         "Name": "[dbo].[OpremaUsluga]",
          "ObjectType": 0
       },
       {
@@ -39,11 +43,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[PogrebOprema]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[PogrebUsluga]",
+         "Name": "[dbo].[PogrebOpremaUsluge]",
          "ObjectType": 0
       },
       {
@@ -51,15 +51,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Usluga]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[VrstaOpreme]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[VrstaUsluge]",
+         "Name": "[dbo].[VrstaOpremeUsluge]",
          "ObjectType": 0
       }
    ],

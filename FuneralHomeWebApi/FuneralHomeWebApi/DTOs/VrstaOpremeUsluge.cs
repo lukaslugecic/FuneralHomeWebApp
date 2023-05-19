@@ -6,7 +6,7 @@ using DomainModels = FuneralHome.Domain.Models;
 
 namespace FuneralHome.DTOs;
 
-public class VrstaOpreme
+public class VrstaOpremeUsluge
 {
     public int Id { get; set; }
 
@@ -14,21 +14,25 @@ public class VrstaOpreme
     [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
     public string Naziv { get; set; } = string.Empty;
 
+    public bool JeOprema { get; set; }
+
 }
 
 
 public static partial class DtoMapping
 {
-    public static VrstaOpreme ToDto(this DomainModels.VrstaOpremeUsluge vrstaOpreme)
-        => new VrstaOpreme()
+    public static VrstaOpremeUsluge ToDto(this DomainModels.VrstaOpremeUsluge vrstaOpremeUsluge)
+        => new VrstaOpremeUsluge()
         {
-            Id = vrstaOpreme.Id,
-            Naziv = vrstaOpreme.Naziv
+            Id = vrstaOpremeUsluge.Id,
+            Naziv = vrstaOpremeUsluge.Naziv,
+            JeOprema = vrstaOpremeUsluge.JeOprema
         };
 
-    public static DomainModels.VrstaOpremeUsluge ToDomain(this VrstaOpreme vrstaOpreme)
+    public static DomainModels.VrstaOpremeUsluge ToDomain(this VrstaOpremeUsluge vrstaOpremeUsluge)
         => new DomainModels.VrstaOpremeUsluge(
-            vrstaOpreme.Id,
-            vrstaOpreme.Naziv
+            vrstaOpremeUsluge.Id,
+            vrstaOpremeUsluge.Naziv,
+            vrstaOpremeUsluge.JeOprema
        );
 }

@@ -8,20 +8,20 @@ namespace FuneralHome.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VrstaOpremeController : ControllerBase
+    public class VrstaOpremeUslugeController : ControllerBase
     {
-        private readonly IVrstaOpremeRepository _vrstaOpremeRepository;
+        private readonly IVrstaOpremeUslugeRepository _vrstaOpremeUslugeRepository;
 
-        public VrstaOpremeController(IVrstaOpremeRepository repository)
+        public VrstaOpremeUslugeController(IVrstaOpremeUslugeRepository repository)
         {
-            _vrstaOpremeRepository = repository;
+            _vrstaOpremeUslugeRepository = repository;
         }
 
-        // GET: api/VrstaOpreme
+        // GET: api/VrstaOpremeUsluge
         [HttpGet]
-        public ActionResult<IEnumerable<VrstaOpreme>> GetAllVrstaOpreme()
+        public ActionResult<IEnumerable<VrstaOpremeUsluge>> GetAllVrstaOpremeUsluge()
         {
-            var vrstaResult = _vrstaOpremeRepository.GetAll()
+            var vrstaResult = _vrstaOpremeUslugeRepository.GetAll()
                 .Map(o => o.Select(DtoMapping.ToDto));
 
             return vrstaResult
@@ -29,11 +29,11 @@ namespace FuneralHome.Controllers
                 : Problem(vrstaResult.Message, statusCode: 500);
         }
 
-        // GET: api/VrstaOpreme/5
+        // GET: api/VrstaOpremeUsluge/5
         [HttpGet("{id}")]
-        public ActionResult<VrstaOpreme> GetVrstaOpreme(int id)
+        public ActionResult<VrstaOpremeUsluge> GetVrstaOpremeUsluge(int id)
         {
-            var vrstaResult = _vrstaOpremeRepository.Get(id).Map(DtoMapping.ToDto);
+            var vrstaResult = _vrstaOpremeUslugeRepository.Get(id).Map(DtoMapping.ToDto);
 
             return vrstaResult switch
             {
@@ -43,10 +43,9 @@ namespace FuneralHome.Controllers
             };
         }
 
-        // PUT: api/VrstaOpreme/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/VrstaOpremeUsluge/5
         [HttpPut("{id}")]
-        public IActionResult EditVrstaOpreme(int id, VrstaOpreme vrsta)
+        public IActionResult EditVrstaOpremeUsluge(int id, VrstaOpremeUsluge vrsta)
         {
             if (!ModelState.IsValid)
             {
@@ -57,7 +56,7 @@ namespace FuneralHome.Controllers
                 return BadRequest();
             }
 
-            if (!_vrstaOpremeRepository.Exists(id))
+            if (!_vrstaOpremeUslugeRepository.Exists(id))
             {
                 return NotFound();
             }
@@ -66,17 +65,16 @@ namespace FuneralHome.Controllers
 
             var result =
                 domainVrsta.IsValid()
-                .Bind(() => _vrstaOpremeRepository.Update(domainVrsta));
+                .Bind(() => _vrstaOpremeUslugeRepository.Update(domainVrsta));
 
             return result
                 ? AcceptedAtAction("EditVrstaOpreme", vrsta)
                 : Problem(result.Message, statusCode: 500);
         }
 
-        // POST: api/VrstaOpreme
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: api/VrstaOpremeUsluge
         [HttpPost]
-        public ActionResult<VrstaOpreme> CreateVrstaOpreme(VrstaOpreme vrsta)
+        public ActionResult<VrstaOpremeUsluge> CreateVrstaOpremeUsluge(VrstaOpremeUsluge vrsta)
         {
             if (!ModelState.IsValid)
             {
@@ -87,21 +85,21 @@ namespace FuneralHome.Controllers
 
             var result =
                 domainVrsta.IsValid()
-                .Bind(() => _vrstaOpremeRepository.Insert(domainVrsta));
+                .Bind(() => _vrstaOpremeUslugeRepository.Insert(domainVrsta));
 
             return result
                 ? CreatedAtAction("GetVrstaOpreme", new { id = vrsta.Id }, vrsta)
                 : Problem(result.Message, statusCode: 500);
         }
 
-        // DELETE: api/VrstaOpreme/5
+        // DELETE: api/VrstaOpremeUsluge/5
         [HttpDelete("{id}")]
-        public IActionResult DeleteVrstaOpreme(int id)
+        public IActionResult DeleteVrstaOpremeUsluge(int id)
         {
-            if (!_vrstaOpremeRepository.Exists(id))
+            if (!_vrstaOpremeUslugeRepository.Exists(id))
                 return NotFound();
 
-            var deleteResult = _vrstaOpremeRepository.Remove(id);
+            var deleteResult = _vrstaOpremeUslugeRepository.Remove(id);
             return deleteResult
                 ? NoContent()
                 : Problem(deleteResult.Message, statusCode: 500);

@@ -13,15 +13,15 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     {
         public Pogreb()
         {
-            PogrebOprema = new HashSet<PogrebOprema>();
-            Usluga = new HashSet<Usluga>();
+            PogrebOpremaUsluge = new HashSet<PogrebOpremaUsluge>();
         }
 
         [Key]
         public int IdPogreb { get; set; }
         public int SmrtniSlucajId { get; set; }
-        public DateTime DatumPogreb { get; set; }
+        public DateOnly DatumPogreba { get; set; }
         public bool Kremacija { get; set; }
+        public DateOnly DatumUgovaranja { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal UkupnaCijena { get; set; }
 
@@ -29,10 +29,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [InverseProperty("Pogreb")]
         public virtual SmrtniSlucaj SmrtniSlucaj { get; set; }
         [InverseProperty("Pogreb")]
-        public virtual ICollection<PogrebOprema> PogrebOprema { get; set; }
-
-        [ForeignKey("PogrebId")]
-        [InverseProperty("Pogreb")]
-        public virtual ICollection<Usluga> Usluga { get; set; }
+        public virtual ICollection<PogrebOpremaUsluge> PogrebOpremaUsluge { get; set; }
     }
 }

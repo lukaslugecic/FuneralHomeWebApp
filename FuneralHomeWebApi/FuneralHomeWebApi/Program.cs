@@ -20,10 +20,8 @@ IConfiguration configuration = builder.Environment.IsDevelopment()
 // this allows the DbContext to be injected
 builder.Services.AddDbContext<FuneralHomeContext>(options =>
 options.UseSqlServer(configuration.GetConnectionString("FuneralHomeDB")));
-builder.Services.AddTransient<IVrstaUslugeRepository, VrstaUslugeRepository>();
-builder.Services.AddTransient<IUslugaRepository, UslugaRepository>();
-builder.Services.AddTransient<IVrstaOpremeRepository, VrstaOpremeRepository>();
-builder.Services.AddTransient<IOpremaRepository, OpremaRepository>();
+builder.Services.AddTransient<IVrstaOpremeUslugeRepository, VrstaOpremeUslugeRepository>();
+builder.Services.AddTransient<IOpremaUslugaRepository, OpremaUslugaRepository>();
 builder.Services.AddTransient<IKorisnikRepository, KorisnikRepository>();
 builder.Services.AddTransient<IOsmrtnicaRepository, OsmrtnicaRepository>();
 builder.Services.AddTransient<IOsiguranjeRepository, OsiguranjeRepository>();

@@ -9,7 +9,7 @@ public class Pogreb : AggregateRoot<int>
     private DateTime _datumPogreba;
     private bool _kremacija;
     private decimal _ukupnaCijena;
-    private readonly List<PogrebOpremaUsluga> _pogrebOpremaUsluga;
+    private readonly List<PogrebOpremaUsluge> _pogrebOpremaUsluge;
     private SmrtniSlucaj? _smrtniSlucaj; // readonly?
     private Korisnik? _korisnik;
 
@@ -17,7 +17,7 @@ public class Pogreb : AggregateRoot<int>
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
     public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
-    public IReadOnlyList<PogrebOpremaUsluga> PogrebOpremaUsluga => _pogrebOpremaUsluga.ToList();
+    public IReadOnlyList<PogrebOpremaUsluge> PogrebOpremaUsluge => _pogrebOpremaUsluge.ToList();
     public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value; }
     public Korisnik? Korisnik { get => _korisnik; set => _korisnik = value; }
 
@@ -25,7 +25,7 @@ public class Pogreb : AggregateRoot<int>
     public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija, decimal ukupnaCijena,
         Korisnik? korisnik = null,
         SmrtniSlucaj? smrtniSlucaj = null,
-        IEnumerable<PogrebOpremaUsluga>? pogrebOpremaUsluga = null
+        IEnumerable<PogrebOpremaUsluge>? pogrebOpremaUsluga = null
         ) : base(id)
     {
         _smrtniSlucajId = smrtniSlucajId;
@@ -34,7 +34,7 @@ public class Pogreb : AggregateRoot<int>
         _korisnik = korisnik;
         _ukupnaCijena = ukupnaCijena;
         _smrtniSlucaj = smrtniSlucaj;
-        _pogrebOpremaUsluga = pogrebOpremaUsluga?.ToList() ?? new List<PogrebOpremaUsluga>();
+        _pogrebOpremaUsluge = pogrebOpremaUsluga?.ToList() ?? new List<PogrebOpremaUsluge>();
     }
 
 
@@ -49,10 +49,10 @@ public class Pogreb : AggregateRoot<int>
     public bool AddOprema(OpremaUsluga opremaUsluga, int kolicina)
     {
         // provjeri da li je oprema vec dodana, ako je, zbroji kolicine
-        var pogrebOprema = _pogrebOpremaUsluga.FirstOrDefault(po => po.OpremaUsluga.Equals(opremaUsluga));
+        var pogrebOprema = _pogrebOpremaUsluge.FirstOrDefault(po => po.OpremaUsluga.Equals(opremaUsluga));
         if (pogrebOprema is null)
         {
-            _pogrebOpremaUsluga.Add(new PogrebOpremaUsluga(opremaUsluga, kolicina));
+            _pogrebOpremaUsluge.Add(new PogrebOpremaUsluge(opremaUsluga, kolicina, opremaUsluga.Cijena));
             _ukupnaCijena += opremaUsluga.Cijena * kolicina;
             return true;
         }
@@ -62,14 +62,14 @@ public class Pogreb : AggregateRoot<int>
         return true;
     }
 
-    public bool AddOprema(PogrebOpremaUsluga pogrebOpremaUsluga)
+    public bool AddOprema(PogrebOpremaUsluge pogrebOpremaUsluga)
     {
         return AddOprema(pogrebOpremaUsluga.OpremaUsluga, pogrebOpremaUsluga.Kolicina);
     }
 
     public bool IncrementOpremaUsluga(int opremaUslugaId)
     {
-        var pogrebOpremaUsluga = _pogrebOpremaUsluga.FirstOrDefault(po => po.OpremaUsluga.Id == opremaUslugaId);
+        var pogrebOpremaUsluga = _pogrebOpremaUsluge.FirstOrDefault(po => po.OpremaUsluga.Id == opremaUslugaId);
         if (pogrebOpremaUsluga is null)
             return false;
         pogrebOpremaUsluga.Kolicina++;
@@ -79,26 +79,26 @@ public class Pogreb : AggregateRoot<int>
 
     public bool DecrementOpremaUsluga(int opremaUslugaId)
     {
-        var pogrebOpremaUsluga = _pogrebOpremaUsluga.FirstOrDefault(po => po.OpremaUsluga.Id == opremaUslugaId);
+        var pogrebOpremaUsluga = _pogrebOpremaUsluge.FirstOrDefault(po => po.OpremaUsluga.Id == opremaUslugaId);
         if (pogrebOpremaUsluga is null)
             return false;
         pogrebOpremaUsluga.Kolicina--;
         _ukupnaCijena -= pogrebOpremaUsluga.OpremaUsluga.Cijena;
         if (pogrebOpremaUsluga.Kolicina == 0)
-            _pogrebOpremaUsluga.Remove(pogrebOpremaUsluga);
+            _pogrebOpremaUsluge.Remove(pogrebOpremaUsluga);
         return true;
     }
 
-    public bool RemoveOpremaUsluga(PogrebOpremaUsluga pogrebOprema)
+    public bool RemoveOpremaUsluga(PogrebOpremaUsluge pogrebOprema)
     {
-        return _pogrebOpremaUsluga.Remove(pogrebOprema);
+        return _pogrebOpremaUsluge.Remove(pogrebOprema);
     }
 
     public bool RemoveOpremaUsluga(OpremaUsluga oprema)
     {
-        var pogrebOpremaUsluga = _pogrebOpremaUsluga.FirstOrDefault(po => po.OpremaUsluga.Equals(oprema));
+        var pogrebOpremaUsluga = _pogrebOpremaUsluge.FirstOrDefault(po => po.OpremaUsluga.Equals(oprema));
         // smanji ukupnu cijenu
-        if (pogrebOpremaUsluga is not null && _pogrebOpremaUsluga.Remove(pogrebOpremaUsluga))
+        if (pogrebOpremaUsluga is not null && _pogrebOpremaUsluge.Remove(pogrebOpremaUsluga))
         {
             _ukupnaCijena -= oprema.Cijena * pogrebOpremaUsluga.Kolicina;
             return true;
@@ -111,7 +111,7 @@ public class Pogreb : AggregateRoot<int>
     public void CalculateUkupnaCijena()
     {
         _ukupnaCijena = 0;
-        foreach (var pogrebOprema in _pogrebOpremaUsluga)
+        foreach (var pogrebOprema in _pogrebOpremaUsluge)
         {
             _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina;
         }
@@ -126,7 +126,7 @@ public class Pogreb : AggregateRoot<int>
          */
 
         _ukupnaCijena = 0;
-        foreach (var pogrebOprema in _pogrebOpremaUsluga)
+        foreach (var pogrebOprema in _pogrebOpremaUsluge)
         {
            _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina * popust;
         }
@@ -160,13 +160,13 @@ public class Pogreb : AggregateRoot<int>
                _datumPogreba == pogreb._datumPogreba &&
                _kremacija == pogreb._kremacija &&
                _ukupnaCijena == pogreb._ukupnaCijena &&
-               _pogrebOpremaUsluga.SequenceEqual(pogreb._pogrebOpremaUsluga);
+               _pogrebOpremaUsluge.SequenceEqual(pogreb._pogrebOpremaUsluge);
                //&& _smrtniSlucaj.Equals(pogreb.SmrtniSlucaj);
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _smrtniSlucajId ,_datumPogreba ,_kremacija, _ukupnaCijena, _pogrebOpremaUsluga);
+        return HashCode.Combine(_id, _smrtniSlucajId ,_datumPogreba ,_kremacija, _ukupnaCijena, _pogrebOpremaUsluge);
     }
 
     public override Result IsValid()

@@ -28,7 +28,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [StringLength(50)]
         [Unicode(false)]
         public string Prezime { get; set; }
-        public DateTime DatumRodenja { get; set; }
+        public DateOnly DatumRodenja { get; set; }
         [Required]
         [StringLength(50)]
         [Unicode(false)]

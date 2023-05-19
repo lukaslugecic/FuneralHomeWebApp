@@ -4,20 +4,20 @@ using FuneralHome.Domain.Models;
 using BaseLibrary;
 
 namespace FuneralHome.Repositories.SqlServer;
-public class VrstaUslugeRepository : IVrstaUslugeRepository
+public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
 {
     private readonly FuneralHomeContext _dbContext;
 
-    public VrstaUslugeRepository(FuneralHomeContext dbContext)
+    public VrstaOpremeUslugeRepository(FuneralHomeContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public bool Exists(VrstaUsluge model)
+    public bool Exists(VrstaOpremeUsluge model)
     {
         try
         {
-            return _dbContext.VrstaUsluge
+            return _dbContext.VrstaOpremeUsluge
                              .AsNoTracking()
                              .Contains(model.ToDbModel());
         }
@@ -32,9 +32,9 @@ public class VrstaUslugeRepository : IVrstaUslugeRepository
     {
         try
         {
-            return _dbContext.VrstaUsluge
+            return _dbContext.VrstaOpremeUsluge
                              .AsNoTracking()
-                             .FirstOrDefault(v => v.IdVrstaUsluge.Equals(id)) != null;
+                             .FirstOrDefault(v => v.IdVrstaOpremeUsluge.Equals(id)) != null;
         }
         catch (Exception)
         {
@@ -43,49 +43,49 @@ public class VrstaUslugeRepository : IVrstaUslugeRepository
 
     }
 
-    public Result<VrstaUsluge> Get(int id)
+    public Result<VrstaOpremeUsluge> Get(int id)
     {
         try
         {
-            var vrsta = _dbContext.VrstaUsluge
+            var vrsta = _dbContext.VrstaOpremeUsluge
                                  .AsNoTracking()
-                                 .FirstOrDefault(v => v.IdVrstaUsluge.Equals(id))?
+                                 .FirstOrDefault(v => v.IdVrstaOpremeUsluge.Equals(id))?
                                  .ToDomain();
 
             return vrsta is not null
             ? Results.OnSuccess(vrsta)
-                : Results.OnFailure<VrstaUsluge>($"No type with such id {id}");
+                : Results.OnFailure<VrstaOpremeUsluge>($"No type with such id {id}");
         }
         catch (Exception e)
         {
-            return Results.OnException<VrstaUsluge>(e);
+            return Results.OnException<VrstaOpremeUsluge>(e);
         }
 
     }
 
-    public Result<IEnumerable<VrstaUsluge>> GetAll()
+    public Result<IEnumerable<VrstaOpremeUsluge>> GetAll()
     {
         try
         {
             var vrsta =
-                _dbContext.VrstaUsluge
+                _dbContext.VrstaOpremeUsluge
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
             return Results.OnSuccess(vrsta);
         }
         catch (Exception e)
         {
-            return Results.OnException<IEnumerable<VrstaUsluge>>(e);
+            return Results.OnException<IEnumerable<VrstaOpremeUsluge>>(e);
         }
     }
 
 
-    public Result Insert(VrstaUsluge model)
+    public Result Insert(VrstaOpremeUsluge model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.VrstaUsluge.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
+            if (_dbContext.VrstaOpremeUsluge.Add(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Added)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 
@@ -110,12 +110,12 @@ public class VrstaUslugeRepository : IVrstaUslugeRepository
     {
         try
         {
-            var model = _dbContext.VrstaUsluge
+            var model = _dbContext.VrstaOpremeUsluge
                           .AsNoTracking()
-                          .FirstOrDefault(cv => cv.IdVrstaUsluge.Equals(id));
+                          .FirstOrDefault(cv => cv.IdVrstaOpremeUsluge.Equals(id));
             if (model is not null)
             {
-                _dbContext.VrstaUsluge.Remove(model);
+                _dbContext.VrstaOpremeUsluge.Remove(model);
 
                 return _dbContext.SaveChanges() > 0
                     ? Results.OnSuccess()
@@ -129,12 +129,12 @@ public class VrstaUslugeRepository : IVrstaUslugeRepository
         }
     }
 
-    public Result Update(VrstaUsluge model)
+    public Result Update(VrstaOpremeUsluge model)
     {
         try
         {
             var dbModel = model.ToDbModel();
-            if (_dbContext.VrstaUsluge.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
+            if (_dbContext.VrstaOpremeUsluge.Update(dbModel).State == Microsoft.EntityFrameworkCore.EntityState.Modified)
             {
                 var isSuccess = _dbContext.SaveChanges() > 0;
 

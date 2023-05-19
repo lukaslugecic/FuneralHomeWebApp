@@ -8,19 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 {
-    public partial class PogrebOprema
+    public partial class PogrebOpremaUsluge
     {
         [Key]
         public int PogrebId { get; set; }
         [Key]
-        public int OpremaId { get; set; }
-        public int Kolicina { get; set; }
+        public int OpremaUslugaId { get; set; }
+        [Column(TypeName = "numeric(18, 2)")]
+        public decimal Kolicina { get; set; }
+        [Column(TypeName = "numeric(18, 2)")]
+        public decimal Cijena { get; set; }
 
-        [ForeignKey("OpremaId")]
-        [InverseProperty("PogrebOprema")]
-        public virtual Oprema Oprema { get; set; }
+        [ForeignKey("OpremaUslugaId")]
+        [InverseProperty("PogrebOpremaUsluge")]
+        public virtual OpremaUsluga OpremaUsluga { get; set; }
         [ForeignKey("PogrebId")]
-        [InverseProperty("PogrebOprema")]
+        [InverseProperty("PogrebOpremaUsluge")]
         public virtual Pogreb Pogreb { get; set; }
     }
 }
