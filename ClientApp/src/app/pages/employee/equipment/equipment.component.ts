@@ -16,10 +16,10 @@ import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 export class EquipmentComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'vrstaOpremeNaziv',
+    'vrstaOpremeUslugeNaziv',
     'naziv',
     'slika',
-    'zalihaOpreme',
+    'zaliha',
     'cijena',
     'action'
     ];
@@ -60,7 +60,7 @@ export class EquipmentComponent implements OnInit {
             });
             // ako je odabrana vrsta opreme, filtriramo opremu po vrsti opreme
             if(this.selectedType !== 0){
-              this.dataSource = new MatTableDataSource(res.filter((equipment: any) => equipment.vrstaOpremeId === this.selectedType));
+              this.dataSource = new MatTableDataSource(res.filter((equipment: any) => equipment.vrstaOpremeUslugeId === this.selectedType));
             } else {
               this.dataSource = new MatTableDataSource(res);
             }

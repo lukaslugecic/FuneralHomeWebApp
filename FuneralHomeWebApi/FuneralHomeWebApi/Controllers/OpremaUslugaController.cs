@@ -106,7 +106,7 @@ public class OpremaUslugaController : ControllerBase
             .Bind(() => _opremaUslugaRepository.Update(domainOpremaUsluga));
 
         return result
-            ? AcceptedAtAction("EditOprema", opremaUsluga)
+            ? AcceptedAtAction("EditOpremaUsluga", opremaUsluga)
             : Problem(result.Message, statusCode: 500);
     }
 

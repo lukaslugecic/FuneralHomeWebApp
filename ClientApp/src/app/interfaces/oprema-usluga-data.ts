@@ -1,10 +1,10 @@
 export interface IOpremaData {
     Id: number;
     Naziv: string;
-    VrstaOpremeId: number;
-    VrstaOpremeNaziv: string;
+    VrstaOpremeUslugeId: number;
+    VrstaOpremeUslugeNaziv: string;
     Slika: string;
-    ZalihaOpreme: number;
+    Zaliha: number;
     Cijena: number;
   }
   

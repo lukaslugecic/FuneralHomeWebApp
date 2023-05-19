@@ -25,7 +25,7 @@ public class OpremaUsluga : AggregateRoot<int>
     public string VrstaOpremeUslugeNaziv { get => _vrstaOpremeUslugeNaziv; set => _vrstaOpremeUslugeNaziv = value; }
 
 
-    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeNaziv, string naziv,
+    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeUslugeNaziv, string naziv,
         byte[]? slika, int? zaliha, string? opis, decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
@@ -33,9 +33,9 @@ public class OpremaUsluga : AggregateRoot<int>
             throw new ArgumentException($"'{nameof(naziv)}' cannot be null or empty.", nameof(naziv));
         }
 
-        if (string.IsNullOrEmpty(vrstaOpremeNaziv))
+        if (string.IsNullOrEmpty(vrstaOpremeUslugeNaziv))
         {
-            throw new ArgumentException($"'{nameof(vrstaOpremeNaziv)}' cannot be null or empty.", nameof(vrstaOpremeNaziv));
+            throw new ArgumentException($"'{nameof(vrstaOpremeUslugeNaziv)}' cannot be null or empty.", nameof(vrstaOpremeUslugeNaziv));
         }
 
 
@@ -45,7 +45,7 @@ public class OpremaUsluga : AggregateRoot<int>
         _zaliha = zaliha;
         _opis = opis;
         _vrstaOpremeUslugeId = vrstaOpremeId;
-        _vrstaOpremeUslugeNaziv = vrstaOpremeNaziv;
+        _vrstaOpremeUslugeNaziv = vrstaOpremeUslugeNaziv;
     }
 
     public override bool Equals(object? obj)

@@ -6,7 +6,7 @@
         <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Vrsta opreme</mat-label>
-                <mat-select formControlName="vrstaOpreme">
+                <mat-select formControlName="vrstaOpremeUsluge">
                     <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
                     </mat-option>
                 </mat-select>
@@ -28,7 +28,7 @@
         <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Zaliha opreme</mat-label>
-                <input matInput type="number" placeholder="Npr. 120" formControlName="zalihaOpreme">
+                <input matInput type="number" placeholder="Npr. 120" formControlName="zaliha">
             </mat-form-field>
         </div>
 

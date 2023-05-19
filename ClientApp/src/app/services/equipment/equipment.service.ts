@@ -35,14 +35,14 @@ export class EquipmentService {
   }
 
   public updateEquipment(id: number, data: any) : Observable<any> {
-    return this.http.put<any>(`${environment.apiUrlHttps}/OpremaUsluge/${id}`, data);
+    return this.http.put<any>(`${environment.apiUrlHttps}/OpremaUsluga/${id}`, data);
   }
 
   public addEquipment(data: any) : Observable<any> {
-    return this.http.post<any>(`${environment.apiUrlHttps}/OpremaUsluge`, data);
+    return this.http.post<any>(`${environment.apiUrlHttps}/OpremaUsluga`, data);
   }
 
   public deleteEquipment(id: number) : Observable<any> {
-    return this.http.delete<any>(`${environment.apiUrlHttps}/OpremaUsluge/${id}`);
+    return this.http.delete<any>(`${environment.apiUrlHttps}/OpremaUsluga/${id}`);
   }
 }
