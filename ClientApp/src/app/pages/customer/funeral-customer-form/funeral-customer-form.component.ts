@@ -32,6 +32,7 @@ export class FuneralCustomerFormComponent implements OnInit {
   typesOfEquipment: any[] = [];
   equipment: any[] = [];
   equipmentQuantity: any[] = [];
+  serviceQuantity: any[] = [];
 
   constructor(
     private _deathService: DeathService,
@@ -67,6 +68,9 @@ export class FuneralCustomerFormComponent implements OnInit {
     this._equipmentService.getAllServices().subscribe({
       next: (res) => {
         this.services = res;
+        this.services.forEach((service: any) => {
+          this.serviceQuantity.push({id: service.id, kolicina: 0});
+        });
       }
     });
 
@@ -82,20 +86,20 @@ export class FuneralCustomerFormComponent implements OnInit {
     this._equipmentService.getAllEquipment().subscribe({
       next: (res) => {
         // u this.equipment spremi sve opreme kojima je zaliha > 0
-        this.equipment = res.filter((equipment: any) => equipment.zalihaOpreme > 0);
+        this.equipment = res.filter((equipment: any) => equipment.zaliha > 0);
         this.equipment.forEach((equipment: any) => {
-          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zalihaOpreme ,kolicina: 0});
+          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zaliha, kolicina: 0});
         });
       }
     });
   }
 
   getServices(typeOfServiceId: number) {
-    return this.services.filter((service: any) => service.vrstaUslugeId === typeOfServiceId);
+    return this.services.filter((service: any) => service.vrstaOpremeUslugeId === typeOfServiceId);
   }
 
   getEquipment(typeOfEquipmentId: number) {
-    return this.equipment.filter((equipment: any) => equipment.vrstaOpremeId === typeOfEquipmentId);
+    return this.equipment.filter((equipment: any) => equipment.vrstaOpremeUslugeId === typeOfEquipmentId);
   }
 
   deathForm = this._builder.group({
@@ -218,7 +222,7 @@ export class FuneralCustomerFormComponent implements OnInit {
   addEquipment(id: number) {
     this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina++;
     // provjeri da li je količina veća od zalihe
-    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > this.equipment.find((e: any) => e.id === id).zalihaOpreme){
+    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > this.equipment.find((e: any) => e.id === id).zaliha){
       this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
       this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
         duration: 3000,
@@ -236,19 +240,28 @@ export class FuneralCustomerFormComponent implements OnInit {
     return this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina;
   }
 
+  addService(id: number) {
+    this.serviceQuantity.find((eq: any) => eq.id === id).kolicina++;
+  }
+
+  removeService(id: number) {
+    if(this.serviceQuantity.find((eq: any) => eq.id === id).kolicina > 0){
+      this.serviceQuantity.find((eq: any) => eq.id === id).kolicina--;
+    }
+  }
+
+  getServicesQuantity(id: number) {
+    return this.serviceQuantity.find((s:any) => s.id === id).kolicina;
+  }
+
   getTotalPrice() {
     let totalPrice = 0;
     this.equipmentQuantity.forEach((eq: any) => {
       totalPrice += this.equipment.find((e: any) => e.id === eq.id).cijena * eq.kolicina;
     });
-    for (const type of this.typesOfService) {
-      const formControl = this.deathForm.controls.usluge.get(type.naziv);
-      const serviceId = formControl?.value;
-      if (serviceId) {
-        const service = this.services.find((s: any) => s.id === serviceId);
-        totalPrice += service.cijena;
-      }
-    }
+    this.serviceQuantity.forEach((sq: any) => {
+      totalPrice += this.services.find((s: any) => s.id === sq.id).cijena * sq.kolicina;
+    });
     return totalPrice;
   }
 }
