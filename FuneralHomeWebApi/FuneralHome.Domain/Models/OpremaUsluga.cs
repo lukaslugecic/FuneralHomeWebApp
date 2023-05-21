@@ -14,6 +14,8 @@ public class OpremaUsluga : AggregateRoot<int>
 
     private int _vrstaOpremeUslugeId;
     private string _vrstaOpremeUslugeNaziv;
+    private bool _jeOprema;
+    private string _jedinicaMjereNaziv;
 
 
     public string Naziv { get => _naziv; set => _naziv = value; }
@@ -23,10 +25,12 @@ public class OpremaUsluga : AggregateRoot<int>
     public decimal Cijena { get => _cijena; set => _cijena = value; }
     public int VrstaOpremeUslugeId { get => _vrstaOpremeUslugeId; set => _vrstaOpremeUslugeId = value; }
     public string VrstaOpremeUslugeNaziv { get => _vrstaOpremeUslugeNaziv; set => _vrstaOpremeUslugeNaziv = value; }
+    public bool JeOprema { get => _jeOprema; set => _jeOprema = value; }
+    public string JedinicaMjereNaziv { get => _jedinicaMjereNaziv; set => _jedinicaMjereNaziv = value; }
 
 
-    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeUslugeNaziv, string naziv,
-        byte[]? slika, int? zaliha, string? opis, decimal cijena) : base(id)
+    public OpremaUsluga(int id, int vrstaOpremeId, string vrstaOpremeUslugeNaziv, bool jeOprema, string naziv,
+        byte[]? slika, int? zaliha, string? opis, string jedinicaMjereNaziv ,decimal cijena) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
@@ -46,6 +50,8 @@ public class OpremaUsluga : AggregateRoot<int>
         _opis = opis;
         _vrstaOpremeUslugeId = vrstaOpremeId;
         _vrstaOpremeUslugeNaziv = vrstaOpremeUslugeNaziv;
+        _jeOprema = jeOprema;
+        _jedinicaMjereNaziv = jedinicaMjereNaziv;
     }
 
     public override bool Equals(object? obj)
@@ -59,7 +65,9 @@ public class OpremaUsluga : AggregateRoot<int>
                 _opis == ou._opis &&
                 _zaliha == ou._zaliha &&
                 _vrstaOpremeUslugeId == ou._vrstaOpremeUslugeId &&
-                _vrstaOpremeUslugeNaziv == ou._vrstaOpremeUslugeNaziv;
+                _vrstaOpremeUslugeNaziv == ou._vrstaOpremeUslugeNaziv && 
+                _jeOprema == ou._jeOprema &&
+                _jedinicaMjereNaziv == ou._jedinicaMjereNaziv;
 
 
 

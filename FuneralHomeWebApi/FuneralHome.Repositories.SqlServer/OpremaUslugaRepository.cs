@@ -48,6 +48,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var model = _dbContext.OpremaUsluga
                           .Include(o => o.VrstaOpremeUsluge)
+                          .ThenInclude(v => v.JedinicaMjere)
                           .AsNoTracking()
                           .FirstOrDefault(o => o.IdOpremaUsluga.Equals(id))?
                           .ToDomain();
@@ -68,6 +69,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var model = _dbContext.OpremaUsluga
                           .Include(o => o.VrstaOpremeUsluge)
+                          .ThenInclude(v => v.JedinicaMjere)
                           .AsNoTracking()
                           .FirstOrDefault(o => o.IdOpremaUsluga.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
@@ -89,6 +91,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var models = _dbContext.OpremaUsluga
                            .Include(o => o.VrstaOpremeUsluge)
+                           .ThenInclude(v => v.JedinicaMjere)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
 
@@ -106,6 +109,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var models = _dbContext.OpremaUsluga
                            .Include(o => o.VrstaOpremeUsluge)
+                           .ThenInclude(v => v.JedinicaMjere)
                            .Where(o => o.VrstaOpremeUsluge.JeOprema == true)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
@@ -124,6 +128,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var models = _dbContext.OpremaUsluga
                            .Include(o => o.VrstaOpremeUsluge)
+                           .ThenInclude(v => v.JedinicaMjere)
                            .Where(o => o.VrstaOpremeUsluge.JeOprema == false)
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
@@ -143,6 +148,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var models = _dbContext.OpremaUsluga
                            .Include(o => o.VrstaOpremeUsluge)
+                           .ThenInclude(v => v.JedinicaMjere)
                            .Where(o => o.VrstaOpremeUslugeId.Equals(id))
                            .AsNoTracking()
                            .Select(Mapping.ToDomain);
@@ -161,6 +167,7 @@ public class OpremaUslugaRepository : IOpremaUslugaRepository
         {
             var models = _dbContext.OpremaUsluga
                            .Include(o => o.VrstaOpremeUsluge)
+                           .ThenInclude(v => v.JedinicaMjere)
                            .Select(Mapping.ToDomain);
 
             return Results.OnSuccess(models);

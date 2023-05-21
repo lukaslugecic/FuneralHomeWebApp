@@ -11,6 +11,7 @@ public class OpremaUsluga
     public int Id { get; set; }
     public int VrstaOpremeUslugeId { get; set; }
     public string VrstaOpremeUslugeNaziv { get; set; } = string.Empty;
+    public bool JeOprema { get; set; }
 
     [Required(ErrorMessage = "Name can't be null")]
     [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
@@ -18,6 +19,10 @@ public class OpremaUsluga
     public byte[]? Slika { get; set; }
     public int? Zaliha { get; set; }
     public string? Opis { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Measuring unit can't be null")]
+    [StringLength(50, ErrorMessage = "Measuring unit can't be longer than 50 characters")]
+    public string JedinicaMjereNaziv { get; set; } = string.Empty;
     public decimal Cijena { get; set; }
 }
 
@@ -30,10 +35,12 @@ public static partial class DtoMapping
             Id = opremaUsluga.Id,
             VrstaOpremeUslugeId = opremaUsluga.VrstaOpremeUslugeId,
             VrstaOpremeUslugeNaziv = opremaUsluga.VrstaOpremeUslugeNaziv,
+            JeOprema = opremaUsluga.JeOprema,
             Naziv = opremaUsluga.Naziv,
             Slika = opremaUsluga.Slika,
             Zaliha = opremaUsluga.Zaliha,
             Opis = opremaUsluga.Opis,
+            JedinicaMjereNaziv = opremaUsluga.JedinicaMjereNaziv,
             Cijena = opremaUsluga.Cijena
         };
 
@@ -42,10 +49,12 @@ public static partial class DtoMapping
             opremaUsluga.Id,
             opremaUsluga.VrstaOpremeUslugeId,
             opremaUsluga.VrstaOpremeUslugeNaziv,
+            opremaUsluga.JeOprema,
             opremaUsluga.Naziv,
             opremaUsluga.Slika,
             opremaUsluga.Zaliha,
             opremaUsluga.Opis,
+            opremaUsluga.JedinicaMjereNaziv,
             opremaUsluga.Cijena
        );
 }

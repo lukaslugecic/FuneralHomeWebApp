@@ -156,7 +156,7 @@ export class FuneralCustomerFormComponent implements OnInit {
       this.equipmentQuantity.forEach((eq: any) => {
         if(eq.kolicina > 0){
           pogrebOprema.push({
-            oprema: this.equipment.find((e: any) => e.id === eq.id),
+            opremaUsluga: this.equipment.find((e: any) => e.id === eq.id),
             kolicina: eq.kolicina
           });
         }

@@ -1,11 +1,14 @@
 export interface IPogrebOpremaData {
-    oprema: {
+    opremaUsluga: {
         id: number;
         naziv: string;
-        vrstaOpremeId: number;
-        vrstaOpremeNaziv: string;
-        slika: string;
-        zalihaOpreme: number;
+        vrstaOpremeUslugeId: number;
+        vrstaOpremeUslugeNaziv: string;
+        jeOprema: boolean;
+        slika: string | null;
+        zaliha: number | null;
+        opis: string | null;
+        jedinicaMjereNaziv: string,
         cijena: number;
     },
     kolicina: number;

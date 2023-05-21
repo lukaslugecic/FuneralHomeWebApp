@@ -91,6 +91,7 @@ public class PogrebRepository : IPogrebRepository
                           .Include(p => p.PogrebOpremaUsluge)
                           .ThenInclude(po => po.OpremaUsluga)
                           .ThenInclude(o => o.VrstaOpremeUsluge)
+                          .ThenInclude(v => v.JedinicaMjere)
                           .AsNoTracking()
                           .FirstOrDefault(p => p.IdPogreb.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();

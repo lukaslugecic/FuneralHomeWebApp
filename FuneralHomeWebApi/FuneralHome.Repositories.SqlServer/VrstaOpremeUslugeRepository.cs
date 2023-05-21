@@ -48,9 +48,10 @@ public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
         try
         {
             var vrsta = _dbContext.VrstaOpremeUsluge
-                                 .AsNoTracking()
-                                 .FirstOrDefault(v => v.IdVrstaOpremeUsluge.Equals(id))?
-                                 .ToDomain();
+                                  .Include(v => v.JedinicaMjere)
+                                  .AsNoTracking()
+                                  .FirstOrDefault(v => v.IdVrstaOpremeUsluge.Equals(id))?
+                                  .ToDomain();
 
             return vrsta is not null
             ? Results.OnSuccess(vrsta)
@@ -69,6 +70,7 @@ public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
         {
             var vrsta =
                 _dbContext.VrstaOpremeUsluge
+                          .Include(v => v.JedinicaMjere)
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
             return Results.OnSuccess(vrsta);
@@ -85,6 +87,7 @@ public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
         {
             var vrsta =
                 _dbContext.VrstaOpremeUsluge
+                          .Include(v => v.JedinicaMjere)
                           .Where(v => v.JeOprema == true)
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);
@@ -102,6 +105,7 @@ public class VrstaOpremeUslugeRepository : IVrstaOpremeUslugeRepository
         {
             var vrsta =
                 _dbContext.VrstaOpremeUsluge
+                          .Include(v => v.JedinicaMjere)
                           .Where(v => v.JeOprema == false)
                           .AsNoTracking()
                           .Select(Mapping.ToDomain);

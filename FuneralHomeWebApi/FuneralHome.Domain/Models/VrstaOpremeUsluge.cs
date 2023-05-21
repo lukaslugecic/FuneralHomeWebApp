@@ -8,12 +8,14 @@ public class VrstaOpremeUsluge : Entity<int>
     private string _naziv;
     private bool _jeOprema;
     private int _jedinicaMjereId;
+    private string _jedinicaMjereNaziv;
     public string Naziv { get => _naziv; set => _naziv = value; }
     public bool JeOprema { get => _jeOprema; set => _jeOprema = value; }
     public int JedinicaMjereId { get => _jedinicaMjereId; set => _jedinicaMjereId = value; }
+    public string JedinicaMjereNaziv { get => _jedinicaMjereNaziv; set => _jedinicaMjereNaziv = value; }
 
 
-    public VrstaOpremeUsluge(int id, string naziv, bool jeOprema, int jedinicaMjereId) : base(id)
+    public VrstaOpremeUsluge(int id, string naziv, bool jeOprema, int jedinicaMjereId, string jedinicaMjereNaziv) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
@@ -22,6 +24,7 @@ public class VrstaOpremeUsluge : Entity<int>
         _naziv = naziv;
         _jeOprema = jeOprema;
         _jedinicaMjereId = jedinicaMjereId;
+        _jedinicaMjereNaziv = jedinicaMjereNaziv;
     }
 
     public override bool Equals(object? obj)

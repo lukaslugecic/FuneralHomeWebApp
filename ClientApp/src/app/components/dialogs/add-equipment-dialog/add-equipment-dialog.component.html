@@ -1,12 +1,12 @@
 <div mat-dialog-title>
-    <h1>Odaberi opremu</h1>
+    <h1>{{ this.data.isEquipment ? 'Odaberi opremu' : 'Odaberi uslugu'}}</h1>
 </div>
 <form [formGroup]="equipmentForm" (ngSubmit)="onFormSubmit()">
     <div mat-dialog-content class="content">
         <div class="row">
             <mat-form-field appearance="outline">
-                <mat-label>Vrsta opreme</mat-label>
-                <mat-select formControlName="vrstaOpreme">
+                <mat-label>{{ this.data.isEquipment ? 'Vrsta opreme' : 'Vrsta usluge'}}</mat-label>
+                <mat-select formControlName="vrstaOpremeUsluge">
                     <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
                     </mat-option>
                 </mat-select>
@@ -18,8 +18,8 @@
         </div>
         <div class="row">
             <mat-form-field appearance="outline">
-                <mat-label>Oprema</mat-label>
-                <mat-select formControlName="opremaId">
+                <mat-label>{{ this.data.isEquipment ? 'Oprema' : 'Usluga'}}</mat-label>
+                <mat-select formControlName="opremaUslugaId">
                     <mat-option *ngFor="let val of filteredEquipmentToShow" [value]="val.id">{{val.naziv}}
                     </mat-option>
                 </mat-select>

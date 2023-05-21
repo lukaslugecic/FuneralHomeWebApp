@@ -83,7 +83,7 @@ public class Pogreb : AggregateRoot<int>
         if (pogrebOpremaUsluga is null)
             return false;
         pogrebOpremaUsluga.Kolicina--;
-        _ukupnaCijena -= pogrebOpremaUsluga.OpremaUsluga.Cijena;
+        _ukupnaCijena -= pogrebOpremaUsluga.Cijena;
         if (pogrebOpremaUsluga.Kolicina == 0)
             _pogrebOpremaUsluge.Remove(pogrebOpremaUsluga);
         return true;
@@ -100,7 +100,7 @@ public class Pogreb : AggregateRoot<int>
         // smanji ukupnu cijenu
         if (pogrebOpremaUsluga is not null && _pogrebOpremaUsluge.Remove(pogrebOpremaUsluga))
         {
-            _ukupnaCijena -= oprema.Cijena * pogrebOpremaUsluga.Kolicina;
+            _ukupnaCijena -= pogrebOpremaUsluga.Cijena * pogrebOpremaUsluga.Kolicina;
             return true;
         }
         return false;
@@ -113,7 +113,7 @@ public class Pogreb : AggregateRoot<int>
         _ukupnaCijena = 0;
         foreach (var pogrebOprema in _pogrebOpremaUsluge)
         {
-            _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina;
+            _ukupnaCijena += pogrebOprema.Cijena * pogrebOprema.Kolicina;
         }
     }
 

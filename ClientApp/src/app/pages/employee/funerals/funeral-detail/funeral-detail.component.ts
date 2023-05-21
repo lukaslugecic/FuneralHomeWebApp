@@ -39,7 +39,7 @@ export class FuneralDetailComponent implements OnInit {
 
   equipmentColumns: string[] = [
     'id',
-    'vrstaOpremeNaziv',
+    'vrstaOpremeUslugeNaziv',
     'naziv',
     'cijena',
     'kolicina',
@@ -52,6 +52,8 @@ export class FuneralDetailComponent implements OnInit {
     'vrstaUslugeNaziv',
     'naziv',
     'cijena',
+    'kolicina',
+    'add',
     'action'
   ];
 
@@ -82,8 +84,8 @@ export class FuneralDetailComponent implements OnInit {
     this._funeralService.getFuneralDetailById(this.funeralId).subscribe({
       next: (res) => {
         this.arrayOfDeaths.push(res);
-        this.arrayOfEquipment = res.pogrebOprema;
-        this.arrayOfServices = res.pogrebUsluga;
+        this.arrayOfEquipment = res.opremaUsluge.filter((e: any) => e.opremaUsluga.jeOprema === true);
+        this.arrayOfServices = res.opremaUsluge.filter((e: any) => e.opremaUsluga.jeOprema === false);
         this.dataSourceDeaths = new MatTableDataSource(this.arrayOfDeaths);
         this.dataSourceEquipment = new MatTableDataSource(this.arrayOfEquipment);
         this.dataSourceServices = new MatTableDataSource(this.arrayOfServices);
@@ -139,7 +141,8 @@ export class FuneralDetailComponent implements OnInit {
 
   addEquipment() {
     const dialogRef = this._dialog.open(AddEquipmentDialogComponent, {
-      data: this.funeralId,
+      data: { funeralId: this.funeralId,
+              isEquipment: true}
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -164,8 +167,9 @@ export class FuneralDetailComponent implements OnInit {
   }
 
   addService() {
-    const dialogRef = this._dialog.open(AddServiceDialogComponent, {
-      data: this.funeralId,
+    const dialogRef = this._dialog.open(AddEquipmentDialogComponent, {
+      data: { funeralId: this.funeralId,
+              isEquipment: false}
     });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
@@ -173,14 +177,6 @@ export class FuneralDetailComponent implements OnInit {
           this.getAllInfo();
         }
       },
-    });
-  }
-
-  removeService(data: any) {
-    this._funeralService.removeService(this.funeralId!, data).subscribe({
-      next: (res) => {
-        this.getAllInfo();
-      }
     });
   }
 

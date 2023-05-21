@@ -16,6 +16,7 @@ public class VrstaOpremeUsluge
 
     public bool JeOprema { get; set; }
     public int JedinicaMjereId { get; set; }
+    public string JedinicaMjereNaziv { get; set; } = string.Empty;
 
 }
 
@@ -28,7 +29,8 @@ public static partial class DtoMapping
             Id = vrstaOpremeUsluge.Id,
             Naziv = vrstaOpremeUsluge.Naziv,
             JeOprema = vrstaOpremeUsluge.JeOprema,
-            JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId
+            JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId,
+            JedinicaMjereNaziv = vrstaOpremeUsluge.JedinicaMjereNaziv
         };
 
     public static DomainModels.VrstaOpremeUsluge ToDomain(this VrstaOpremeUsluge vrstaOpremeUsluge)
@@ -36,6 +38,7 @@ public static partial class DtoMapping
             vrstaOpremeUsluge.Id,
             vrstaOpremeUsluge.Naziv,
             vrstaOpremeUsluge.JeOprema,
-            vrstaOpremeUsluge.JedinicaMjereId
+            vrstaOpremeUsluge.JedinicaMjereId,
+            vrstaOpremeUsluge.JedinicaMjereNaziv
        );
 }

@@ -183,10 +183,12 @@ public static class Mapping
             opremaUsluga.IdOpremaUsluga,
             opremaUsluga.VrstaOpremeUslugeId,
             opremaUsluga.VrstaOpremeUsluge.Naziv,
+            opremaUsluga.VrstaOpremeUsluge.JeOprema,
             opremaUsluga.Naziv,
             opremaUsluga.Slika,
             opremaUsluga.Zaliha,
             opremaUsluga.Opis,
+            opremaUsluga.VrstaOpremeUsluge.JedinicaMjere.Naziv,
             opremaUsluga.Cijena
            );
 
@@ -208,7 +210,8 @@ public static class Mapping
                 vrstaOpremeUsluge.IdVrstaOpremeUsluge,
                 vrstaOpremeUsluge.Naziv,
                 vrstaOpremeUsluge.JeOprema,
-                vrstaOpremeUsluge.JedinicaMjereId
+                vrstaOpremeUsluge.JedinicaMjereId,
+                vrstaOpremeUsluge.JedinicaMjere.Naziv
                 );
 
     public static DbModels.VrstaOpremeUsluge ToDbModel(this VrstaOpremeUsluge vrstaOpremeUsluge)
