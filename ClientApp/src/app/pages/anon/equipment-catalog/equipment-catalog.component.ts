@@ -52,6 +52,6 @@ export class EquipmentFilterPipe {
     if (!items || !filter) {
       return items;
     }
-    return items.filter((item: any) => item.vrstaOpremeId === filter);
+    return items.filter((item: any) => item.vrstaOpremeUslugeId === filter);
   }
 }
