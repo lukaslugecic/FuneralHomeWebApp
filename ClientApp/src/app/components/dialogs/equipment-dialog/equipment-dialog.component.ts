@@ -61,6 +61,7 @@ export class EquipmentDialogComponent implements OnInit {
           Slika: this.equipmentForm.value.slika,
           VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
           Opis: null
         }
         this._equipmentService
@@ -88,6 +89,7 @@ export class EquipmentDialogComponent implements OnInit {
           Slika: this.equipmentForm.value.slika,
           VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
           Opis: null
         }
         this._equipmentService.addEquipment(this.toUpdate).subscribe({

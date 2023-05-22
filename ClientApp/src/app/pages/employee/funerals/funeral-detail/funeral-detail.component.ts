@@ -4,7 +4,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AddEquipmentDialogComponent } from 'src/app/components/dialogs/add-equipment-dialog/add-equipment-dialog.component';
-import { AddServiceDialogComponent } from 'src/app/components/dialogs/add-service-dialog/add-service-dialog.component';
 import { DeathDialogComponent } from 'src/app/components/dialogs/death-dialog/death-dialog.component';
 import { FuneralDialogComponent } from 'src/app/components/dialogs/funeral-dialog/funeral-dialog.component';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';

@@ -56,6 +56,7 @@ export class ServiceDialogComponent implements OnInit {
           Cijena: this.serviceForm.value.cijena,
           VrstaOpremeUslugeId: this.serviceForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
           Slika: null,
           Zaliha: null
         }
@@ -84,6 +85,7 @@ export class ServiceDialogComponent implements OnInit {
           Cijena: this.serviceForm.value.cijena,
           VrstaOpremeUslugeId: this.serviceForm.value.vrstaOpremeUsluge,
           VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
           Slika: null,
           Zaliha: null
         }

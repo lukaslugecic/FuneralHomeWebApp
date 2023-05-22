@@ -6,6 +6,7 @@ export interface IOpremaUslugaData {
     Slika: string | null;
     Zaliha: number | null;
     Opis: string | null;
+    JedinicaMjereNaziv: string;
     Cijena: number;
   }
   

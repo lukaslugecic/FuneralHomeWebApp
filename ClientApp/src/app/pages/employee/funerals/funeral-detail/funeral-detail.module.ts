@@ -21,7 +21,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AddEquipmentDialogModule } from 'src/app/components/dialogs/add-equipment-dialog/add-equipment-dialog.module';
-import { AddServiceDialogModule } from 'src/app/components/dialogs/add-service-dialog/add-service-dialog.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 
@@ -48,7 +47,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatSortModule,
     MatSnackBarModule,
     AddEquipmentDialogModule,
-    AddServiceDialogModule,
     MatExpansionModule
   ]
 })

@@ -69,8 +69,10 @@ export class FuneralCustomerFormComponent implements OnInit {
       next: (res) => {
         this.services = res;
         this.services.forEach((service: any) => {
-          this.serviceQuantity.push({id: service.id, kolicina: 0});
+          this.serviceQuantity.push({id: service.id, kolicina: 0, mjera: service.jedinicaMjereNaziv, added: false});
+          this.uslugeForm.addControl(service.id.toString(), this._builder.control('',Validators.min(1)));
         });
+        console.log(this.serviceQuantity)
       }
     });
 
@@ -88,7 +90,8 @@ export class FuneralCustomerFormComponent implements OnInit {
         // u this.equipment spremi sve opreme kojima je zaliha > 0
         this.equipment = res.filter((equipment: any) => equipment.zaliha > 0);
         this.equipment.forEach((equipment: any) => {
-          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zaliha, kolicina: 0});
+          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zaliha, kolicina: 0, added: false});
+          this.opremaForm.addControl(equipment.id.toString(), this._builder.control('',Validators.min(1)));
         });
       }
     });
@@ -165,6 +168,14 @@ export class FuneralCustomerFormComponent implements OnInit {
           });
         }
       });
+      this.serviceQuantity.forEach((sq: any) => {
+        if(sq.kolicina > 0){
+          pogrebOprema.push({
+            opremaUsluga: this.services.find((s: any) => s.id === sq.id),
+            kolicina: sq.kolicina
+          });
+        }
+      });
 
       const pogrebUsluge : IPogrebUslugeData[] = [];
       for (const type of this.typesOfService) {
@@ -219,21 +230,40 @@ export class FuneralCustomerFormComponent implements OnInit {
     }
   }
 
-  addEquipment(id: number) {
-    this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina++;
-    // provjeri da li je količina veća od zalihe
-    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > this.equipment.find((e: any) => e.id === id).zaliha){
-      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
-      this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
-        duration: 3000,
-      });
+  
+  addedService(id: number){
+    return this.serviceQuantity.find((sq: any) => sq.id === id).added;
+  }
+
+  changeServiceQuantity(id: number, event: any) {
+    const quantityInput = event.target as HTMLInputElement;
+    const quantity = Number(quantityInput?.value);
+    if(quantity > 0){
+      this.serviceQuantity.find((sq: any) => sq.id === id).kolicina = quantity;
     }
   }
 
-  removeEquipment(id: number) {
-    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > 0){
-      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
+
+  addedEquipment(id: number){
+    return this.equipmentQuantity.find((eq: any) => eq.id === id).added;
+  }
+
+  changeEquipmentQuantity(id: number, event: any) {
+    const quantityInput = event.target as HTMLInputElement;
+    const quantity = Number(quantityInput?.value);
+    if(quantity > 0){
+      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
     }
+  }
+
+  addEquipment(id: number) {
+    this.equipmentQuantity.find((eq: any) => eq.id === id).added = true;
+  }
+
+  removeEquipment(id: number) {
+    const equipment = this.equipmentQuantity.find((eq: any) => eq.id === id);
+    equipment.added = false;
+    equipment.kolicina = 0;
   }
 
   getEquipmentQuantity(id: number) {
@@ -241,17 +271,17 @@ export class FuneralCustomerFormComponent implements OnInit {
   }
 
   addService(id: number) {
-    this.serviceQuantity.find((eq: any) => eq.id === id).kolicina++;
+    this.serviceQuantity.find((eq: any) => eq.id === id).added = true;
   }
 
   removeService(id: number) {
-    if(this.serviceQuantity.find((eq: any) => eq.id === id).kolicina > 0){
-      this.serviceQuantity.find((eq: any) => eq.id === id).kolicina--;
-    }
+    const service = this.serviceQuantity.find((eq: any) => eq.id === id);
+    service.added = false;
+    service.kolicina = 0;
   }
 
-  getServicesQuantity(id: number) {
-    return this.serviceQuantity.find((s:any) => s.id === id).kolicina;
+  getServiceUnit(id: number) {
+    return this.serviceQuantity.find((s:any) => s.id === id).mjera;
   }
 
   getTotalPrice() {
