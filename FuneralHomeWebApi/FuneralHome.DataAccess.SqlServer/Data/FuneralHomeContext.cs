@@ -107,7 +107,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.JedinicaMjere)
                     .WithMany(p => p.VrstaOpremeUsluge)
                     .HasForeignKey(d => d.JedinicaMjereId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_VrstaOpremeUsluge_JedinicaMjere");
             });
 
