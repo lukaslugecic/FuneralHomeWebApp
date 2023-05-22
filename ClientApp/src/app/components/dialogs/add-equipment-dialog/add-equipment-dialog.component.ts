@@ -27,6 +27,7 @@ export class AddEquipmentDialogComponent implements OnInit {
   equipmentOrServices: any[] = [];
   equipmentToShow: Oprema[] = [];
   filteredEquipmentToShow: Oprema[] = [];
+  mjera: string = 'Količina'
 
 
   constructor(
@@ -66,6 +67,7 @@ export class AddEquipmentDialogComponent implements OnInit {
     this.equipmentForm.get('vrstaOpremeUsluge')?.valueChanges.subscribe(value => {
       // Filter the equipment options based on the selected type
       this.filteredEquipmentToShow = this.equipmentToShow.filter(e => e.vrstaOpremeUsluge === value);
+      this.mjera = this.types.find((type: any) => type.id === value)?.jedinicaMjereNaziv ?? 'Mjera';
     });
   }
 

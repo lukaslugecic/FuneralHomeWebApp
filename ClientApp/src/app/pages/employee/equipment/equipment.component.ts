@@ -26,7 +26,7 @@ export class EquipmentComponent implements OnInit {
 
   selectedType: any =  0;
   types: IVrstaOpremeUslugeData[] = [
-    { id: 0, naziv: 'Sva oprema', jeOprema: true }
+    { id: 0, naziv: 'Sva oprema', jeOprema: true , jedinicaMjereId: 0, jedinicaMjereNaziv: 'Količina'}
   ];
 
   dataSource!: MatTableDataSource<any>;

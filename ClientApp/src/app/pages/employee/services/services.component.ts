@@ -25,7 +25,7 @@ export class ServicesComponent implements OnInit {
 
   selectedType: any = 0;
   types: IVrstaOpremeUslugeData[] = [
-    { id: 0, naziv: 'Sve usluge', jeOprema: false}
+    { id: 0, naziv: 'Sve usluge', jeOprema: false, jedinicaMjereId: 0, jedinicaMjereNaziv: 'Mjera'}
   ];
 
   dataSource!: MatTableDataSource<any>;
