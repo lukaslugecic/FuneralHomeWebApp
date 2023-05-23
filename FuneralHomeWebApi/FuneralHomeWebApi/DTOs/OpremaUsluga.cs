@@ -19,10 +19,7 @@ public class OpremaUsluga
     public byte[]? Slika { get; set; }
     public int? Zaliha { get; set; }
     public string? Opis { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "Measuring unit can't be null")]
-    [StringLength(50, ErrorMessage = "Measuring unit can't be longer than 50 characters")]
-    public string JedinicaMjereNaziv { get; set; } = string.Empty;
+    public string? JedinicaMjereNaziv { get; set; } = string.Empty;
     public decimal Cijena { get; set; }
 }
 

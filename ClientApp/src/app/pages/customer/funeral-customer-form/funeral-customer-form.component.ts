@@ -252,7 +252,15 @@ export class FuneralCustomerFormComponent implements OnInit {
     const quantityInput = event.target as HTMLInputElement;
     const quantity = Number(quantityInput?.value);
     if(quantity > 0){
-      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
+      //this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
+      if(this.equipmentQuantity.find((eq: any) => eq.id === id).zaliha < quantity){
+        this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
+      }
+
     }
   }
 
@@ -271,7 +279,12 @@ export class FuneralCustomerFormComponent implements OnInit {
   }
 
   addService(id: number) {
-    this.serviceQuantity.find((eq: any) => eq.id === id).added = true;
+    const service = this.serviceQuantity.find((eq: any) => eq.id === id);
+    service.added = true;
+    if(service.mjera === ""){
+      service.kolicina = 1;
+    }
+
   }
 
   removeService(id: number) {

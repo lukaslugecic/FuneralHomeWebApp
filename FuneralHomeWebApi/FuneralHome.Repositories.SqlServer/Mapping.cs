@@ -188,7 +188,7 @@ public static class Mapping
             opremaUsluga.Slika,
             opremaUsluga.Zaliha,
             opremaUsluga.Opis,
-            opremaUsluga.VrstaOpremeUsluge.JedinicaMjere.Naziv,
+            opremaUsluga.VrstaOpremeUsluge.JedinicaMjereId is not null ? opremaUsluga.VrstaOpremeUsluge.JedinicaMjere.Naziv : "",
             opremaUsluga.Cijena
            );
 
@@ -211,7 +211,7 @@ public static class Mapping
                 vrstaOpremeUsluge.Naziv,
                 vrstaOpremeUsluge.JeOprema,
                 vrstaOpremeUsluge.JedinicaMjereId,
-                vrstaOpremeUsluge.JedinicaMjere.Naziv
+                vrstaOpremeUsluge.JedinicaMjereId is not null ? vrstaOpremeUsluge.JedinicaMjere.Naziv : ""
                 );
 
     public static DbModels.VrstaOpremeUsluge ToDbModel(this VrstaOpremeUsluge vrstaOpremeUsluge)

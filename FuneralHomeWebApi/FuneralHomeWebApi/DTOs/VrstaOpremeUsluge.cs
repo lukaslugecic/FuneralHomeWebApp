@@ -15,8 +15,8 @@ public class VrstaOpremeUsluge
     public string Naziv { get; set; } = string.Empty;
 
     public bool JeOprema { get; set; }
-    public int JedinicaMjereId { get; set; }
-    public string JedinicaMjereNaziv { get; set; } = string.Empty;
+    public int? JedinicaMjereId { get; set; }
+    public string? JedinicaMjereNaziv { get; set; } = string.Empty;
 
 }
 
