@@ -40,9 +40,12 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
             modelBuilder.Entity<OpremaUsluga>(entity =>
             {
-                entity.HasOne(d => d.VrstaOpreme)
-                    .WithMany(p => p.Oprema)
-                    .HasForeignKey(d => d.VrstaOpremeId)
+                entity.HasKey(e => e.IdOpremaUsluga)
+                    .HasName("PK_Oprema");
+
+                entity.HasOne(d => d.VrstaOpremeUsluge)
+                    .WithMany(p => p.OpremaUsluga)
+                    .HasForeignKey(d => d.VrstaOpremeUslugeId)
                     .HasConstraintName("FK_Oprema_VrstaOpreme");
             });
 
@@ -98,10 +101,13 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
             modelBuilder.Entity<VrstaOpremeUsluge>(entity =>
             {
-                entity.HasOne(d => d.VrstaUsluge)
-                    .WithMany(p => p.Usluga)
-                    .HasForeignKey(d => d.VrstaUslugeId)
-                    .HasConstraintName("FK_Usluga_VrstaUsluge");
+                entity.HasKey(e => e.IdVrstaOpremeUsluge)
+                    .HasName("PK_VrstaOpreme");
+
+                entity.HasOne(d => d.JedinicaMjere)
+                    .WithMany(p => p.VrstaOpremeUsluge)
+                    .HasForeignKey(d => d.JedinicaMjereId)
+                    .HasConstraintName("FK_VrstaOpremeUsluge_JedinicaMjere");
             });
 
             OnModelCreatingPartial(modelBuilder);
