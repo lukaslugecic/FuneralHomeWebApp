@@ -23,6 +23,8 @@ import { InsuranceService } from 'src/app/services/insurance/insurance.service';
 })
 export class FuneralCustomerFormComponent implements OnInit {
  
+  initialValue = 1;
+
   userDeaths: any[] = [];
   typesOfFuneral = [
     { value: true, naziv: 'Kremiranje' },
@@ -72,7 +74,7 @@ export class FuneralCustomerFormComponent implements OnInit {
         this.services = res;
         this.services.forEach((service: any) => {
           this.serviceQuantity.push({id: service.id, kolicina: 0, mjera: service.jedinicaMjereNaziv, added: false});
-          this.uslugeForm.addControl(service.id.toString(), this._builder.control('',Validators.min(1)));
+          this.uslugeForm.addControl(service.id.toString(), this._builder.control(this.initialValue, Validators.min(1)));
         });
         console.log(this.serviceQuantity)
       }
@@ -93,7 +95,7 @@ export class FuneralCustomerFormComponent implements OnInit {
         this.equipment = res.filter((equipment: any) => equipment.zaliha > 0);
         this.equipment.forEach((equipment: any) => {
           this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zaliha, kolicina: 0, added: false});
-          this.opremaForm.addControl(equipment.id.toString(), this._builder.control('',Validators.min(1)));
+          this.opremaForm.addControl(equipment.id.toString(), this._builder.control(1, Validators.min(1)));
         });
       }
     });
@@ -107,6 +109,7 @@ export class FuneralCustomerFormComponent implements OnInit {
     return this.equipment.filter((equipment: any) => equipment.vrstaOpremeUslugeId === typeOfEquipmentId);
   }
 
+  
   deathForm = this._builder.group({
     smrtniSlucaj: this._builder.group({
       smrtniSlucajId: this._builder.control('',Validators.required),
@@ -276,14 +279,17 @@ export class FuneralCustomerFormComponent implements OnInit {
     }
   }
 
-  addEquipment(id: number) {
-    this.equipmentQuantity.find((eq: any) => eq.id === id).added = true;
+  addEquipment(id: number, event: any) {
+    const equipment = this.equipmentQuantity.find((eq: any) => eq.id === id);
+    equipment.added = true;
+    equipment.kolicina = 1;
   }
 
   removeEquipment(id: number) {
     const equipment = this.equipmentQuantity.find((eq: any) => eq.id === id);
     equipment.added = false;
     equipment.kolicina = 0;
+    this.opremaForm.controls[id].setValue(1);
   }
 
   getEquipmentQuantity(id: number) {
@@ -293,16 +299,14 @@ export class FuneralCustomerFormComponent implements OnInit {
   addService(id: number) {
     const service = this.serviceQuantity.find((eq: any) => eq.id === id);
     service.added = true;
-    if(service.mjera === ""){
-      service.kolicina = 1;
-    }
-
+    service.kolicina = 1;
   }
 
   removeService(id: number) {
     const service = this.serviceQuantity.find((eq: any) => eq.id === id);
     service.added = false;
     service.kolicina = 0;
+    this.uslugeForm.controls[id].setValue(1);
   }
 
   getServiceUnit(id: number) {
