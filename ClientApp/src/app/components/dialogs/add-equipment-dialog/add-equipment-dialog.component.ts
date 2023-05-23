@@ -72,6 +72,11 @@ export class AddEquipmentDialogComponent implements OnInit {
   }
 
   onFormSubmit() {
+    if(this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.jedinicaMjereNaziv == ""){
+      this.equipmentForm.patchValue({
+        kolicina: 1
+      })
+    }
     // provjeri je li kolicina veca od zalihe opreme
     const kolicina = this.equipmentForm.get('kolicina')?.value;
     const zaliha = this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.zaliha;

@@ -179,7 +179,13 @@ export class FuneralDetailComponent implements OnInit {
     });
   }
 
-  incrementEquipment(id: number){
+  incrementEquipment(id: number, mjera: string, kolicina: number){
+    if(mjera == '' && kolicina == 1){
+      this._snackBar.open('Usluga je već dodana!', 'Zatvori', {
+        duration: 3000,
+      });
+      return;
+    }
     this._funeralService.incrementEquipment(this.funeralId!, id).subscribe({
       next: (res) => {
         this.getAllInfo();
