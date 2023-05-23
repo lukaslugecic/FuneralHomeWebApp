@@ -120,18 +120,18 @@ public class Pogreb : AggregateRoot<int>
 
     public void CalculateUkupnaCijena(decimal popust, string paket)
     {
-
-        /*
-         * PROVJERITI KOJE JE VRSTE OPREMA USLUGA
-         */
-
         _ukupnaCijena = 0;
         foreach (var pogrebOprema in _pogrebOpremaUsluge)
         {
-           _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina * popust;
+            if(paket.Equals("Oprema") && pogrebOprema.OpremaUsluga.JeOprema)
+                _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina * popust;
+            else if(paket.Equals("Usluge") && !pogrebOprema.OpremaUsluga.JeOprema)
+                _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina * popust;
+            else if(paket.Equals("Potpuni"))
+                _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina * popust;
+            else
+                _ukupnaCijena += pogrebOprema.OpremaUsluga.Cijena * pogrebOprema.Kolicina;
         }
-        
-
     }
 
 
@@ -142,7 +142,8 @@ public class Pogreb : AggregateRoot<int>
          * broj rata - (danasnji datum - datum ugovaranja).broj mjeseci
          * kroz broj rata
          */
-        var brojMjeseci = (DateTime.Now - osiguranje.DatumUgovaranja).Days / 30;
+        var brojMjeseci = (SmrtniSlucaj?.DatumSmrtiPok - osiguranje.DatumUgovaranja)?.Days / 30 ??
+                          (DateTime.Now - osiguranje.DatumUgovaranja).Days / 30;
         var brojNeOtplacenihRata = osiguranje.BrojRata - brojMjeseci;
         if(brojNeOtplacenihRata < 0)
             brojNeOtplacenihRata = 0;
