@@ -46,8 +46,7 @@ public static class Mapping
            osiguranje.PlacanjeNaRate,
            osiguranje.BrojRata,
            osiguranje.PaketOsiguranjaId,
-           osiguranje.PaketOsiguranja.Naziv,
-           osiguranje.PaketOsiguranja.Cijena
+           osiguranje.PaketOsiguranja.Naziv
        );
 
     public static DbModels.Osiguranje ToDbModel(this Osiguranje osiguranje)
@@ -64,16 +63,14 @@ public static class Mapping
     public static PaketOsiguranja ToDomain(this DbModels.PaketOsiguranja paket)
         => new PaketOsiguranja(
                 paket.IdPaketOsiguranja,
-                paket.Naziv,
-                paket.Cijena
+                paket.Naziv
            );
 
     public static DbModels.PaketOsiguranja ToDbModel(this PaketOsiguranja paket)
         => new DbModels.PaketOsiguranja()
         {
             IdPaketOsiguranja = paket.Id,
-            Naziv = paket.Naziv,
-            Cijena = paket.Cijena
+            Naziv = paket.Naziv
         };
 
     public static JedinicaMjere ToDomain(this DbModels.JedinicaMjere jedinicaMjere)

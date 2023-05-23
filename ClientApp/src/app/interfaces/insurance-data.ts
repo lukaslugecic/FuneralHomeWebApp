@@ -8,5 +8,4 @@ export interface IInsuranceData {
     BrojRata: number;
     PaketOsiguranjaId: number;
     NazivPaketa: string;
-    CijenaPaketa: number;
 }

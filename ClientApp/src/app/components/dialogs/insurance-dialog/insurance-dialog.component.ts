@@ -99,7 +99,6 @@ export class InsuranceDialogComponent implements OnInit {
           BrojRata: this.insuranceForm.value.brojRata,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
-          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
         }
         this._insuranceService
           .updateInsurance(this.data.id, this.toUpdate)
@@ -129,7 +128,6 @@ export class InsuranceDialogComponent implements OnInit {
           BrojRata: this.insuranceForm.value.brojRata,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
-          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
         }
         this._insuranceService.addInsurance(this.toUpdate).subscribe({
           next: (val: any) => {

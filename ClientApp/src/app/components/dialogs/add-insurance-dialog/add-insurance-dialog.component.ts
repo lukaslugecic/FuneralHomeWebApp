@@ -64,7 +64,6 @@ export class AddInsuranceDialogComponent implements OnInit {
           PlacanjeNaRate: this.insuranceForm.value.brojRata !== 1,
           PaketOsiguranjaId: this.insuranceForm.value.paketOsiguranjaId,
           NazivPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.naziv ?? "",
-          CijenaPaketa: this.packages.find(x => x.id == this.insuranceForm.value.paketOsiguranjaId)?.cijena ?? 0,
           BrojRata: this.insuranceForm.value.brojRata
         }
         this._insuranceService.addInsurance(this.toAdd).subscribe({

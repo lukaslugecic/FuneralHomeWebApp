@@ -13,7 +13,6 @@ public class Osiguranje : AggregateRoot<int>
     private string _prezime;
     private int _paketOsiguranjaId;
     private string _nazivPaketa;
-    private decimal _cijenaPaketa;
 
     public DateTime DatumUgovaranja { get => _datumUgoravaranja; set => _datumUgoravaranja = value; }
     public bool PlacanjeNaRate { get => _placanjeNaRate; set => _placanjeNaRate = value; }
@@ -23,12 +22,11 @@ public class Osiguranje : AggregateRoot<int>
     public int BrojRata { get => _brojRata; set => _brojRata = value; }
     public int PaketOsiguranjaId { get => _paketOsiguranjaId; set => _paketOsiguranjaId = value; }
     public string NazivPaketa { get => _nazivPaketa; set => _nazivPaketa = value; }
-    public decimal CijenaPaketa { get => _cijenaPaketa; set => _cijenaPaketa = value; }
 
 
 
     public Osiguranje(int id, int korisnikId, string ime, string prezime, DateTime datumUgovaranja, bool placanjeNaRate,
-        int brojRata, int paketOsiguranjaId, string nazivPaketa, decimal cijenaPaketa) : base(id)
+        int brojRata, int paketOsiguranjaId, string nazivPaketa) : base(id)
     {
         _ime = ime;
         _prezime = prezime;
@@ -38,7 +36,6 @@ public class Osiguranje : AggregateRoot<int>
         _brojRata = brojRata;
         _paketOsiguranjaId = paketOsiguranjaId;
         _nazivPaketa = nazivPaketa;
-        _cijenaPaketa = cijenaPaketa;
     }
 
     public override bool Equals(object? obj)

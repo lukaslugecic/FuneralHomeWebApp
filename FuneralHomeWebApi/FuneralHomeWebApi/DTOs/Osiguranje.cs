@@ -20,7 +20,6 @@ public class Osiguranje
     [Required(ErrorMessage = "Name can't be null")]
     [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
     public string NazivPaketa { get; set; } = string.Empty;
-    public decimal CijenaPaketa { get; set; }
 }
 
 
@@ -37,8 +36,7 @@ public static partial class DtoMapping
             PlacanjeNaRate = osiguranje.PlacanjeNaRate,
             BrojRata = osiguranje.BrojRata,
             PaketOsiguranjaId = osiguranje.PaketOsiguranjaId,
-            NazivPaketa = osiguranje.NazivPaketa,
-            CijenaPaketa = osiguranje.CijenaPaketa
+            NazivPaketa = osiguranje.NazivPaketa
 
         };
 
@@ -52,7 +50,6 @@ public static partial class DtoMapping
             osiguranje.PlacanjeNaRate,
             osiguranje.BrojRata,
             osiguranje.PaketOsiguranjaId,
-            osiguranje.NazivPaketa,
-            osiguranje.CijenaPaketa
+            osiguranje.NazivPaketa
         );
 }

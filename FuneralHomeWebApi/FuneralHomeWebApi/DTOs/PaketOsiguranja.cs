@@ -13,7 +13,6 @@ public class PaketOsiguranja
     [Required(ErrorMessage = "Name can't be null")]
     [StringLength(50, ErrorMessage = "Name can't be longer than 50 characters")]
     public string Naziv { get; set; } = string.Empty;
-    public decimal Cijena { get; set; }
 
 }
 
@@ -24,14 +23,12 @@ public static partial class DtoMapping
         => new PaketOsiguranja()
         {
             Id = paket.Id,
-            Naziv = paket.Naziv,
-            Cijena = paket.Cijena
+            Naziv = paket.Naziv
         };
 
     public static DomainModels.PaketOsiguranja ToDomain(this PaketOsiguranja paket)
         => new DomainModels.PaketOsiguranja(
             paket.Id,
-            paket.Naziv,
-            paket.Cijena
+            paket.Naziv
        );
 }

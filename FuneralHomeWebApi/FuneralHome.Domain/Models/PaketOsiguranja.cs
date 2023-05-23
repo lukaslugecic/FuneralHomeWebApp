@@ -7,13 +7,11 @@ public class PaketOsiguranja : Entity<int>
 {
 
     private string _naziv;
-    private decimal _cijena;
 
     public string Naziv { get => _naziv; set => _naziv = value; }
-    public decimal Cijena { get => _cijena; set => _cijena = value; }
   
 
-    public PaketOsiguranja(int id, string naziv, decimal cijena) : base(id)
+    public PaketOsiguranja(int id, string naziv) : base(id)
     {
         if (string.IsNullOrEmpty(naziv))
         {
@@ -21,7 +19,6 @@ public class PaketOsiguranja : Entity<int>
         }
 
         _naziv = naziv;
-        _cijena = cijena;
     }
 
     public override bool Equals(object? obj)
@@ -29,14 +26,13 @@ public class PaketOsiguranja : Entity<int>
         return obj is not null &&
                 obj is PaketOsiguranja paket &&
                 _id == paket._id &&
-                _naziv == paket._naziv &&
-                _cijena == paket._cijena;
+                _naziv == paket._naziv;
 
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _naziv, _cijena);
+        return HashCode.Combine(_id, _naziv);
     }
 
     public override Result IsValid()
