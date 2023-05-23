@@ -24,6 +24,7 @@ export class FuneralsComponent implements OnInit {
     'ime',
     'prezime',
     'ukupnaCijena',
+    'datumUgovaranja',
     'action'
     ];
 

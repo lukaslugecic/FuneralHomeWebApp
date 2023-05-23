@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
+import { InsuranceService } from 'src/app/services/insurance/insurance.service';
 
 @Component({
   selector: 'app-funeral-customer-form',
@@ -38,6 +39,7 @@ export class FuneralCustomerFormComponent implements OnInit {
     private _deathService: DeathService,
     private _equipmentService: EquipmentService,
     private _funeralService: FuneralService,
+    private _insuranceService: InsuranceService,
     private _authService: AuthService,
     private readonly _snackBar: MatSnackBar,
     private _dateAdapter: DateAdapter<Date>,
@@ -201,6 +203,7 @@ export class FuneralCustomerFormComponent implements OnInit {
         datumPogreba: new Date(new Date(this.smrtniSlucajForm.value.datumPogreba).getTime() 
         - new Date(this.smrtniSlucajForm.value.datumPogreba).getTimezoneOffset() * 60000),
         kremacija: this.smrtniSlucajForm.value.kremacija,
+        datumUgovaranja: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000),
         ukupnaCijena: 0,
       };
       
@@ -216,6 +219,15 @@ export class FuneralCustomerFormComponent implements OnInit {
             duration: 3000,
           });
           this._router.navigate(['/profile']);
+          this._insuranceService.getInsuranceByDeathId(this.smrtniSlucajForm.value.smrtniSlucajId).subscribe({
+            next: (res) => {
+              if(res.length > 0){
+                this._snackBar.open(`Isplačeno je osiguranje!`, 'U redu', {
+                  duration: 3000,
+                });
+              }
+            }
+          });
         },
         error: (err) => {
           this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {

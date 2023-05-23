@@ -19,6 +19,7 @@ public class PogrebSmrtniSlucaj
     public int KorisnikId { get; set; }
     public string Ime { get; set; } = string.Empty;
     public string Prezime { get; set; } = string.Empty;
+    public DateTime DatumUgovaranja { get; set; }
     public decimal UkupnaCijena { get; set; }
 }
 
@@ -34,6 +35,7 @@ public static partial class DtoMapping
             PrezimePok = pogreb.PrezimePok,
             DatumSmrti = pogreb.DatumSmrti,
             DatumPogreba = pogreb.DatumPogreba,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             Kremacija = pogreb.Kremacija,
             UkupnaCijena = pogreb.UkupnaCijena,
             KorisnikId = pogreb.KorisnikId,
@@ -53,6 +55,7 @@ public static partial class DtoMapping
             pogreb.UkupnaCijena,
             pogreb.KorisnikId,
             pogreb.Ime,
-            pogreb.Prezime
+            pogreb.Prezime,
+            pogreb.DatumUgovaranja
         );
 }

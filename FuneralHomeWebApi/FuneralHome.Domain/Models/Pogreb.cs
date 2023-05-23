@@ -8,21 +8,24 @@ public class Pogreb : AggregateRoot<int>
     private int _smrtniSlucajId;
     private DateTime _datumPogreba;
     private bool _kremacija;
+    private DateTime _datumUgovaranja;
     private decimal _ukupnaCijena;
     private readonly List<PogrebOpremaUsluge> _pogrebOpremaUsluge;
-    private SmrtniSlucaj? _smrtniSlucaj; // readonly?
+    private SmrtniSlucaj? _smrtniSlucaj;
     private Korisnik? _korisnik;
+
 
     public int SmrtniSlucajId { get => _smrtniSlucajId; set => _smrtniSlucajId = value; }
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
+    public DateTime DatumUgovaranja { get => _datumUgovaranja; set => _datumUgovaranja = value; }
     public decimal UkupnaCijena { get => _ukupnaCijena; set => _ukupnaCijena = value; }
     public IReadOnlyList<PogrebOpremaUsluge> PogrebOpremaUsluge => _pogrebOpremaUsluge.ToList();
     public SmrtniSlucaj? SmrtniSlucaj { get => _smrtniSlucaj; set => _smrtniSlucaj = value; }
     public Korisnik? Korisnik { get => _korisnik; set => _korisnik = value; }
 
 
-    public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija, decimal ukupnaCijena,
+    public Pogreb(int id, int smrtniSlucajId, DateTime datumPogreba, bool kremacija, DateTime datumUgovaranja, decimal ukupnaCijena,
         Korisnik? korisnik = null,
         SmrtniSlucaj? smrtniSlucaj = null,
         IEnumerable<PogrebOpremaUsluge>? pogrebOpremaUsluga = null
@@ -32,6 +35,7 @@ public class Pogreb : AggregateRoot<int>
         _datumPogreba = datumPogreba;
         _kremacija = kremacija;
         _korisnik = korisnik;
+        _datumUgovaranja = datumUgovaranja;
         _ukupnaCijena = ukupnaCijena;
         _smrtniSlucaj = smrtniSlucaj;
         _pogrebOpremaUsluge = pogrebOpremaUsluga?.ToList() ?? new List<PogrebOpremaUsluge>();
@@ -160,6 +164,7 @@ public class Pogreb : AggregateRoot<int>
                _smrtniSlucajId == pogreb._smrtniSlucajId &&
                _datumPogreba == pogreb._datumPogreba &&
                _kremacija == pogreb._kremacija &&
+               _datumUgovaranja == pogreb._datumUgovaranja &&
                _ukupnaCijena == pogreb._ukupnaCijena &&
                _pogrebOpremaUsluge.SequenceEqual(pogreb._pogrebOpremaUsluge);
                //&& _smrtniSlucaj.Equals(pogreb.SmrtniSlucaj);
@@ -167,7 +172,7 @@ public class Pogreb : AggregateRoot<int>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_id, _smrtniSlucajId ,_datumPogreba ,_kremacija, _ukupnaCijena, _pogrebOpremaUsluge);
+        return HashCode.Combine(_id, _smrtniSlucajId ,_datumPogreba ,_kremacija, _datumUgovaranja, _ukupnaCijena, _pogrebOpremaUsluge);
     }
 
     public override Result IsValid()

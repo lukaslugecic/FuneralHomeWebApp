@@ -15,6 +15,7 @@ public class PogrebSmrtniSlucaj : AggregateRoot<int>
     private int _korisnikId;
     private string _ime;
     private string _prezime;
+    private DateTime _datumUgovaranja;
     
     public DateTime DatumPogreba { get => _datumPogreba; set => _datumPogreba = value; }
     public bool Kremacija { get => _kremacija; set => _kremacija = value; }
@@ -26,10 +27,11 @@ public class PogrebSmrtniSlucaj : AggregateRoot<int>
     public int KorisnikId { get => _korisnikId; set => _korisnikId = value; }
     public string Ime { get => _ime; set => _ime = value; }
     public string Prezime { get => _prezime; set => _prezime = value; }
+    public DateTime DatumUgovaranja { get => _datumUgovaranja; set => _datumUgovaranja = value; }
 
 
     public PogrebSmrtniSlucaj(int id, int smrtniSlucajId, string imePok, string prezimePok, DateTime datumSmrti, DateTime datumPogreba, bool kremacija, decimal ukupnaCijena,
-        int korisnikId, string ime, string prezime) : base(id)
+        int korisnikId, string ime, string prezime, DateTime datumUgovaranja) : base(id)
     {
         if (string.IsNullOrEmpty(imePok))
         {
@@ -61,6 +63,7 @@ public class PogrebSmrtniSlucaj : AggregateRoot<int>
         _korisnikId = korisnikId;
         _ime = ime;
         _prezime = prezime;
+        _datumUgovaranja = datumUgovaranja;
     }
 
 

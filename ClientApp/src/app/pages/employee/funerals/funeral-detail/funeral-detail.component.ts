@@ -23,6 +23,7 @@ export class FuneralDetailComponent implements OnInit {
     'ime',
     'prezime',
     'ukupnaCijena',
+    'datumUgovaranja',
     'action'
   ];
 
@@ -205,5 +206,4 @@ export class FuneralDetailComponent implements OnInit {
       }
     });
   }
-
 }

@@ -95,6 +95,7 @@ public static class Mapping
            pogreb.SmrtniSlucajId,
            pogreb.DatumPogreba,
            pogreb.Kremacija,
+           pogreb.DatumUgovaranja,
            pogreb.UkupnaCijena,
            pogreb.SmrtniSlucaj?.Korisnik.ToDomain(),
            pogreb.SmrtniSlucaj?.ToDomain(),
@@ -107,6 +108,7 @@ public static class Mapping
             IdPogreb = pogreb.Id,
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             Kremacija = pogreb.Kremacija,
             UkupnaCijena = pogreb.UkupnaCijena,
            // PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
@@ -141,7 +143,8 @@ public static class Mapping
                 pogreb.UkupnaCijena,
                 pogreb.SmrtniSlucaj.KorisnikId,
                 pogreb.SmrtniSlucaj.Korisnik.Ime,
-                pogreb.SmrtniSlucaj.Korisnik.Prezime
+                pogreb.SmrtniSlucaj.Korisnik.Prezime,
+                pogreb.DatumUgovaranja
             );
 
     public static DbModels.Pogreb ToDbModel(this PogrebSmrtniSlucaj pogreb)
@@ -151,6 +154,7 @@ public static class Mapping
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             UkupnaCijena = pogreb.UkupnaCijena
         };
 

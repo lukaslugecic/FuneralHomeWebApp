@@ -13,6 +13,7 @@ public class PogrebAggregate
     //public DateOnly DatumPogreba { get; set; }
     public DateTime DatumPogreba { get; set; }
     public bool Kremacija { get; set; }
+    public DateTime DatumUgovaranja { get; set; }
     public decimal UkupnaCijena { get; set; }
     public IEnumerable<PogrebOpremaUsluge> OpremaUsluge { get; set; } = Enumerable.Empty<PogrebOpremaUsluge>();
 
@@ -30,6 +31,7 @@ public static partial class DtoMapping
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             UkupnaCijena = pogreb.UkupnaCijena,
             OpremaUsluge = pogreb.PogrebOpremaUsluge == null
                             ? new List<PogrebOpremaUsluge>()
@@ -44,6 +46,7 @@ public static partial class DtoMapping
             pogreb.SmrtniSlucajId,
             pogreb.DatumPogreba,
             pogreb.Kremacija,
+            pogreb.DatumUgovaranja,
             pogreb.UkupnaCijena,
             pogreb.Korisnik.ToDomain(),
             pogreb.SmrtniSlucaj.ToDomain(),

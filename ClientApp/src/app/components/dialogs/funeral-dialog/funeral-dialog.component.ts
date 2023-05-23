@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ISmrtniSlucajData } from 'src/app/interfaces/smrtnislucaj-data';
@@ -25,7 +25,7 @@ export class FuneralDialogComponent implements OnInit {
   ];
 
   funeralForm: FormGroup = new FormGroup({
-    datumPogreba: new FormControl('', [Validators.required]),
+    datumPogreba: new FormControl('', [Validators.required, dateNotInPastValidator()]),
     kremacija: new FormControl('', [Validators.required]),
     smrtniSlucajId: new FormControl('', [Validators.required]),
     korisnikId: new FormControl(''),
@@ -86,7 +86,8 @@ export class FuneralDialogComponent implements OnInit {
         kremacija: this.data.kremacija,
         smrtniSlucajId: this.data.smrtniSlucajId,
         korisnikId: this.data.korisnikId ?? this.data.korisnik.id,
-        ukupnaCijena: this.data.ukupnaCijena
+        ukupnaCijena: this.data.ukupnaCijena,
+        datumUgovaranja: this.data.datumUgovaranja
       });
       this.slucajevi.push( {
         smrtniSlucajId : this.data.smrtniSlucajId,
@@ -121,7 +122,8 @@ export class FuneralDialogComponent implements OnInit {
           KorisnikId: this.funeralForm.value.korisnikId,
           Ime: this.korisnici.find(k => k.korisnikId === this.funeralForm.value.korisnikId)?.imeIprezime?.split(" ")[0] || '',
           Prezime: this.korisnici.find(k => k.korisnikId === this.funeralForm.value.korisnikId)?.imeIprezime?.split(" ")[1] || '',
-          UkupnaCijena: this.funeralForm.value.ukupnaCijena
+          UkupnaCijena: this.funeralForm.value.ukupnaCijena,
+          DatumUgovaranja: this.data.datumUgovaranja
         }
         this._funeralService
           .upadateFuneralDeath(this.data.id, this.toUpdate)
@@ -151,7 +153,8 @@ export class FuneralDialogComponent implements OnInit {
           KorisnikId: 0,
           Ime: '',	
           Prezime: '',
-          UkupnaCijena: this.funeralForm.value.ukupnaCijena
+          UkupnaCijena: this.funeralForm.value.ukupnaCijena,
+          DatumUgovaranja: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000)
         }
         this._funeralService.addFuneral(this.toUpdate).subscribe({
           next: (val: any) => {
@@ -169,9 +172,15 @@ export class FuneralDialogComponent implements OnInit {
         });
       }
     } else {
-      this.snackBar.open('Popunite sva polja!', 'U redu', {
-        duration: 3000,
-      });
+      if(this.funeralForm.value.datumPogreba < new Date()){
+        this.snackBar.open('Datum pogreba ne može biti u prošlosti!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.snackBar.open('Popunite sva polja!', 'U redu', {
+          duration: 3000,
+        });
+      }
     }
   }
 
@@ -209,4 +218,10 @@ type SmrtniSlucaj = {
   smrtniSlucajId: number;
   imeIprezime: string;
   datumSmrti: Date;
+}
+
+export function dateNotInPastValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: any } | null => {
+    return new Date(control.value) < new Date() ? { dateNotInPast: { value: control.value } } : null;
+  };
 }
