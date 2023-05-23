@@ -20,8 +20,6 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [Required]
         [StringLength(50)]
         public string Naziv { get; set; }
-        [Column(TypeName = "numeric(18, 2)")]
-        public decimal Cijena { get; set; }
 
         [InverseProperty("PaketOsiguranja")]
         public virtual ICollection<Osiguranje> Osiguranje { get; set; }
