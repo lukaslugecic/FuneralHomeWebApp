@@ -19,10 +19,13 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int IdVrstaOpremeUsluge { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Naziv { get; set; }
         public bool JeOprema { get; set; }
+        public int? JedinicaMjereId { get; set; }
 
+        [ForeignKey("JedinicaMjereId")]
+        [InverseProperty("VrstaOpremeUsluge")]
+        public virtual JedinicaMjere JedinicaMjere { get; set; }
         [InverseProperty("VrstaOpremeUsluge")]
         public virtual ICollection<OpremaUsluga> OpremaUsluga { get; set; }
     }

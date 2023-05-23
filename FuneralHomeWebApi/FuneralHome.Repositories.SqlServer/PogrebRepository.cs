@@ -88,11 +88,10 @@ public class PogrebRepository : IPogrebRepository
             var model = _dbContext.Pogreb
                           .Include(p => p.SmrtniSlucaj)
                           .ThenInclude(ss => ss.Korisnik)
-                          .Include(p => p.PogrebOprema)
-                          .ThenInclude(po => po.Oprema)
-                          .ThenInclude(o => o.VrstaOpreme)
-                          .Include(p => p.Usluga)
-                          .ThenInclude(u => u.VrstaUsluge)
+                          .Include(p => p.PogrebOpremaUsluge)
+                          .ThenInclude(po => po.OpremaUsluga)
+                          .ThenInclude(o => o.VrstaOpremeUsluge)
+                          .ThenInclude(v => v.JedinicaMjere)
                           .AsNoTracking()
                           .FirstOrDefault(p => p.IdPogreb.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
@@ -166,8 +165,7 @@ public class PogrebRepository : IPogrebRepository
         {
             var models = _dbContext.Pogreb
                             .Include(p => p.SmrtniSlucaj)
-                            .Include(p => p.PogrebOprema)
-                            .Include(p => p.Usluga) // ????
+                            .Include(p => p.PogrebOpremaUsluge)
                             .Select(Mapping.ToDomain);
 
             return Results.OnSuccess(models);
@@ -315,7 +313,7 @@ public class PogrebRepository : IPogrebRepository
                 return Results.OnFailure($"Funeral with id {model.Id} not found.");
 
             dbModel.SmrtniSlucajId = model.SmrtniSlucajId;
-            dbModel.DatumPogreb = model.DatumPogreba;
+            dbModel.DatumPogreba = model.DatumPogreba;
             dbModel.Kremacija = model.Kremacija;
             dbModel.UkupnaCijena = model.UkupnaCijena;
             dbModel.SmrtniSlucaj.KorisnikId = model.KorisnikId;
@@ -345,11 +343,9 @@ public class PogrebRepository : IPogrebRepository
             _dbContext.ChangeTracker.Clear();
 
             var dbModel = _dbContext.Pogreb
-                              .Include(_ => _.PogrebOprema)
-                              .ThenInclude(_ => _.Oprema)
-                              .ThenInclude(o => o.VrstaOpreme)
-                              .Include(_ => _.Usluga)
-                              .ThenInclude(u => u.VrstaUsluge)
+                              .Include(_ => _.PogrebOpremaUsluge)
+                              .ThenInclude(_ => _.OpremaUsluga)
+                              .ThenInclude(o => o.VrstaOpremeUsluge)
                               //.AsNoTracking()
                               .FirstOrDefault(_ => _.IdPogreb == model.Id);
             if (dbModel == null)
@@ -358,56 +354,32 @@ public class PogrebRepository : IPogrebRepository
 
 
             dbModel.SmrtniSlucajId = model.SmrtniSlucajId;
-            dbModel.DatumPogreb = model.DatumPogreba;
+            dbModel.DatumPogreba = model.DatumPogreba;
             dbModel.Kremacija = model.Kremacija;
             dbModel.UkupnaCijena = model.UkupnaCijena;
 
-            foreach (var pogrebOprema in model.PogrebOprema)
+            foreach (var pogrebOpremaUsluga in model.PogrebOpremaUsluge)
             {
                 // it exists in the DB, so just update it
                 var pogrebOpremaToUpdate =
-                    dbModel.PogrebOprema
-                           .FirstOrDefault(po => po.PogrebId.Equals(model.Id) && po.OpremaId.Equals(pogrebOprema.Oprema.Id));
+                    dbModel.PogrebOpremaUsluge
+                           .FirstOrDefault(po => po.PogrebId.Equals(model.Id) && po.OpremaUslugaId.Equals(pogrebOpremaUsluga.OpremaUsluga.Id));
                 if (pogrebOpremaToUpdate != null)
                 {
-                    pogrebOpremaToUpdate.Kolicina = pogrebOprema.Kolicina;
+                    pogrebOpremaToUpdate.Kolicina = pogrebOpremaUsluga.Kolicina;
                 }
                 else // it does not exist in the DB, so add it
                 {
-                    dbModel.PogrebOprema.Add(pogrebOprema.ToDbModel(model.Id));
+                    dbModel.PogrebOpremaUsluge.Add(pogrebOpremaUsluga.ToDbModel(model.Id));
                 }
             }
 
-            dbModel.PogrebOprema
-                  .Where(po => !model.PogrebOprema.Any(_ => _.Oprema.Id == po.OpremaId))
+            dbModel.PogrebOpremaUsluge
+                  .Where(po => !model.PogrebOpremaUsluge.Any(_ => _.OpremaUsluga.Id == po.OpremaUslugaId))
                   .ToList()
                   .ForEach(pogrebOprema =>
                   {
-                      dbModel.PogrebOprema.Remove(pogrebOprema);
-                  });
-
-            foreach (var pogrebUsluga in model.PogrebUsluga)
-            {
-                var pogrebUslugaToUpdate = dbModel.Usluga.FirstOrDefault(pu => pu.Pogreb.Any(p => p.IdPogreb.Equals(model.Id)) && pu.IdUsluga.Equals(pogrebUsluga.Id));
-                if (pogrebUslugaToUpdate != null)
-                {
-                    pogrebUslugaToUpdate.VrstaUslugeId = pogrebUsluga.VrstaUslugeId;
-                    pogrebUslugaToUpdate.Naziv = pogrebUsluga.Naziv;
-                    pogrebUslugaToUpdate.Opis = pogrebUsluga.Opis;
-                    pogrebUslugaToUpdate.Cijena = pogrebUsluga.Cijena;
-                }
-                else
-                {
-                    dbModel.Usluga.Add(pogrebUsluga.ToDbModel());
-                }
-            }
-
-            dbModel.Usluga
-                .Where(po => !model.PogrebUsluga.Any(_ => _.Id == po.IdUsluga))
-                  .ToList()
-                  .ForEach(pogrebUsluga =>
-                  {
-                      dbModel.Usluga.Remove(pogrebUsluga);
+                      dbModel.PogrebOpremaUsluge.Remove(pogrebOprema);
                   });
 
 

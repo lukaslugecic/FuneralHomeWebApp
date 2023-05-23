@@ -1,0 +1,89 @@
+<app-main-navigation></app-main-navigation>
+
+<div class="main-body">
+    <h1>Pogrebi</h1>
+      <div class="filter">
+        <mat-form-field>
+          <mat-label>Filter</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Filter" #input>
+        </mat-form-field>
+        <button mat-raised-button (click)="openAddForm()"> Dodaj novi pogreb </button>
+      </div>
+  
+    
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort>
+    
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+          </ng-container>
+    
+          <ng-container matColumnDef="imePok">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime pokojnika </th>
+            <td mat-cell *matCellDef="let row"> {{row.imePok}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="prezimePok">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime pokojnika </th>
+            <td mat-cell *matCellDef="let row"> {{row.prezimePok}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="datumPogreba">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum pogreba </th>
+            <td mat-cell *matCellDef="let row"> {{row.datumPogreba | date: 'dd.MM.yyyy.'}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="ime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ime naručitelja </th>
+            <td mat-cell *matCellDef="let row"> {{row.ime}}</td>
+          </ng-container>
+  
+          <ng-container matColumnDef="prezime">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Prezime naručitelja </th>
+            <td mat-cell *matCellDef="let row"> {{row.prezime}}</td>
+          </ng-container>
+          
+    
+          <ng-container matColumnDef="kremacija">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Vrsta sahrane </th>
+            <td mat-cell *matCellDef="let row"> {{row.kremacija ? 'Kremacija' : 'Ukop'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="datumUgovaranja">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum ugovaranja </th>
+            <td mat-cell *matCellDef="let row"> {{row.datumUgovaranja | date: 'dd.MM.yyyy.'}}</td>
+          </ng-container>
+          
+          <ng-container matColumnDef="ukupnaCijena">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cijena pogreba </th>
+            <td mat-cell *matCellDef="let row"> {{row.ukupnaCijena | currency:'EUR'}} </td>
+          </ng-container>
+          
+          <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button (click)="redirectToDetails(row.id)" >
+                <mat-icon>info</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openEditForm(row)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteFuneral(row.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+    
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    
+          
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">Nema odgovarajućih podataka s "{{input.value}}"</td>
+          </tr>
+        </table>
+    
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Odaberi stranicu"></mat-paginator>
+      </div>
+    </div>

@@ -9,7 +9,6 @@ namespace FuneralHome.DTOs;
 public class AddPogreb
 {
     public Pogreb Pogreb { get; set; } = new Pogreb();
-    public List<PogrebOprema> Oprema { get; set; } = new List<PogrebOprema>();
-    public List<Usluga> Usluga { get; set; } = new List<Usluga>();
+    public List<PogrebOpremaUsluge> Oprema { get; set; } = new List<PogrebOpremaUsluge>();
 }
 

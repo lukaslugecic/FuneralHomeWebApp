@@ -14,7 +14,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
-import { ServiceService } from 'src/app/services/service/service.service';
+import { InsuranceService } from 'src/app/services/insurance/insurance.service';
 
 @Component({
   selector: 'app-funeral-customer-form',
@@ -33,12 +33,13 @@ export class FuneralCustomerFormComponent implements OnInit {
   typesOfEquipment: any[] = [];
   equipment: any[] = [];
   equipmentQuantity: any[] = [];
+  serviceQuantity: any[] = [];
 
   constructor(
     private _deathService: DeathService,
-    private _serviceService: ServiceService,
     private _equipmentService: EquipmentService,
     private _funeralService: FuneralService,
+    private _insuranceService: InsuranceService,
     private _authService: AuthService,
     private readonly _snackBar: MatSnackBar,
     private _dateAdapter: DateAdapter<Date>,
@@ -57,7 +58,7 @@ export class FuneralCustomerFormComponent implements OnInit {
       }
     });
 
-    this._serviceService.getTypesOfServices().subscribe({
+    this._equipmentService.getTypesOfServices().subscribe({
       next: (res) => {
         this.typesOfService = res;
         this.typesOfService.forEach((typeOfService: any) => {
@@ -66,9 +67,14 @@ export class FuneralCustomerFormComponent implements OnInit {
       }
     });
 
-    this._serviceService.getAllServices().subscribe({
+    this._equipmentService.getAllServices().subscribe({
       next: (res) => {
         this.services = res;
+        this.services.forEach((service: any) => {
+          this.serviceQuantity.push({id: service.id, kolicina: 0, mjera: service.jedinicaMjereNaziv, added: false});
+          this.uslugeForm.addControl(service.id.toString(), this._builder.control('',Validators.min(1)));
+        });
+        console.log(this.serviceQuantity)
       }
     });
 
@@ -84,20 +90,21 @@ export class FuneralCustomerFormComponent implements OnInit {
     this._equipmentService.getAllEquipment().subscribe({
       next: (res) => {
         // u this.equipment spremi sve opreme kojima je zaliha > 0
-        this.equipment = res.filter((equipment: any) => equipment.zalihaOpreme > 0);
+        this.equipment = res.filter((equipment: any) => equipment.zaliha > 0);
         this.equipment.forEach((equipment: any) => {
-          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zalihaOpreme ,kolicina: 0});
+          this.equipmentQuantity.push({id: equipment.id, zaliha: equipment.zaliha, kolicina: 0, added: false});
+          this.opremaForm.addControl(equipment.id.toString(), this._builder.control('',Validators.min(1)));
         });
       }
     });
   }
 
   getServices(typeOfServiceId: number) {
-    return this.services.filter((service: any) => service.vrstaUslugeId === typeOfServiceId);
+    return this.services.filter((service: any) => service.vrstaOpremeUslugeId === typeOfServiceId);
   }
 
   getEquipment(typeOfEquipmentId: number) {
-    return this.equipment.filter((equipment: any) => equipment.vrstaOpremeId === typeOfEquipmentId);
+    return this.equipment.filter((equipment: any) => equipment.vrstaOpremeUslugeId === typeOfEquipmentId);
   }
 
   deathForm = this._builder.group({
@@ -158,8 +165,16 @@ export class FuneralCustomerFormComponent implements OnInit {
       this.equipmentQuantity.forEach((eq: any) => {
         if(eq.kolicina > 0){
           pogrebOprema.push({
-            oprema: this.equipment.find((e: any) => e.id === eq.id),
+            opremaUsluga: this.equipment.find((e: any) => e.id === eq.id),
             kolicina: eq.kolicina
+          });
+        }
+      });
+      this.serviceQuantity.forEach((sq: any) => {
+        if(sq.kolicina > 0){
+          pogrebOprema.push({
+            opremaUsluga: this.services.find((s: any) => s.id === sq.id),
+            kolicina: sq.kolicina
           });
         }
       });
@@ -188,6 +203,7 @@ export class FuneralCustomerFormComponent implements OnInit {
         datumPogreba: new Date(new Date(this.smrtniSlucajForm.value.datumPogreba).getTime() 
         - new Date(this.smrtniSlucajForm.value.datumPogreba).getTimezoneOffset() * 60000),
         kremacija: this.smrtniSlucajForm.value.kremacija,
+        datumUgovaranja: new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000),
         ukupnaCijena: 0,
       };
       
@@ -203,6 +219,15 @@ export class FuneralCustomerFormComponent implements OnInit {
             duration: 3000,
           });
           this._router.navigate(['/profile']);
+          this._insuranceService.getInsuranceByDeathId(this.smrtniSlucajForm.value.smrtniSlucajId).subscribe({
+            next: (res) => {
+              if(res.length > 0){
+                this._snackBar.open(`Isplačeno je osiguranje!`, 'U redu', {
+                  duration: 3000,
+                });
+              }
+            }
+          });
         },
         error: (err) => {
           this._snackBar.open('Greška prilikom dodavanja pogreba!', 'U redu', {
@@ -217,25 +242,71 @@ export class FuneralCustomerFormComponent implements OnInit {
     }
   }
 
-  addEquipment(id: number) {
-    this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina++;
-    // provjeri da li je količina veća od zalihe
-    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > this.equipment.find((e: any) => e.id === id).zalihaOpreme){
-      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
-      this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
-        duration: 3000,
-      });
+  
+  addedService(id: number){
+    return this.serviceQuantity.find((sq: any) => sq.id === id).added;
+  }
+
+  changeServiceQuantity(id: number, event: any) {
+    const quantityInput = event.target as HTMLInputElement;
+    const quantity = Number(quantityInput?.value);
+    if(quantity > 0){
+      this.serviceQuantity.find((sq: any) => sq.id === id).kolicina = quantity;
     }
   }
 
-  removeEquipment(id: number) {
-    if(this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina > 0){
-      this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina--;
+
+  addedEquipment(id: number){
+    return this.equipmentQuantity.find((eq: any) => eq.id === id).added;
+  }
+
+  changeEquipmentQuantity(id: number, event: any) {
+    const quantityInput = event.target as HTMLInputElement;
+    const quantity = Number(quantityInput?.value);
+    if(quantity > 0){
+      //this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
+      if(this.equipmentQuantity.find((eq: any) => eq.id === id).zaliha < quantity){
+        this._snackBar.open('Nema dovoljno opreme na skladištu!', 'U redu', {
+          duration: 3000,
+        });
+      } else {
+        this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina = quantity;
+      }
+
     }
+  }
+
+  addEquipment(id: number) {
+    this.equipmentQuantity.find((eq: any) => eq.id === id).added = true;
+  }
+
+  removeEquipment(id: number) {
+    const equipment = this.equipmentQuantity.find((eq: any) => eq.id === id);
+    equipment.added = false;
+    equipment.kolicina = 0;
   }
 
   getEquipmentQuantity(id: number) {
     return this.equipmentQuantity.find((eq: any) => eq.id === id).kolicina;
+  }
+
+  addService(id: number) {
+    const service = this.serviceQuantity.find((eq: any) => eq.id === id);
+    service.added = true;
+    if(service.mjera === ""){
+      service.kolicina = 1;
+    }
+
+  }
+
+  removeService(id: number) {
+    const service = this.serviceQuantity.find((eq: any) => eq.id === id);
+    service.added = false;
+    service.kolicina = 0;
+  }
+
+  getServiceUnit(id: number) {
+    return this.serviceQuantity.find((s:any) => s.id === id).mjera;
   }
 
   getTotalPrice() {
@@ -243,14 +314,9 @@ export class FuneralCustomerFormComponent implements OnInit {
     this.equipmentQuantity.forEach((eq: any) => {
       totalPrice += this.equipment.find((e: any) => e.id === eq.id).cijena * eq.kolicina;
     });
-    for (const type of this.typesOfService) {
-      const formControl = this.deathForm.controls.usluge.get(type.naziv);
-      const serviceId = formControl?.value;
-      if (serviceId) {
-        const service = this.services.find((s: any) => s.id === serviceId);
-        totalPrice += service.cijena;
-      }
-    }
+    this.serviceQuantity.forEach((sq: any) => {
+      totalPrice += this.services.find((s: any) => s.id === sq.id).cijena * sq.kolicina;
+    });
     return totalPrice;
   }
 }

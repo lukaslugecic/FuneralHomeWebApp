@@ -22,16 +22,13 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int IdKorisnik { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Ime { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Prezime { get; set; }
         public DateTime DatumRodenja { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Adresa { get; set; }
         [Required]
         [Column("OIB")]
@@ -40,11 +37,9 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public string Oib { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Mail { get; set; }
         [Required]
         [StringLength(100)]
-        [Unicode(false)]
         public string Lozinka { get; set; }
         [Required]
         [StringLength(1)]

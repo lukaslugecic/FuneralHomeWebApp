@@ -6,7 +6,7 @@
         <div class="row">
             <mat-form-field appearance="outline">
                 <mat-label>Vrsta usluge</mat-label>
-                <mat-select formControlName="vrstaUsluge">
+                <mat-select formControlName="vrstaOpremeUsluge">
                     <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
                     </mat-option>
                 </mat-select>

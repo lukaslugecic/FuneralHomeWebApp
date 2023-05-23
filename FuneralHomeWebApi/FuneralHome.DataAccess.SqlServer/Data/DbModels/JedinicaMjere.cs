@@ -12,17 +12,16 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     {
         public JedinicaMjere()
         {
-            OpremaUsluga = new HashSet<OpremaUsluga>();
+            VrstaOpremeUsluge = new HashSet<VrstaOpremeUsluge>();
         }
 
         [Key]
         public int IdJednicaMjere { get; set; }
         [Required]
         [StringLength(50)]
-        [Unicode(false)]
         public string Naziv { get; set; }
 
         [InverseProperty("JedinicaMjere")]
-        public virtual ICollection<OpremaUsluga> OpremaUsluga { get; set; }
+        public virtual ICollection<VrstaOpremeUsluge> VrstaOpremeUsluge { get; set; }
     }
 }

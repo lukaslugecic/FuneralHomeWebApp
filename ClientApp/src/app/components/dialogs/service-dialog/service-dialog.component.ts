@@ -2,9 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IUslugaData } from 'src/app/interfaces/usluga-data';
-import { IVrstaUslugeData } from 'src/app/interfaces/vrsta-usluge-data';
-import { ServiceService } from 'src/app/services/service/service.service';
+import { IOpremaUslugaData } from 'src/app/interfaces/oprema-usluga-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
+import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
   selector: 'app-service-dialog',
@@ -17,15 +17,15 @@ export class ServiceDialogComponent implements OnInit {
     naziv: new FormControl('', [Validators.required]),
     opis: new FormControl('', [Validators.required]),
     cijena: new FormControl('', [Validators.required]),
-    vrstaUsluge: new FormControl('', [Validators.required])
+    vrstaOpremeUsluge: new FormControl('', [Validators.required])
   });
   
-  toUpdate: IUslugaData = {} as IUslugaData;
+  toUpdate: IOpremaUslugaData = {} as IOpremaUslugaData;
 
-  types: IVrstaUslugeData[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
 
   constructor(
-    private readonly _serviceService: ServiceService,
+    private readonly _equipmentService: EquipmentService,
     private _dialogRef: MatDialogRef<ServiceDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly snackBar: MatSnackBar
@@ -33,14 +33,14 @@ export class ServiceDialogComponent implements OnInit {
 
   ngOnInit() {
     // dohvatiti vrste usluga i spremiti u this.types zatim popuniti formu sa podacima ako je data != null
-    this._serviceService.getTypesOfServices().subscribe((data: any) => {
+    this._equipmentService.getTypesOfServices().subscribe((data: any) => {
       this.types = data;
       if (this.data) {
         this.serviceForm.patchValue({
           naziv: this.data.naziv,
           opis: this.data.opis,
           cijena: this.data.cijena,
-          vrstaUsluge: this.data.vrstaUslugeId,
+          vrstaOpremeUsluge: this.data.vrstaOpremeUslugeId,
         });
       }
     });
@@ -54,12 +54,15 @@ export class ServiceDialogComponent implements OnInit {
           Naziv: this.serviceForm.value.naziv,
           Opis: this.serviceForm.value.opis,
           Cijena: this.serviceForm.value.cijena,
-          VrstaUslugeId: this.serviceForm.value.vrstaUsluge,
-          VrstaUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaUsluge)?.naziv ?? "",
+          VrstaOpremeUslugeId: this.serviceForm.value.vrstaOpremeUsluge,
+          VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
+          Slika: null,
+          Zaliha: null
         }
         console.log(this.toUpdate);
-        this._serviceService
-          .updateService(this.data.id, this.toUpdate)
+        this._equipmentService
+          .updateEquipment(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
               this.snackBar.open('Usluga uspješno uređena!', 'U redu', {
@@ -80,10 +83,13 @@ export class ServiceDialogComponent implements OnInit {
           Naziv: this.serviceForm.value.naziv,
           Opis: this.serviceForm.value.opis,
           Cijena: this.serviceForm.value.cijena,
-          VrstaUslugeId: this.serviceForm.value.vrstaUsluge,
-          VrstaUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaUsluge)?.naziv ?? "",
+          VrstaOpremeUslugeId: this.serviceForm.value.vrstaOpremeUsluge,
+          VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.serviceForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
+          Slika: null,
+          Zaliha: null
         }
-        this._serviceService.addService(this.toUpdate).subscribe({
+        this._equipmentService.addEquipment(this.toUpdate).subscribe({
           next: (val: any) => {
             this.snackBar.open('Usluga uspješno dodana!', 'U redu', {
               duration: 3000,

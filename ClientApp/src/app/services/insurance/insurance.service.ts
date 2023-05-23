@@ -18,6 +18,10 @@ export class InsuranceService {
     return this.http.get<Array<any>>(`${environment.apiUrlHttps}/Osiguranje/Korisnik/${id}`);
   }
 
+  public getInsuranceByDeathId(id: number) : Observable<any> {
+    return this.http.get<any>(`${environment.apiUrlHttps}/Osiguranje/SmrtniSlucaj/${id}`);
+  }
+
   public addInsurance(data: any) : Observable<any> {
     return this.http.post(`${environment.apiUrlHttps}/Osiguranje`, data);
   }

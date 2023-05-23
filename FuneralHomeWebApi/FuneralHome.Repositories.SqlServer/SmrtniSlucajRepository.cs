@@ -67,7 +67,6 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             var model = _dbContext.SmrtniSlucaj
                           .Include(ss => ss.Korisnik)
-                          .Include(ss => ss.Osmrtnica)
                           .AsNoTracking()
                           .FirstOrDefault(ss => ss.IdSmrtniSlucaj.Equals(id)) // give me the first or null; substitute for .Where() // single or default throws an exception if more than one element meets the criteria
                           ?.ToDomain();
@@ -165,7 +164,6 @@ public class SmrtniSlucajRepository : ISmrtniSlucajRepository
         {
             var models = _dbContext.SmrtniSlucaj
                             .Include(ss => ss.Korisnik)
-                            .Include(ss => ss.Osmrtnica)
                             .Select(Mapping.ToDomain);
 
             return Results.OnSuccess(models);

@@ -50,7 +50,124 @@
             </div>
         </div>
         </mat-step>
-        <mat-step [stepControl]="uslugeForm" label="Odaberite usluge">
+        <mat-step [stepControl]="opremaForm" label="Odaberite uslugu">
+          <div formGroupName="usluge">
+              <div>
+                  <h2>Za svaku vrstu odaberite uslugu po želji</h2>
+                  <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
+              </div>
+              <mat-accordion>
+                  <div *ngFor="let type of typesOfService">
+                      <mat-expansion-panel>
+                        <mat-expansion-panel-header>
+                          {{ type.naziv }}
+                        </mat-expansion-panel-header>
+                        <mat-list>
+                          <mat-list-item *ngFor="let e of getServices(type.id)">
+                              <div mat-line>{{ e.naziv }}</div>
+                              <div mat-line>Cijena: €{{ e.cijena }}</div>
+                              <div mat-list-item>
+                                <div *ngIf="getServiceUnit(e.id) == '' ">
+                                  <div *ngIf="addedService(e.id)">
+                                    Usluga je dodana.
+                                    <button mat-icon-button type="button" (click)="removeService(e.id)">
+                                      <mat-icon>delete</mat-icon>
+                                    </button>
+                                  </div>
+                                  <div *ngIf="!addedService(e.id)">
+                                    <button mat-icon-button type="button" (click)="addService(e.id)">
+                                      <mat-icon>add</mat-icon>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div *ngIf="addedService(e.id) && getServiceUnit(e.id)">
+                                  <mat-form-field class="inputInPanel" appearance="outline">
+                                    <mat-label>{{ getServiceUnit(e.id)}}</mat-label>
+                                    <input matInput type="number" [formControlName]="e.id.toString()" placeholder="npr. 12" (change)="changeServiceQuantity(e.id, $event)">
+                                  </mat-form-field>
+                                  <button mat-icon-button type="button" (click)="removeService(e.id)">
+                                    <mat-icon>delete</mat-icon>
+                                  </button>
+                                </div>
+                                <div *ngIf="!addedService(e.id) && getServiceUnit(e.id)">
+                                  <button mat-icon-button type="button" (click)="addService(e.id)">
+                                    <mat-icon>add</mat-icon>
+                                  </button>
+                                </div>
+                              </div>
+                          </mat-list-item>
+                        </mat-list>
+                      </mat-expansion-panel>
+                    </div>
+              </mat-accordion>
+            <div>
+              <button mat-raised-button color="primary" matStepperPrevious>Natrag</button> | 
+              <button mat-raised-button color="primary" type="button" matStepperNext>Sljedeće</button>
+            </div>
+        </div>
+      </mat-step>
+        <mat-step [stepControl]="opremaForm" label="Odaberite opremu">
+            <div formGroupName="oprema">
+                <div>
+                    <h2>Za svaku vrstu odaberite opremu po želji</h2>
+                    <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
+                </div>
+                <mat-accordion>
+                    <div *ngFor="let type of typesOfEquipment">
+                        <mat-expansion-panel>
+                          <mat-expansion-panel-header>
+                            {{ type.naziv }}
+                          </mat-expansion-panel-header>
+                          <mat-list>
+                            <mat-list-item *ngFor="let e of getEquipment(type.id)">
+                                <img *ngIf="e.slika" mat-list-avatar [src]="'data:image/jpeg;base64,' + e.slika">
+                                <div mat-line>{{ e.naziv }}</div>
+                                <div mat-line>Cijena: €{{ e.cijena }}</div>
+                                <div mat-list-item>
+                                  <div *ngIf="addedEquipment(e.id)">
+                                    <mat-form-field class="inputInPanel" appearance="outline">
+                                      <mat-label>Količina:</mat-label>
+                                      <input matInput type="number" [formControlName]="e.id.toString()" placeholder="npr. 12" (change)="changeEquipmentQuantity(e.id, $event)">
+                                    </mat-form-field>
+                                    <button mat-icon-button type="button" (click)="removeEquipment(e.id)">
+                                      <mat-icon>delete</mat-icon>
+                                    </button>
+                                  </div>
+                                  <div *ngIf="!addedEquipment(e.id)">
+                                    <button mat-icon-button type="button" (click)="addEquipment(e.id)">
+                                      <mat-icon>add</mat-icon>
+                                    </button>
+                                  </div>
+                                </div>
+                            </mat-list-item>
+                          </mat-list>
+                        </mat-expansion-panel>
+                      </div>
+                </mat-accordion>
+              <div>
+                <button mat-raised-button color="primary" matStepperPrevious>Natrag</button> | 
+                <button mat-raised-button color="accent" >Potvrdi</button>
+              </div>
+          </div>
+        </mat-step>
+      </mat-stepper>
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+  <mat-step [stepControl]="uslugeForm" label="Odaberite usluge">
           <div formGroupName="usluge">
             <h2>Za svaku vrstu odaberite uslugu po želji.</h2>
             <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
@@ -71,43 +188,5 @@
             </div>
         </div>
         </mat-step>
-        <mat-step [stepControl]="opremaForm" label="Odaberite opremu">
-            <div formGroupName="oprema">
-                <div>
-                    <h2>Za svaku vrstu odaberite opremu po želji</h2>
-                    <h3>Ukupna cijena: {{ getTotalPrice()}}€</h3>
-                </div>
-                <mat-accordion>
-                    <div *ngFor="let type of typesOfEquipment">
-                        <mat-expansion-panel>
-                          <mat-expansion-panel-header>
-                            {{ type.naziv }}
-                          </mat-expansion-panel-header>
-                          <mat-list>
-                            <mat-list-item *ngFor="let e of getEquipment(type.id)">
-                                <img *ngIf="e.slika" mat-list-avatar [src]="'data:image/jpeg;base64,' + e.slika">
-                                <div mat-line>{{ e.naziv }}</div>
-                                <div mat-line>Cijena: €{{ e.cijena }}</div>
-                                <div mat-list-item>
-                                    Količina: {{ getEquipmentQuantity(e.id) }}
-                                    <button mat-icon-button type="button" (click)="addEquipment(e.id)">
-                                        <mat-icon>add_circle</mat-icon>
-                                    </button>
-                                    <button mat-icon-button type="button" (click)="removeEquipment(e.id)">
-                                        <mat-icon>remove_circle</mat-icon>
-                                    </button>
-                                </div>
-                            </mat-list-item>
-                          </mat-list>
-                        </mat-expansion-panel>
-                      </div>
-                </mat-accordion>
-              <div>
-                <button mat-raised-button color="primary" matStepperPrevious>Natrag</button> | 
-                <button mat-raised-button color="accent" >Potvrdi</button>
-              </div>
-          </div>
-        </mat-step>
-      </mat-stepper>
-    </form>
-</div>
+
+-->

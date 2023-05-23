@@ -13,9 +13,9 @@ public class PogrebAggregate
     //public DateOnly DatumPogreba { get; set; }
     public DateTime DatumPogreba { get; set; }
     public bool Kremacija { get; set; }
+    public DateTime DatumUgovaranja { get; set; }
     public decimal UkupnaCijena { get; set; }
-    public IEnumerable<PogrebOprema> PogrebOprema { get; set; } = Enumerable.Empty<PogrebOprema>();
-    public IEnumerable<Usluga> PogrebUsluga { get; set; } = Enumerable.Empty<Usluga>();
+    public IEnumerable<PogrebOpremaUsluge> OpremaUsluge { get; set; } = Enumerable.Empty<PogrebOpremaUsluge>();
 
     public SmrtniSlucaj SmrtniSlucaj { get; set; } = new SmrtniSlucaj();
     public Korisnik Korisnik { get; set; } = new Korisnik();
@@ -31,13 +31,11 @@ public static partial class DtoMapping
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
             DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             UkupnaCijena = pogreb.UkupnaCijena,
-            PogrebOprema = pogreb.PogrebOprema == null
-                            ? new List<PogrebOprema>()
-                            : pogreb.PogrebOprema.Select(pa => pa.ToDto()).ToList(),
-            PogrebUsluga = pogreb.PogrebUsluga == null
-                            ? new List<Usluga>()
-                            : pogreb.PogrebUsluga.Select(pa => pa.ToDto()).ToList(),
+            OpremaUsluge = pogreb.PogrebOpremaUsluge == null
+                            ? new List<PogrebOpremaUsluge>()
+                            : pogreb.PogrebOpremaUsluge.Select(pa => pa.ToDto()).ToList(),
             SmrtniSlucaj = pogreb.SmrtniSlucaj!.ToDto(),
             Korisnik = pogreb.Korisnik!.ToDto()
         };
@@ -48,10 +46,10 @@ public static partial class DtoMapping
             pogreb.SmrtniSlucajId,
             pogreb.DatumPogreba,
             pogreb.Kremacija,
+            pogreb.DatumUgovaranja,
             pogreb.UkupnaCijena,
             pogreb.Korisnik.ToDomain(),
             pogreb.SmrtniSlucaj.ToDomain(),
-            pogreb.PogrebOprema.Select(ToDomain),
-            pogreb.PogrebUsluga.Select(ToDomain)
+            pogreb.OpremaUsluge.Select(ToDomain)
         );
 }

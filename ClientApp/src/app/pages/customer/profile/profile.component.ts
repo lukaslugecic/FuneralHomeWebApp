@@ -40,6 +40,7 @@ export class ProfileComponent implements OnInit {
     'prezimePok',
     'datumPogreba',
     'kremacija',
+    'datumUgovaranja',
     'ukupnaCijena',
   ];
 
@@ -49,7 +50,6 @@ export class ProfileComponent implements OnInit {
     'placanjeNaRate',
     'brojRata',
     'nazivPaketa',
-    //'cijenaPaketa',
     'action'
   ];
 

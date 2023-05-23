@@ -132,6 +132,11 @@
                     <th mat-header-cell *matHeaderCellDef> Vrsta sahrane </th>
                     <td mat-cell *matCellDef="let row"> {{row.kremacija ? 'Kremacija' : 'Ukop'}} </td>
                   </ng-container>
+
+                  <ng-container matColumnDef="datumUgovaranja">
+                    <th mat-header-cell *matHeaderCellDef> Datum ugovaranja</th>
+                    <td mat-cell *matCellDef="let row"> {{row.datumUgovaranja | date: 'dd.MM.yyyy.'}}</td>
+                  </ng-container>
                   
                   <ng-container matColumnDef="ukupnaCijena">
                     <th mat-header-cell *matHeaderCellDef> Cijena pogreba </th>

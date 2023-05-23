@@ -9,4 +9,5 @@ export interface IPogrebSmrtniSlucajData {
     KorisnikId: number;
     Ime: string;
     Prezime: string;
+    DatumUgovaranja: Date;
 }

@@ -3,9 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { forkJoin } from 'rxjs';
-import { IOpremaData } from 'src/app/interfaces/oprema-data';
 import { IPogrebOpremaData } from 'src/app/interfaces/pogreb-oprema-data';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
 
@@ -17,17 +16,18 @@ import { FuneralService } from 'src/app/services/funeral/funeral.service';
 export class AddEquipmentDialogComponent implements OnInit {
   
   equipmentForm: FormGroup = new FormGroup({
-    opremaId: new FormControl('', [Validators.required]),
-    vrstaOpreme: new FormControl('', [Validators.required]),
+    opremaUslugaId: new FormControl('', [Validators.required]),
+    vrstaOpremeUsluge: new FormControl('', [Validators.required]),
     kolicina : new FormControl('', [Validators.required, Validators.min(1)]),
   });
   
   toAdd: IPogrebOpremaData = {} as IPogrebOpremaData;
 
-  types: IVrstaOpremeData[] = [];
-  equipment: any[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
+  equipmentOrServices: any[] = [];
   equipmentToShow: Oprema[] = [];
   filteredEquipmentToShow: Oprema[] = [];
+  mjera: string = 'Količina'
 
 
   constructor(
@@ -39,66 +39,98 @@ export class AddEquipmentDialogComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    const typesToCall = this.data.isEquipment ?
+                        this._equipmentService.getTypesOfEquipment() :
+                        this._equipmentService.getTypesOfServices();
+    const otherToCall = this.data.isEquipment ?
+                        this._equipmentService.getAllEquipment() :
+                        this._equipmentService.getAllServices();
     forkJoin([
-      this._equipmentService.getTypesOfEquipment(),
-      this._equipmentService.getAllEquipment(),
+      typesToCall, otherToCall
     ]).subscribe(([types, equipment]) => {
       this.types = types;
-      this.equipment = equipment.filter(e => e.zalihaOpreme > 0);
-      this.equipment.forEach((e: any) => {
+      if(this.data.isEquipment){
+        this.equipmentOrServices = equipment.filter(e => e.zaliha > 0);
+      } else {
+        this.equipmentOrServices = equipment;
+      }
+        
+      this.equipmentOrServices.forEach((e: any) => {
         this.equipmentToShow.push({
           id: e.id,
-          vrstaOpreme: e.vrstaOpremeId,
+          vrstaOpremeUsluge: e.vrstaOpremeUslugeId,
           naziv: "Naziv: " + e.naziv + ", Cijena: " + e.cijena + "€",
-          zalihaOpreme: e.zalihaOpreme
+          zaliha: e.zaliha
         });
       });
     });
-    this.equipmentForm.get('vrstaOpreme')?.valueChanges.subscribe(value => {
+    this.equipmentForm.get('vrstaOpremeUsluge')?.valueChanges.subscribe(value => {
       // Filter the equipment options based on the selected type
-      this.filteredEquipmentToShow = this.equipmentToShow.filter(e => e.vrstaOpreme === value);
+      this.filteredEquipmentToShow = this.equipmentToShow.filter(e => e.vrstaOpremeUsluge === value);
+      this.mjera = this.types.find((type: any) => type.id === value)?.jedinicaMjereNaziv ?? 'Mjera';
     });
   }
 
   onFormSubmit() {
+    if(this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.jedinicaMjereNaziv == ""){
+      this.equipmentForm.patchValue({
+        kolicina: 1
+      })
+    }
     // provjeri je li kolicina veca od zalihe opreme
     const kolicina = this.equipmentForm.get('kolicina')?.value;
-    const zaliha = this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.zalihaOpreme;
-    if(kolicina > zaliha){
+    const zaliha = this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.zaliha;
+    if(this.data.isEquipment && kolicina > zaliha){
           this.snackBar.open(`Količina odabrane opreme (${kolicina}) veća je od zalihe (${zaliha})!`, 'U redu', {
           duration: 3000,
       });
     } else
     if (this.equipmentForm.valid) {
         this.toAdd = {
-          oprema: {
-            id: this.equipmentForm.value.opremaId,
-            naziv: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.naziv,
-            vrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
-            vrstaOpremeNaziv: this.types.find((t: any) => t.id === this.equipmentForm.get('vrstaOpreme')?.value)?.naziv as string, // this.equipment.find((e: any) => e.id === this.equipmentForm.get('opremaId')?.value)?.VrstaOpremeNaziv as string,
-            slika: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.slika,
-            zalihaOpreme: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.zalihaOpreme,
-            cijena: this.equipment.find((e: any) => e.id === this.equipmentForm.value.opremaId)?.cijena,
+          opremaUsluga: {
+            id: this.equipmentForm.value.opremaUslugaId,
+            vrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
+            vrstaOpremeUslugeNaziv: this.types.find((t: any) => t.id === this.equipmentForm.get('vrstaOpremeUsluge')?.value)?.naziv as string,
+            jeOprema: this.data.isEquipment,
+            naziv: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.naziv,
+            slika: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.slika,
+            zaliha: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.zaliha,
+            opis: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.opis,
+            jedinicaMjereNaziv: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.jedinicaMjereNaziv,
+            cijena: this.equipmentOrServices.find((e: any) => e.id === this.equipmentForm.value.opremaUslugaId)?.cijena,
           },
           kolicina: this.equipmentForm.get('kolicina')?.value,
         }
-        this._funeralService.addEquipment(this.data, this.toAdd).subscribe({
+        console.log(this.toAdd)
+        this._funeralService.addEquipment(this.data.funeralId, this.toAdd).subscribe({
           next: (val: any) => {
-            this.snackBar.open('Oprema uspješno dodana!', 'U redu', {
-              duration: 3000,
-            });
+            if(this.data.isEquipment){
+              this.snackBar.open('Oprema uspješno dodana!', 'U redu', {
+                duration: 3000,
+              });
+            } else {
+              this.snackBar.open('Usluga uspješno dodana!', 'U redu', {
+                duration: 3000,
+              });
+            }
             this._dialogRef.close(true);
           },
           error: (err: any) => {
             console.error(err);
-            this.snackBar.open('Greška prilikom dodavanja opreme!', 'Zatvori', {
-              duration: 3000,
-            });
+            if(this.data.isEquipment){
+              this.snackBar.open('Greška prilikom dodavanja opreme!', 'U redu', {
+                duration: 3000,
+              });
+            } else {
+              this.snackBar.open('Greška prilikom dodavanja usluge!', 'U redu', {
+                duration: 3000,
+              });
+            }
           },
         });
     } else {
       if(this.equipmentForm.get('kolicina')?.value < 1){
-        this.snackBar.open('Količina mora opreme mora biti veća od 0!', 'U redu', {
+        this.snackBar.open('Količina mora biti veća od 0!', 'U redu', {
           duration: 3000,
         });
       } else {
@@ -114,6 +146,6 @@ export class AddEquipmentDialogComponent implements OnInit {
 type Oprema = {
   id: number;
   naziv: string;
-  vrstaOpreme: string;
-  zalihaOpreme: number;
+  vrstaOpremeUsluge: string;
+  zaliha: number;
 };

@@ -34,26 +34,6 @@ public static class Mapping
             VrstaKorisnika = korisnik.VrstaKorisnika
         };
 
-   
-
-    public static Osmrtnica ToDomain(this DbModels.Osmrtnica osmrtnica)
-       => new Osmrtnica(
-           osmrtnica.IdOsmrtnica,
-           osmrtnica.SlikaPok,
-           osmrtnica.Opis,
-           osmrtnica.ObjavaNaStranici
-       );
-
-    public static DbModels.Osmrtnica ToDbModel(this Osmrtnica osmrtnica)
-        => new DbModels.Osmrtnica()
-        {
-           IdOsmrtnica = osmrtnica.Id,
-           SlikaPok = osmrtnica.SlikaPok,
-           Opis = osmrtnica.Opis,
-           ObjavaNaStranici = osmrtnica.ObjavaNaStranici
-        };
-
-    
 
 
     public static Osiguranje ToDomain(this DbModels.Osiguranje osiguranje)
@@ -96,17 +76,30 @@ public static class Mapping
             Cijena = paket.Cijena
         };
 
+    public static JedinicaMjere ToDomain(this DbModels.JedinicaMjere jedinicaMjere)
+        => new JedinicaMjere(
+                jedinicaMjere.IdJednicaMjere,
+                jedinicaMjere.Naziv
+           );
+
+    public static DbModels.JedinicaMjere ToDbModel(this JedinicaMjere jedinicaMjere)
+        => new DbModels.JedinicaMjere()
+        {
+            IdJednicaMjere = jedinicaMjere.Id,
+            Naziv = jedinicaMjere.Naziv
+        };
+
     public static Pogreb ToDomain(this DbModels.Pogreb pogreb)
        => new Pogreb(
            pogreb.IdPogreb,
            pogreb.SmrtniSlucajId,
-           pogreb.DatumPogreb,
+           pogreb.DatumPogreba,
            pogreb.Kremacija,
+           pogreb.DatumUgovaranja,
            pogreb.UkupnaCijena,
            pogreb.SmrtniSlucaj?.Korisnik.ToDomain(),
            pogreb.SmrtniSlucaj?.ToDomain(),
-           pogreb.PogrebOprema.Select(ToDomain),
-           pogreb.Usluga.Select(ToDomain)
+           pogreb.PogrebOpremaUsluge.Select(ToDomain)
        );
 
     public static DbModels.Pogreb ToDbModel(this Pogreb pogreb)
@@ -114,7 +107,8 @@ public static class Mapping
         {
             IdPogreb = pogreb.Id,
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
-            DatumPogreb = pogreb.DatumPogreba,
+            DatumPogreba = pogreb.DatumPogreba,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             Kremacija = pogreb.Kremacija,
             UkupnaCijena = pogreb.UkupnaCijena,
            // PogrebOprema = pogreb.PogrebOprema.Select(po => po.ToDbModel(pogreb.Id)).ToList(),
@@ -122,17 +116,19 @@ public static class Mapping
            // SmrtniSlucaj = pogreb.SmrtniSlucaj?.ToDbModel()
         };
 
-    public static PogrebOprema ToDomain(this DbModels.PogrebOprema pogrebOprema)
-        => new PogrebOprema(
-            pogrebOprema.Oprema.ToDomain(),
-            pogrebOprema.Kolicina
+    public static PogrebOpremaUsluge ToDomain(this DbModels.PogrebOpremaUsluge pogrebOprema)
+        => new PogrebOpremaUsluge(
+            pogrebOprema.OpremaUsluga.ToDomain(),
+            (int) pogrebOprema.Kolicina,
+            pogrebOprema.Cijena
             );
-    public static DbModels.PogrebOprema ToDbModel(this PogrebOprema pogrebOprema, int pogrebId)
-       => new DbModels.PogrebOprema()
+    public static DbModels.PogrebOpremaUsluge ToDbModel(this PogrebOpremaUsluge pogrebOprema, int pogrebId)
+       => new DbModels.PogrebOpremaUsluge()
        {
            PogrebId = pogrebId,
-           OpremaId = pogrebOprema.Oprema.Id,
-           Kolicina = pogrebOprema.Kolicina
+           OpremaUslugaId = pogrebOprema.OpremaUsluga.Id,
+           Kolicina = pogrebOprema.Kolicina,
+           Cijena = pogrebOprema.Cijena
        };
 
     public static PogrebSmrtniSlucaj ToDomain2(this DbModels.Pogreb pogreb)
@@ -142,12 +138,13 @@ public static class Mapping
                 pogreb.SmrtniSlucaj.ImePok,
                 pogreb.SmrtniSlucaj.PrezimePok,
                 pogreb.SmrtniSlucaj.DatumSmrtiPok,
-                pogreb.DatumPogreb,
+                pogreb.DatumPogreba,
                 pogreb.Kremacija,
                 pogreb.UkupnaCijena,
                 pogreb.SmrtniSlucaj.KorisnikId,
                 pogreb.SmrtniSlucaj.Korisnik.Ime,
-                pogreb.SmrtniSlucaj.Korisnik.Prezime
+                pogreb.SmrtniSlucaj.Korisnik.Prezime,
+                pogreb.DatumUgovaranja
             );
 
     public static DbModels.Pogreb ToDbModel(this PogrebSmrtniSlucaj pogreb)
@@ -155,8 +152,9 @@ public static class Mapping
         {
             IdPogreb = pogreb.Id,
             SmrtniSlucajId = pogreb.SmrtniSlucajId,
-            DatumPogreb = pogreb.DatumPogreba,
+            DatumPogreba = pogreb.DatumPogreba,
             Kremacija = pogreb.Kremacija,
+            DatumUgovaranja = pogreb.DatumUgovaranja,
             UkupnaCijena = pogreb.UkupnaCijena
         };
 
@@ -183,72 +181,50 @@ public static class Mapping
            Oibpok = smrtniSlucaj.Oibpok
         };
 
-    public static Usluga ToDomain(this DbModels.Usluga usluga)
-       => new Usluga(
-           usluga.IdUsluga,
-           usluga.Naziv,
-           usluga.VrstaUslugeId,
-           usluga.VrstaUsluge.Naziv,
-           usluga.Opis,
-           usluga.Cijena
-       );
 
-    public static DbModels.Usluga ToDbModel(this Usluga usluga)
-        => new DbModels.Usluga()
-        {
-            IdUsluga = usluga.Id,
-            Naziv = usluga.Naziv,
-            VrstaUslugeId = usluga.VrstaUslugeId,
-            Opis = usluga.Opis,
-            Cijena = usluga.Cijena
-        };
-
-    public static VrstaUsluge ToDomain(this DbModels.VrstaUsluge vrstaUsluge)
-        => new VrstaUsluge(
-               vrstaUsluge.IdVrstaUsluge,
-               vrstaUsluge.Naziv
+    public static OpremaUsluga ToDomain(this DbModels.OpremaUsluga opremaUsluga)
+        => new OpremaUsluga(
+            opremaUsluga.IdOpremaUsluga,
+            opremaUsluga.VrstaOpremeUslugeId,
+            opremaUsluga.VrstaOpremeUsluge.Naziv,
+            opremaUsluga.VrstaOpremeUsluge.JeOprema,
+            opremaUsluga.Naziv,
+            opremaUsluga.Slika,
+            opremaUsluga.Zaliha,
+            opremaUsluga.Opis,
+            opremaUsluga.VrstaOpremeUsluge.JedinicaMjereId is not null ? opremaUsluga.VrstaOpremeUsluge.JedinicaMjere.Naziv : "",
+            opremaUsluga.Cijena
            );
 
-    public static DbModels.VrstaUsluge ToDbModel(this VrstaUsluge vrstaUsluge)
-        => new DbModels.VrstaUsluge()
+    public static DbModels.OpremaUsluga ToDbModel(this OpremaUsluga opremaUsluga)
+        => new DbModels.OpremaUsluga()
         {
-            IdVrstaUsluge = vrstaUsluge.Id,
-            Naziv = vrstaUsluge.Naziv
+            IdOpremaUsluga = opremaUsluga.Id,
+            VrstaOpremeUslugeId = opremaUsluga.VrstaOpremeUslugeId,
+            Naziv = opremaUsluga.Naziv,
+            Slika = opremaUsluga.Slika,
+            Zaliha = opremaUsluga.Zaliha,
+            Opis = opremaUsluga.Opis,
+            Cijena = opremaUsluga.Cijena
+
         };
 
-    public static Oprema ToDomain(this DbModels.Oprema oprema)
-        => new Oprema(
-            oprema.IdOprema,
-            oprema.Naziv,
-            oprema.VrstaOpremeId,
-            oprema.VrstaOpreme.Naziv,
-            oprema.Slika,
-            oprema.ZalihaOpreme,
-            oprema.Cijena
-           );
-
-    public static DbModels.Oprema ToDbModel(this Oprema oprema)
-        => new DbModels.Oprema()
-        {
-            IdOprema = oprema.Id,
-            Naziv = oprema.Naziv,
-            VrstaOpremeId = oprema.VrstaOpremeId,
-            Slika = oprema.Slika,
-            ZalihaOpreme = oprema.ZalihaOpreme,
-            Cijena = oprema.Cijena
-        };
-
-    public static VrstaOpreme ToDomain(this DbModels.VrstaOpreme vrstaOpreme)
-        => new VrstaOpreme(
-                vrstaOpreme.IdVrstaOpreme,
-                vrstaOpreme.Naziv
+    public static VrstaOpremeUsluge ToDomain(this DbModels.VrstaOpremeUsluge vrstaOpremeUsluge)
+        => new VrstaOpremeUsluge(
+                vrstaOpremeUsluge.IdVrstaOpremeUsluge,
+                vrstaOpremeUsluge.Naziv,
+                vrstaOpremeUsluge.JeOprema,
+                vrstaOpremeUsluge.JedinicaMjereId,
+                vrstaOpremeUsluge.JedinicaMjereId is not null ? vrstaOpremeUsluge.JedinicaMjere.Naziv : ""
                 );
 
-    public static DbModels.VrstaOpreme ToDbModel(this VrstaOpreme vrstaOpreme)
-        => new DbModels.VrstaOpreme()
+    public static DbModels.VrstaOpremeUsluge ToDbModel(this VrstaOpremeUsluge vrstaOpremeUsluge)
+        => new DbModels.VrstaOpremeUsluge()
         {
-            IdVrstaOpreme = vrstaOpreme.Id,
-            Naziv = vrstaOpreme.Naziv
+            IdVrstaOpremeUsluge = vrstaOpremeUsluge.Id,
+            Naziv = vrstaOpremeUsluge.Naziv,
+            JeOprema = vrstaOpremeUsluge.JeOprema,
+            JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId
         };
 
 }

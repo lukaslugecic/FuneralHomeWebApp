@@ -12,15 +12,15 @@ namespace FuneralHome.Controllers;
 public class PogrebController : ControllerBase
 {
     private readonly IPogrebRepository _pogrebRepository;
-    private readonly IOpremaRepository _opremaRepository;
+    private readonly IOpremaUslugaRepository _opremaUslugaRepository;
     private readonly IOsiguranjeRepository _osiguranjeRepository;
 
     public PogrebController(IPogrebRepository repository,
-        IOpremaRepository opremaRepository,
+        IOpremaUslugaRepository opremaRepository,
         IOsiguranjeRepository osiguranjeRepository)
     {
         _pogrebRepository = repository;
-        _opremaRepository = opremaRepository;
+        _opremaUslugaRepository = opremaRepository;
         _osiguranjeRepository = osiguranjeRepository;
     }
 
@@ -114,7 +114,7 @@ public class PogrebController : ControllerBase
 
 
     [HttpPost("AddOprema/{pogrebId}")]
-    public IActionResult AddOprema(int pogrebId, PogrebOprema pogrebOprema)
+    public IActionResult AddOprema(int pogrebId, PogrebOpremaUsluge pogrebOprema)
     {
         if (!ModelState.IsValid)
         {
@@ -143,7 +143,7 @@ public class PogrebController : ControllerBase
 
         if (pogreb.AddOprema(domainPogrebOprema))
         {
-            var opremaResult = _opremaRepository.DecreaseZaliha(domainPogrebOprema.Oprema, domainPogrebOprema.Kolicina);
+            var opremaResult = _opremaUslugaRepository.DecreaseZaliha(domainPogrebOprema.OpremaUsluga, domainPogrebOprema.Kolicina);
             if (opremaResult.IsFailure)
             {
                 return Problem(opremaResult.Message, statusCode: 500);
@@ -170,7 +170,7 @@ public class PogrebController : ControllerBase
 
     
     [HttpPost("RemoveOprema/{pogrebId}")]
-    public IActionResult RemoveOprema(int pogrebId, Oprema oprema)
+    public IActionResult RemoveOprema(int pogrebId, OpremaUsluga opremaUsluga)
     {
         if (!ModelState.IsValid)
         {
@@ -189,23 +189,23 @@ public class PogrebController : ControllerBase
 
         var pogreb = pogrebResult.Data;
         
-        var domainOprema = oprema.ToDomain();
+        var domainOprema = opremaUsluga.ToDomain();
 
-        var kolicina = pogreb.PogrebOprema
-            .Where(o => o.Oprema.Id == oprema.Id)
+        var kolicina = pogreb.PogrebOpremaUsluge
+            .Where(o => o.OpremaUsluga.Id == opremaUsluga.Id)
             .Select(o => o.Kolicina).FirstOrDefault();
 
         if (kolicina == 0)
         {
-            return NotFound($"Couldn't find equipment kolicina {oprema.Naziv}");
+            return NotFound($"Couldn't find equipment kolicina {opremaUsluga.Naziv}");
         }
 
-        if (!pogreb.RemoveOprema(domainOprema))
+        if (!pogreb.RemoveOpremaUsluga(domainOprema))
         {
-            return NotFound($"Couldn't find equipment {oprema.Naziv}");
+            return NotFound($"Couldn't find equipment {opremaUsluga.Naziv}");
         }
 
-        var opremaResult = _opremaRepository.IncreaseZaliha(domainOprema, kolicina);
+        var opremaResult = _opremaUslugaRepository.IncreaseZaliha(domainOprema, kolicina);
         if (opremaResult.IsFailure)
         {
             return Problem(opremaResult.Message, statusCode: 500);
@@ -249,10 +249,10 @@ public class PogrebController : ControllerBase
 
         var pogreb = pogrebResult.Data;
     
-        if (pogreb.IncrementOprema(opremaId))
+        if (pogreb.IncrementOpremaUsluga(opremaId))
         {
-            var oprema = _opremaRepository.Get(opremaId).Data;
-            var opremaResult = _opremaRepository.DecreaseZaliha(oprema, 1);
+            var oprema = _opremaUslugaRepository.Get(opremaId).Data;
+            var opremaResult = _opremaUslugaRepository.DecreaseZaliha(oprema, 1);
             if (opremaResult.IsFailure)
             {
                 return Problem(opremaResult.Message, statusCode: 500);
@@ -295,10 +295,10 @@ public class PogrebController : ControllerBase
         }
         var pogreb = pogrebResult.Data;
 
-        if (pogreb.DecrementOprema(opremaId))
+        if (pogreb.DecrementOpremaUsluga(opremaId))
         {
-            var oprema = _opremaRepository.Get(opremaId).Data;
-            var opremaResult = _opremaRepository.IncreaseZaliha(oprema, 1);
+            var oprema = _opremaUslugaRepository.Get(opremaId).Data;
+            var opremaResult = _opremaUslugaRepository.IncreaseZaliha(oprema, 1);
             if (opremaResult.IsFailure)
             {
                 return Problem(opremaResult.Message, statusCode: 500);
@@ -317,101 +317,6 @@ public class PogrebController : ControllerBase
         var updateResult =
             pogreb.IsValid()
             .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
-        return updateResult
-            ? Accepted()
-            : Problem(updateResult.Message, statusCode: 500);
-    }
-
-
-    [HttpPost("AddUsluga/{pogrebId}")]
-    public IActionResult AddUsluga(int pogrebId, Usluga usluga)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var pogrebResult = _pogrebRepository.GetAggregate(pogrebId);
-        if (pogrebResult.IsFailure)
-        {
-            return NotFound();
-        }
-        if (pogrebResult.IsException)
-        {
-            return Problem(pogrebResult.Message, statusCode: 500);
-        }
-
-        var pogreb = pogrebResult.Data;
-
-        var domainPogrebUsluga = usluga.ToDomain();
-        var validationResult = domainPogrebUsluga.IsValid();
-
-        if (!validationResult)
-        {
-            return Problem(validationResult.Message, statusCode: 500);
-        }
-
-        pogreb.AddUsluga(domainPogrebUsluga);
-
-        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
-        if (!osiguranjeResult)
-        {
-            return Problem(osiguranjeResult.Message, statusCode: 500);
-        }
-        if (osiguranjeResult.Data != null)
-            if(osiguranjeResult.Data.Count() > 0)
-                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
-
-        var updateResult =
-            pogreb.IsValid()
-            .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
-
-        return updateResult
-            ? Accepted()
-            : Problem(updateResult.Message, statusCode: 500);
-    }
-
-
-    [HttpPost("RemoveUsluga/{pogrebId}")]
-    public IActionResult RemoveUsluga(int pogrebId, Usluga usluga)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        var pogrebResult = _pogrebRepository.GetAggregate(pogrebId);
-        if (pogrebResult.IsFailure)
-        {
-            return NotFound();
-        }
-        if (pogrebResult.IsException)
-        {
-            return Problem(pogrebResult.Message, statusCode: 500);
-        }
-
-        var pogreb = pogrebResult.Data;
-
-        var domainUsluga = usluga.ToDomain();
-
-        if (!pogreb.RemoveUsluga(domainUsluga))
-        {
-            return NotFound($"Couldn't find service {usluga.Naziv}");
-        }
-
-        var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(pogreb.SmrtniSlucajId);
-        if (!osiguranjeResult)
-        {
-            return Problem(osiguranjeResult.Message, statusCode: 500);
-        }
-        if (osiguranjeResult.Data != null)
-            if (osiguranjeResult.Data.Count() > 0)
-                pogreb.CalculateDiscount(osiguranjeResult.Data.First());
-
-        var updateResult =
-            pogreb.IsValid()
-            .Bind(() => _pogrebRepository.UpdateAggregate(pogreb));
-
         return updateResult
             ? Accepted()
             : Problem(updateResult.Message, statusCode: 500);
@@ -590,7 +495,7 @@ public class PogrebController : ControllerBase
             return Problem(validationResulWithId.Message, statusCode: 500);
         }
 
-        foreach (PogrebOprema pogrebOprema in addPogreb.Oprema)
+        foreach (PogrebOpremaUsluge pogrebOprema in addPogreb.Oprema)
         {
             var domainPogrebOprema = pogrebOprema.ToDomain(id);
             var pogrebOpremavalidationResult = domainPogrebOprema.IsValid();
@@ -601,7 +506,7 @@ public class PogrebController : ControllerBase
 
             if (domainPogrebWithId.AddOprema(domainPogrebOprema))
             {
-                var opremaResult = _opremaRepository.DecreaseZaliha(domainPogrebOprema.Oprema, domainPogrebOprema.Kolicina);
+                var opremaResult = _opremaUslugaRepository.DecreaseZaliha(domainPogrebOprema.OpremaUsluga, domainPogrebOprema.Kolicina);
                 if (!opremaResult)
                 {
                     var deleteResult = _pogrebRepository.Remove(id);
@@ -610,17 +515,6 @@ public class PogrebController : ControllerBase
             };   
         }
 
-        foreach(Usluga usluga in addPogreb.Usluga)
-        {
-            var domainUsluga = usluga.ToDomain();
-            var uslugaValidationResult = domainUsluga.IsValid();
-            if (!uslugaValidationResult)
-            {
-                var deleteResult = _pogrebRepository.Remove(id);
-                return Problem(uslugaValidationResult.Message, statusCode: 500);
-            }
-            domainPogrebWithId.AddUsluga(domainUsluga);
-        }
 
         var osiguranjeResult = _osiguranjeRepository.GetBySmrtniSlucajId(domainPogrebWithId.SmrtniSlucajId);
         if (!osiguranjeResult)

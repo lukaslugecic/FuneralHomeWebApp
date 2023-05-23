@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IOpremaData } from 'src/app/interfaces/oprema-data';
-import { IVrstaOpremeData } from 'src/app/interfaces/vrsta-opreme-data';
+import { IOpremaUslugaData } from 'src/app/interfaces/oprema-usluga-data';
+import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
 
 @Component({
@@ -17,15 +17,15 @@ export class EquipmentDialogComponent implements OnInit {
 
   equipmentForm: FormGroup = new FormGroup({
     naziv: new FormControl('', [Validators.required]),
-    zalihaOpreme: new FormControl('', [Validators.required, Validators.min(0)]),
+    zaliha: new FormControl('', [Validators.required, Validators.min(0)]),
     cijena: new FormControl('', [Validators.required, Validators.min(0)]),
-    vrstaOpreme: new FormControl('', [Validators.required]),
+    vrstaOpremeUsluge: new FormControl('', [Validators.required]),
     slika: new FormControl('')
   });
   
-  toUpdate: IOpremaData = {} as IOpremaData;
+  toUpdate: IOpremaUslugaData = {} as IOpremaUslugaData;
 
-  types: IVrstaOpremeData[] = [];
+  types: IVrstaOpremeUslugeData[] = [];
 
   constructor(
     private readonly _equipmentService: EquipmentService,
@@ -41,9 +41,9 @@ export class EquipmentDialogComponent implements OnInit {
       if (this.data) {
         this.equipmentForm.patchValue({
           naziv: this.data.naziv,
-          zalihaOpreme: this.data.zalihaOpreme,
+          zaliha: this.data.zaliha,
           cijena: this.data.cijena,
-          vrstaOpreme: this.data.vrstaOpremeId,
+          vrstaOpremeUsluge: this.data.vrstaOpremeUslugeId,
           slika: this.data.slika
         });
       }
@@ -57,10 +57,12 @@ export class EquipmentDialogComponent implements OnInit {
           Id: this.data.id,
           Naziv: this.equipmentForm.value.naziv,
           Cijena: this.equipmentForm.value.cijena,
-          ZalihaOpreme: this.equipmentForm.value.zalihaOpreme,
+          Zaliha: this.equipmentForm.value.zaliha,
           Slika: this.equipmentForm.value.slika,
-          VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
-          VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
+          VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
+          VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
+          Opis: null
         }
         this._equipmentService
           .updateEquipment(this.data.id, this.toUpdate)
@@ -83,10 +85,12 @@ export class EquipmentDialogComponent implements OnInit {
           Id: 0,
           Naziv: this.equipmentForm.value.naziv,
           Cijena: this.equipmentForm.value.cijena,
-          ZalihaOpreme: this.equipmentForm.value.zalihaOpreme,
+          Zaliha: this.equipmentForm.value.zaliha,
           Slika: this.equipmentForm.value.slika,
-          VrstaOpremeId: this.equipmentForm.value.vrstaOpreme,
-          VrstaOpremeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpreme)?.naziv ?? "",
+          VrstaOpremeUslugeId: this.equipmentForm.value.vrstaOpremeUsluge,
+          VrstaOpremeUslugeNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.naziv ?? "",
+          JedinicaMjereNaziv: this.types.find(x => x.id == this.equipmentForm.value.vrstaOpremeUsluge)?.jedinicaMjereNaziv ?? "",
+          Opis: null
         }
         this._equipmentService.addEquipment(this.toUpdate).subscribe({
           next: (val: any) => {

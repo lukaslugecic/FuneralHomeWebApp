@@ -1,4 +1,5 @@
-﻿using FuneralHome.Domain.Models;
+﻿using BaseLibrary;
+using FuneralHome.Domain.Models;
 using System;
 
 namespace FuneralHome.Repositories;
@@ -8,7 +9,9 @@ namespace FuneralHome.Repositories;
 /// </summary>
 /// <typeparam name="TKey"></typeparam>
 /// <typeparam name="TDomainModel"></typeparam>
-public interface IVrstaOpremeRepository
-    : IRepository<int, VrstaOpreme>
+public interface IVrstaOpremeUslugeRepository
+    : IRepository<int, VrstaOpremeUsluge>
 {
+    Result<IEnumerable<VrstaOpremeUsluge>> GetAllOprema();
+    Result<IEnumerable<VrstaOpremeUsluge>> GetAllUsluge();
 }
