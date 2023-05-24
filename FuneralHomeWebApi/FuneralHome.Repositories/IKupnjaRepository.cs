@@ -14,5 +14,6 @@ public interface IKupnjaRepository
       IAggregateRepository<int, Kupnja>
 {
     Result<IEnumerable<Kupnja>> GetAllByKorisnikId(int korisnikId);
+    Result<IEnumerable<Kupnja>> GetAllAggregatesByKorisnikId(int korisnikId);
     Result<Kupnja> GetLatestByKorisnikId(int korisnikId);
 }

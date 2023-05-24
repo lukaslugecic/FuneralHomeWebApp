@@ -7,6 +7,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { DeathService } from 'src/app/services/death/death.service';
 import { FuneralService } from 'src/app/services/funeral/funeral.service';
 import { InsuranceService } from 'src/app/services/insurance/insurance.service';
+import { PurchaseService } from 'src/app/services/purchase/purchase.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -53,6 +54,19 @@ export class ProfileComponent implements OnInit {
     'action'
   ];
 
+  purchaseColumns: string[] = [
+    'id',
+    'datumKupovine',
+    'ukupnaCijena',
+    'details',
+  ];
+
+  expandedRowIndex: number | null = null;
+
+  toggleDetails(rowId: number) {
+    this.expandedRowIndex = this.expandedRowIndex === rowId ? null : rowId;
+  }
+
   id: number = this._authService.userValue?.id as number;
 
   constructor(
@@ -62,7 +76,8 @@ export class ProfileComponent implements OnInit {
     private _userService: UserService,
     private _deathService: DeathService,
     private _funeralService: FuneralService,
-    private _insuranceService: InsuranceService
+    private _insuranceService: InsuranceService,
+    private _purchaseService: PurchaseService
   ) {}
 
 
@@ -70,10 +85,12 @@ export class ProfileComponent implements OnInit {
   dataSourceDeaths!: MatTableDataSource<any>;
   dataSourceFunerals!: MatTableDataSource<any>;
   dataSourceInsurance!: MatTableDataSource<any>;
+  dataSourcePurchase!: MatTableDataSource<any>;
   userData: any[] = [];
   deathData: any[] = [];
   funeralData: any[] = [];
   insuranceData: any[] = [];
+  purchaseData: any[] = [];
 
   ngOnInit(): void {
     this.getAllData();
@@ -111,6 +128,14 @@ export class ProfileComponent implements OnInit {
         this.dataSourceInsurance = new MatTableDataSource(this.insuranceData);
       }
     });
+
+    this._purchaseService.getAllPurchasesByUserId(this.id).subscribe({
+      next: (res) => {
+        this.purchaseData = res;
+        this.dataSourcePurchase = new MatTableDataSource(this.purchaseData);
+      }
+    });
+
   }
 
 

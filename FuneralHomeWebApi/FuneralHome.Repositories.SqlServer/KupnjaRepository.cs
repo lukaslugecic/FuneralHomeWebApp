@@ -162,6 +162,27 @@ public class KupnjaRepository : IKupnjaRepository
         }
     }
 
+    public Result<IEnumerable<Kupnja>> GetAllAggregatesByKorisnikId(int korisnikId)
+    {
+        try
+        {
+            var models = _dbContext.Kupnja
+                            .Include(k => k.Korisnik)
+                            .Include(k => k.KupnjaOpremaUsluge)
+                            .ThenInclude(kou => kou.OpremaUsluga)
+                            .ThenInclude(o => o.VrstaOpremeUsluge)
+                            .ThenInclude(v => v.JedinicaMjere)
+                            .Where(k => k.KorisnikId.Equals(korisnikId))
+                            .Select(Mapping.ToDomain);
+
+            return Results.OnSuccess(models);
+        }
+        catch (Exception e)
+        {
+            return Results.OnException<IEnumerable<Kupnja>>(e);
+        }
+    }
+
     public Result Insert(Kupnja model)
     {
         try

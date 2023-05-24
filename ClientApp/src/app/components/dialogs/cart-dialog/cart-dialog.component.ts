@@ -43,16 +43,21 @@ export class CartDialogComponent implements OnInit {
 
   onFormSubmit() {
     // provjeri da li je količina veća od zalihe i ispisi koja je oprema u pitanju
-    const equipmentWithQuantity = this.equipmentQuantity.filter((eq: any) => eq.kolicina > eq.oprema.zaliha);
-    if(equipmentWithQuantity.length > 0) {
+    const tooMuch = this.equipmentQuantity.filter((eq: any) => eq.kolicina > eq.oprema.zaliha);
+    if(tooMuch.length > 0) {
       let equipmentNames = '';
-      equipmentWithQuantity.forEach((eq: any) => {
+      tooMuch.forEach((eq: any) => {
         equipmentNames += eq.oprema.naziv + ', ';
       });
       equipmentNames = equipmentNames.substring(0, equipmentNames.length - 2);
       this._snackBar.open('Količina opreme ' + equipmentNames + ' je veća od zalihe!', 'U redu', {
         duration: 3000
-
+      });
+      return;
+    }
+    if(this.equipmentQuantity.length === 0) {
+      this._snackBar.open('Košarica je prazna!', 'U redu', {
+        duration: 3000
       });
       return;
     }

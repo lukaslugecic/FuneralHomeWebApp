@@ -44,7 +44,17 @@ public class KupnjaController : ControllerBase
             : Problem(kupnjaResults.Message, statusCode: 500);
     }
 
-    
+    // GET: api/Kupnja/Aggregates/Korisnik/5
+    [HttpGet("Aggregates/Korisnik/{id}")]
+    public ActionResult<IEnumerable<KupnjaAggregate>> GetAllKupnjaAggregatesByKorisnikId(int id)
+    {
+        var kupnjaResults = _kupnjaRepository.GetAllAggregatesByKorisnikId(id)
+            .Map(p => p.Select(DtoMapping.ToAggregateDto));
+        return kupnjaResults
+            ? Ok(kupnjaResults.Data)
+            : Problem(kupnjaResults.Message, statusCode: 500);
+    }
+
 
     // GET : api/Kupanja/Korisnik/5
     [HttpGet("Korisnik/{id}")]
@@ -86,7 +96,7 @@ public class KupnjaController : ControllerBase
         };
     }
 
-
+    
     [HttpPost("AddOprema/{kupnjaId}")]
     public IActionResult AddOprema(int kupnjaId, KupnjaOpremaUsluge kupnjaOprema)
     {
