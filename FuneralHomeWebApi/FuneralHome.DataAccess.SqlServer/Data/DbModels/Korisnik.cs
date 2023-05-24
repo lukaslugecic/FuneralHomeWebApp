@@ -15,6 +15,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     {
         public Korisnik()
         {
+            Kupnja = new HashSet<Kupnja>();
             SmrtniSlucaj = new HashSet<SmrtniSlucaj>();
         }
 
@@ -48,6 +49,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
 
         [InverseProperty("Korisnik")]
         public virtual Osiguranje Osiguranje { get; set; }
+        [InverseProperty("Korisnik")]
+        public virtual ICollection<Kupnja> Kupnja { get; set; }
         [InverseProperty("Korisnik")]
         public virtual ICollection<SmrtniSlucaj> SmrtniSlucaj { get; set; }
     }

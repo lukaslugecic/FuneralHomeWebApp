@@ -12,6 +12,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
     {
         public OpremaUsluga()
         {
+            KupnjaOpremaUsluge = new HashSet<KupnjaOpremaUsluge>();
             PogrebOpremaUsluge = new HashSet<PogrebOpremaUsluge>();
         }
 
@@ -31,6 +32,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         [ForeignKey("VrstaOpremeUslugeId")]
         [InverseProperty("OpremaUsluga")]
         public virtual VrstaOpremeUsluge VrstaOpremeUsluge { get; set; }
+        [InverseProperty("OpremaUsluga")]
+        public virtual ICollection<KupnjaOpremaUsluge> KupnjaOpremaUsluge { get; set; }
         [InverseProperty("OpremaUsluga")]
         public virtual ICollection<PogrebOpremaUsluge> PogrebOpremaUsluge { get; set; }
     }

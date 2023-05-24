@@ -21,6 +21,8 @@ namespace FuneralHome.DataAccess.SqlServer.Data
 
         public virtual DbSet<JedinicaMjere> JedinicaMjere { get; set; }
         public virtual DbSet<Korisnik> Korisnik { get; set; }
+        public virtual DbSet<Kupnja> Kupnja { get; set; }
+        public virtual DbSet<KupnjaOpremaUsluge> KupnjaOpremaUsluge { get; set; }
         public virtual DbSet<OpremaUsluga> OpremaUsluga { get; set; }
         public virtual DbSet<Osiguranje> Osiguranje { get; set; }
         public virtual DbSet<PaketOsiguranja> PaketOsiguranja { get; set; }
@@ -36,6 +38,33 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.Property(e => e.Oib).IsFixedLength();
 
                 entity.Property(e => e.VrstaKorisnika).IsFixedLength();
+            });
+
+            modelBuilder.Entity<Kupnja>(entity =>
+            {
+                entity.HasOne(d => d.Korisnik)
+                    .WithMany(p => p.Kupnja)
+                    .HasForeignKey(d => d.KorisnikId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Kupnja_Korisnik");
+            });
+
+            modelBuilder.Entity<KupnjaOpremaUsluge>(entity =>
+            {
+                entity.HasKey(e => new { e.KupnjaId, e.OpremaUslugaId })
+                    .HasName("PK_KupnjaOpremaUsluge_1");
+
+                entity.HasOne(d => d.Kupnja)
+                    .WithMany(p => p.KupnjaOpremaUsluge)
+                    .HasForeignKey(d => d.KupnjaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_KupnjaOpremaUsluge_Kupnja");
+
+                entity.HasOne(d => d.OpremaUsluga)
+                    .WithMany(p => p.KupnjaOpremaUsluge)
+                    .HasForeignKey(d => d.OpremaUslugaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_KupnjaOpremaUsluge_OpremaUsluga");
             });
 
             modelBuilder.Entity<OpremaUsluga>(entity =>
