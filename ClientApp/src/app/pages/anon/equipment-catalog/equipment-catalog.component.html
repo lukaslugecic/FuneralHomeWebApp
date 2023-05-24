@@ -8,6 +8,10 @@
 <!-- app.component.html -->
 <div class="header">
   <h1><b>Ponuda opreme</b></h1>
+  <button class="buy-button" *ngIf="user$ | async" mat-raised-button
+  (click)="openCart()" [matBadge]="badge$ | async" matBadgePosition="after">
+    Košarica <mat-icon>shopping_cart</mat-icon>
+  </button>
 </div>
 <div class="container">
   <div class="gallery">
@@ -19,6 +23,7 @@
             <img [src]="'data:image/jpeg;base64,' + item.slika" alt="{{ item.naziv }}" class="equipment-image" />
             <h3 class="equipment-name">{{ item.naziv }}</h3>
             <p class="equipment-price">{{ item.cijena | currency: 'EUR'}}</p>
+            <button *ngIf="user$ | async" mat-raised-button (click)="addToCart(item)">Dodaj u košaricu</button>
           </div>
         </div>
       </div>

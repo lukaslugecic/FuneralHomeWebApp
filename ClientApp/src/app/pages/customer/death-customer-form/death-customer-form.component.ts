@@ -115,7 +115,6 @@ export class DeathCustomerFormComponent implements OnInit {
 
 }
 
-// definirati dijalog koji ce pitati "Želite li organizorati pogreb?" i ako je odgovor potvrdan, otvoriti pogrebni obrazac
 @Component({
   selector: 'app-to-organize-funeral-dialog',
   templateUrl: 'dialogs/to-organize-funeral-dialog.html',
@@ -136,5 +135,4 @@ export class ToOrganizeFuneralDialog{
     onYesClick(): void {
       this.dialogRef.close(true);
     }
-  
-  }
+}

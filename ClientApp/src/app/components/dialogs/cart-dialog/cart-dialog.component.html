@@ -1,0 +1,29 @@
+<div mat-dialog-title>
+    <h1>Vaša košarica</h1>
+    <h2>Ukupna cijena: {{ getTotalPrice()}}€</h2>
+</div>
+
+<form [formGroup]="cartForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+                  <mat-list>
+                    <mat-list-item *ngFor="let e of equipmentQuantity">
+                        <img *ngIf="e.oprema.slika" mat-list-avatar [src]="'data:image/jpeg;base64,' + e.oprema.slika">
+                        <div mat-line>{{ e.oprema.naziv }}</div>
+                        <div mat-line>Cijena: €{{ e.oprema.cijena }}</div>
+                        <div mat-list-item>
+                            Količina: {{e.kolicina}}
+                            <button mat-icon-button type="button" (click)="addEquipment(e.oprema.id)">
+                                <mat-icon>add_circle</mat-icon>
+                            </button>
+                            <button mat-icon-button type="button" (click)="removeEquipment(e.oprema.id)">
+                                <mat-icon>remove_circle</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                  </mat-list>
+    </div>
+        <div mat-dialog-actions class="action">
+            <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+            <button mat-raised-button color="primary" type="submit">Potvrdi</button>
+        </div>
+</form>

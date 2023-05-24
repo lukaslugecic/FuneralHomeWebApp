@@ -48,6 +48,7 @@ public class KupnjaRepository : IKupnjaRepository
         try
         {
             var model = _dbContext.Kupnja
+                          .Include(k => k.Korisnik)
                           .AsNoTracking()
                           .FirstOrDefault(p => p.IdKupnja.Equals(id))?
                           .ToDomain();
@@ -67,9 +68,10 @@ public class KupnjaRepository : IKupnjaRepository
         try
         {
             var model = _dbContext.Kupnja
+                          .Include(k => k.Korisnik)
                           .AsNoTracking()
                           .Where(k => k.KorisnikId.Equals(korisnikId))
-                          .OrderByDescending(k => k.DatumKupovine)
+                          .OrderByDescending(k => k.IdKupnja)
                           .FirstOrDefault()
                           ?.ToDomain();
             return model is not null

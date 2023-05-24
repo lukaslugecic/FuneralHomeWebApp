@@ -233,7 +233,7 @@ public static class Mapping
            kupnja.KorisnikId,
            kupnja.DatumKupovine,
            kupnja.UkupnaCijena,
-           kupnja.Korisnik.ToDomain(),
+           kupnja.Korisnik?.ToDomain(),
            kupnja.KupnjaOpremaUsluge.Select(ToDomain)
        );
 
