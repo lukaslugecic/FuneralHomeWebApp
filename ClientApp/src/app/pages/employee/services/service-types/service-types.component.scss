@@ -1,0 +1,43 @@
+.main-body {
+    padding-top: 20px;
+    margin: 0 auto;
+    max-width: 90%;
+  }
+
+  .header {
+    mat-form-field {
+        width: 50%;
+    }
+    mat-select {
+        font-size: larger;
+        width: 15%;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.action {
+    display: flex;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+}
+
+.table-image {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
+h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.0075em;
+    margin-bottom: 1 rem;
+}

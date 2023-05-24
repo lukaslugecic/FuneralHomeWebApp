@@ -21,10 +21,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ServiceDialogModule } from 'src/app/components/dialogs/service-dialog/service-dialog.module';
+import { ServiceTypesComponent } from './service-types/service-types.component';
 
 
 @NgModule({
-  declarations: [ServicesComponent],
+  declarations: [ServicesComponent, ServiceTypesComponent],
   imports: [
     CommonModule,
     MainFooterModule,

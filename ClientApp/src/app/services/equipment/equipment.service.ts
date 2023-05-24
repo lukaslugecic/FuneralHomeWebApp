@@ -26,14 +26,6 @@ export class EquipmentService {
   }
   */
 
-  public getTypesOfEquipment() : Observable<Array<IVrstaOpremeUslugeData>> {
-    return this.http.get<Array<IVrstaOpremeUslugeData>>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/Oprema`);
-  }
-
-  public getTypesOfServices() : Observable<Array<IVrstaOpremeUslugeData>> {
-    return this.http.get<Array<IVrstaOpremeUslugeData>>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/Usluge`);
-  }
-
   public updateEquipment(id: number, data: any) : Observable<any> {
     return this.http.put<any>(`${environment.apiUrlHttps}/OpremaUsluga/${id}`, data);
   }
@@ -44,5 +36,31 @@ export class EquipmentService {
 
   public deleteEquipment(id: number) : Observable<any> {
     return this.http.delete<any>(`${environment.apiUrlHttps}/OpremaUsluga/${id}`);
+  }
+
+  // VrstaOpremeUsluge
+
+  public getTypesOfEquipment() : Observable<Array<IVrstaOpremeUslugeData>> {
+    return this.http.get<Array<IVrstaOpremeUslugeData>>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/Oprema`);
+  }
+
+  public getTypesOfServices() : Observable<Array<IVrstaOpremeUslugeData>> {
+    return this.http.get<Array<IVrstaOpremeUslugeData>>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/Usluge`);
+  }
+
+  public updateTypeOfEquipment(id: number, data: any) : Observable<any> {
+    return this.http.put<any>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/${id}`, data);
+  }
+
+  public addTypeOfEquipment(data: any) : Observable<any> {
+    return this.http.post<any>(`${environment.apiUrlHttps}/VrstaOpremeUsluge`, data);
+  }
+
+  public deleteTypeOfEquipment(id: number) : Observable<any> {
+    return this.http.delete<any>(`${environment.apiUrlHttps}/VrstaOpremeUsluge/${id}`);
+  }
+
+  public getUnits() : Observable<Array<any>> {
+    return this.http.get<Array<any>>(`${environment.apiUrlHttps}/JedinicaMjere`);
   }
 }

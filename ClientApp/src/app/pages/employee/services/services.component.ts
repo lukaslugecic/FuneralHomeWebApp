@@ -7,6 +7,7 @@ import { ServiceDialogComponent } from 'src/app/components/dialogs/service-dialo
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IVrstaOpremeUslugeData } from 'src/app/interfaces/vrsta-opreme-usluge-data';
 import { EquipmentService } from 'src/app/services/equipment/equipment.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-services',
@@ -36,7 +37,8 @@ export class ServicesComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private readonly _equipmentService: EquipmentService,
-    private readonly snackBar: MatSnackBar
+    private readonly snackBar: MatSnackBar,
+    private readonly _router: Router
   ) { }
 
   ngOnInit(): void {
@@ -126,6 +128,9 @@ export class ServicesComponent implements OnInit {
     });
   }
   
+  openTypeTable() {
+    this._router.navigate(['/service/types']);
+  }
 }
 
 

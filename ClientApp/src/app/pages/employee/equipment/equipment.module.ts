@@ -21,11 +21,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { EquipmentDialogModule } from 'src/app/components/dialogs/equipment-dialog/equipment-dialog.module';
+import { TypeDialogModule } from 'src/app/components/dialogs/type-dialog/type-dialog.module';
+import { EquipmentTypesComponent } from './equipment-types/equipment-types.component';
 
 
 
 @NgModule({
-  declarations: [EquipmentComponent],
+  declarations: [EquipmentComponent, EquipmentTypesComponent],
   imports: [
     CommonModule,
     MainFooterModule,
@@ -46,7 +48,8 @@ import { EquipmentDialogModule } from 'src/app/components/dialogs/equipment-dial
     MatPaginatorModule,
     MatSortModule,
     MatSnackBarModule,
-    EquipmentDialogModule
+    EquipmentDialogModule,
+    TypeDialogModule
   ],
   exports: [EquipmentComponent]
 })

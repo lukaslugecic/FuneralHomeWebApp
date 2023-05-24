@@ -1,0 +1,37 @@
+<div mat-dialog-title>
+    <h1>{{jeOprema ? 'Vrste opreme': 'Vrsta usluge'}}</h1>
+</div>
+<form [formGroup]="typeForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-content class="content">
+        <div *ngIf="jeOprema; else jeUsluga">
+            <div class="row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Naziv</mat-label>
+                    <input matInput type="text" placeholder="Npr. Nova oprema" formControlName="naziv">
+                </mat-form-field>
+            </div>
+        </div>
+        <ng-template #jeUsluga>
+            <div class="row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Naziv</mat-label>
+                    <input matInput type="text" placeholder="Npr. Nova usluga" formControlName="naziv">
+                </mat-form-field>
+            </div>
+    
+            <div class="row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Jedinica mjere</mat-label>
+                    <mat-select formControlName="jedinicaMjereId">
+                        <mat-option *ngFor="let val of types" [value]="val.id">{{val.naziv}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </ng-template>
+    </div>
+    <div mat-dialog-actions class="action">
+        <button mat-raised-button type="button" [mat-dialog-close]="false">Odustani</button>
+        <button mat-raised-button color="primary" type="submit">Spremi</button>
+    </div>
+</form>

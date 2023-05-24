@@ -37,6 +37,10 @@ import { ProfileComponent } from './pages/customer/profile/profile.component';
 import { ProfileModule } from './pages/customer/profile/profile.module';
 import { CustomerGuard } from './guards/customer/customer.guard';
 import { EmployeeGuard } from './guards/employee/employee.guard';
+import { EquipmentTypesComponent } from './pages/employee/equipment/equipment-types/equipment-types.component';
+import { EquipmentTypesModule } from './pages/employee/equipment/equipment-types/equipment-types.module';
+import { ServiceTypesComponent } from './pages/employee/services/service-types/service-types.component';
+import { ServiceTypesModule } from './pages/employee/services/service-types/service-types.module';
 
 const routes: Routes = [
   {
@@ -62,7 +66,9 @@ const routes: Routes = [
     path: '',
     children: [
       { path: 'services', component: ServicesComponent},
+      { path: 'service/types', component: ServiceTypesComponent},
       { path: 'equipment', component: EquipmentComponent},
+      { path: 'equipment/types', component: EquipmentTypesComponent},
       { path: 'funerals', component: FuneralsComponent},
       { path: 'funerals/:id', component: FuneralDetailComponent},
       { path: 'deaths', component: DeathsComponent},
@@ -95,7 +101,9 @@ const routes: Routes = [
     RegisterModule,
     LoginModule,
     ServicesModule,
+    ServiceTypesModule,
     EquipmentModule,
+    EquipmentTypesModule,
     FuneralsModule,
     DeathsModule,
     AllUsersModule,

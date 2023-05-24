@@ -11,25 +11,19 @@ import { TypeDialogComponent } from 'src/app/components/dialogs/type-dialog/type
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-equipment',
-  templateUrl: './equipment.component.html',
-  styleUrls: ['./equipment.component.scss']
+  selector: 'app-service-types',
+  templateUrl: './service-types.component.html',
+  styleUrls: ['./service-types.component.scss']
 })
-export class EquipmentComponent implements OnInit {
+export class ServiceTypesComponent implements OnInit {
   displayedColumns: string[] = [
     'id',
-    'vrstaOpremeUslugeNaziv',
     'naziv',
-    'slika',
-    'zaliha',
-    'cijena',
+    'jedinicaMjereNaziv',
     'action'
     ];
 
-  selectedType: any =  0;
-  types: IVrstaOpremeUslugeData[] = [
-    { id: 0, naziv: 'Sva oprema', jeOprema: true , jedinicaMjereId: 0, jedinicaMjereNaziv: 'Količina'}
-  ];
+ 
 
   dataSource!: MatTableDataSource<any>;
 
@@ -39,48 +33,30 @@ export class EquipmentComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private readonly _equipmentService: EquipmentService,
-    private readonly snackBar: MatSnackBar,
+    private readonly _snackBar: MatSnackBar,
     private readonly _router: Router
   ) { }
 
   ngOnInit(): void {
-    this.getAllEquipment();
+    this.getAllTypes();
   }
 
   
 
-  getAllEquipment() {
-    // najprije dohvatimo sve opreme i vrste opreme zatim filtriramo opremu po vrsti opreme
-    this._equipmentService.getAllEquipment().subscribe({
+  getAllTypes() {
+    this._equipmentService.getTypesOfServices().subscribe({
       next: (res) => {
-        this._equipmentService.getTypesOfEquipment().subscribe({
-          next: (res2) => {
-            //dodaj u types sve vrste opreme koje već nisu u types
-            res2.forEach((type: any) => {
-              if(!this.types.find((t: any) => t.id === type.id)){
-                this.types.push(type);
-              }
-            });
-            // ako je odabrana vrsta opreme, filtriramo opremu po vrsti opreme
-            if(this.selectedType !== 0){
-              this.dataSource = new MatTableDataSource(res.filter((equipment: any) => equipment.vrstaOpremeUslugeId === this.selectedType));
-            } else {
-              this.dataSource = new MatTableDataSource(res);
-            }
+            this.dataSource = new MatTableDataSource(res);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
           },
-          error: (err) => {
-            this.snackBar.open('Greška prilikom dohvaćanja vrsta opreme!', 'Zatvori', {
+      error: (err) => {
+            this._snackBar.open('Greška prilikom dohvaćanja vrsta usluga!', 'Zatvori', {
               duration: 3000,
             });
-          },
-        });
-      }
+        },
     });
-    
   }
-
   
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -92,16 +68,16 @@ export class EquipmentComponent implements OnInit {
   }
 
   deleteEquipment(id: number) {
-    if (confirm('Jeste li sigurni da želite obrisati opremu?')) {
-      this._equipmentService.deleteEquipment(id).subscribe({
+    if (confirm('Jeste li sigurni da želite obrisati vrstu usluge?')) {
+      this._equipmentService.deleteTypeOfEquipment(id).subscribe({
         next: (res) => {
-          this.snackBar.open('Oprema je uspješno obrisana!', 'U redu', {
+          this._snackBar.open('Vrsta usluge je uspješno obrisana!', 'U redu', {
             duration: 3000,
           });
-          this.getAllEquipment();
+          this.getAllTypes();
         },
         error: (err) => {
-          this.snackBar.open('Greška prilikom brisanja opreme!', 'Zatvori', {
+          this._snackBar.open('Greška prilikom brisanja vrste usluge!', 'Zatvori', {
             duration: 3000,
           });
         },
@@ -110,33 +86,34 @@ export class EquipmentComponent implements OnInit {
   }
 
   openEditForm(data: any) {
-    const dialogRef = this._dialog.open(EquipmentDialogComponent, {
+    const dialogRef = this._dialog.open(TypeDialogComponent, {
       data,
     });
 
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.getAllEquipment();
+          this.getAllTypes();
         }
       },
     });
   }
 
-  openAddForm() {
-    const dialogRef = this._dialog.open(EquipmentDialogComponent);
+  openAddTypeForm() {
+    const dialogRef = this._dialog.open(TypeDialogComponent, {
+      data: { jeOprema: false}
+    });
     dialogRef.afterClosed().subscribe({
       next: (val) => {
         if (val) {
-          this.getAllEquipment();
+          this.getAllTypes();
         }
       },
     });
   }
 
-  openTypeTable() {
-    this._router.navigate(['/equipment/types']);
+  openEquipmentPage() {
+    this._router.navigate(['/services']);
   }
 }
-
 
