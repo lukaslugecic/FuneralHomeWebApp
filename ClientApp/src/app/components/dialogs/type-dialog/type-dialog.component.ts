@@ -67,14 +67,14 @@ export class TypeDialogComponent implements OnInit {
           .updateTypeOfEquipment(this.data.id, this.toUpdate)
           .subscribe({
             next: (val: any) => {
-              this.snackBar.open('Vrsta usluge uspješno uređena!', 'U redu', {
+              this.snackBar.open('Vrsta uspješno uređena!', 'U redu', {
                 duration: 3000,
               });
               this._dialogRef.close(true);
             },
             error: (err: any) => {
               console.error(err);
-              this.snackBar.open('Greška prilikom uređivanja vrste usluge!', 'Zatvori', {
+              this.snackBar.open('Greška prilikom uređivanja vrste!', 'Zatvori', {
                 duration: 3000,
               });
             },
@@ -89,14 +89,14 @@ export class TypeDialogComponent implements OnInit {
         }
         this._equipmentService.addTypeOfEquipment(this.toUpdate).subscribe({
           next: (val: any) => {
-            this.snackBar.open('Vrsta usluge uspješno dodana!', 'U redu', {
+            this.snackBar.open('Vrsta uspješno dodana!', 'U redu', {
               duration: 3000,
             });
             this._dialogRef.close(true);
           },
           error: (err: any) => {
             console.error(err);
-            this.snackBar.open('Greška prilikom dodavanja vrste usluge!', 'Zatvori', {
+            this.snackBar.open('Greška prilikom dodavanja vrste!', 'Zatvori', {
               duration: 3000,
             });
           },
