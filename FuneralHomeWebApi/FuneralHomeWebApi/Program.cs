@@ -28,6 +28,7 @@ builder.Services.AddTransient<IOsiguranjeRepository, OsiguranjeRepository>();
 builder.Services.AddTransient<IPaketOsiguranjaRepository, PaketOsiguranjaRepository>();
 builder.Services.AddTransient<IPogrebRepository, PogrebRepository>();
 builder.Services.AddTransient<ISmrtniSlucajRepository, SmrtniSlucajRepository>();
+builder.Services.AddTransient<IKupnjaRepository, KupnjaRepository>();
 
 
 // Add services to the container.

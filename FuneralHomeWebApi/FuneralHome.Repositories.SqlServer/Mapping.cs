@@ -2,6 +2,7 @@
 using System.Data;
 using System;
 using DbModels = FuneralHome.DataAccess.SqlServer.Data.DbModels;
+
 namespace FuneralHome.Repositories.SqlServer;
 public static class Mapping
 {
@@ -224,4 +225,39 @@ public static class Mapping
             JedinicaMjereId = vrstaOpremeUsluge.JedinicaMjereId
         };
 
+
+
+    public static Kupnja ToDomain(this DbModels.Kupnja kupnja)
+       => new Kupnja(
+           kupnja.IdKupnja,
+           kupnja.KorisnikId,
+           kupnja.DatumKupovine,
+           kupnja.UkupnaCijena,
+           kupnja.Korisnik.ToDomain(),
+           kupnja.KupnjaOpremaUsluge.Select(ToDomain)
+       );
+
+    public static DbModels.Kupnja ToDbModel(this Kupnja kupnja)
+        => new DbModels.Kupnja()
+        {
+            IdKupnja = kupnja.Id,
+            DatumKupovine = kupnja.DatumKupovine,
+            UkupnaCijena = kupnja.UkupnaCijena,
+            KorisnikId = kupnja.KorisnikId
+        };
+
+    public static KupnjaOpremaUsluge ToDomain(this DbModels.KupnjaOpremaUsluge kupnjaOpremaUsluge)
+        => new KupnjaOpremaUsluge(
+            kupnjaOpremaUsluge.OpremaUsluga.ToDomain(),
+            (int) kupnjaOpremaUsluge.Kolicina,
+            kupnjaOpremaUsluge.Cijena
+            );
+    public static DbModels.KupnjaOpremaUsluge ToDbModel(this KupnjaOpremaUsluge kupnjaOpremaUsluge, int kupnjaId)
+       => new DbModels.KupnjaOpremaUsluge()
+       {
+           KupnjaId = kupnjaId,
+           OpremaUslugaId = kupnjaOpremaUsluge.OpremaUsluga.Id,
+           Kolicina = kupnjaOpremaUsluge.Kolicina,
+           Cijena = kupnjaOpremaUsluge.Cijena
+       };
 }
