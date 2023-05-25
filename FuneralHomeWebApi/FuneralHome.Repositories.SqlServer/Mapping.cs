@@ -117,7 +117,7 @@ public static class Mapping
     public static PogrebOpremaUsluge ToDomain(this DbModels.PogrebOpremaUsluge pogrebOprema)
         => new PogrebOpremaUsluge(
             pogrebOprema.OpremaUsluga.ToDomain(),
-            (int) pogrebOprema.Kolicina,
+            pogrebOprema.Kolicina,
             pogrebOprema.Cijena
             );
     public static DbModels.PogrebOpremaUsluge ToDbModel(this PogrebOpremaUsluge pogrebOprema, int pogrebId)
@@ -249,7 +249,7 @@ public static class Mapping
     public static KupnjaOpremaUsluge ToDomain(this DbModels.KupnjaOpremaUsluge kupnjaOpremaUsluge)
         => new KupnjaOpremaUsluge(
             kupnjaOpremaUsluge.OpremaUsluga.ToDomain(),
-            (int) kupnjaOpremaUsluge.Kolicina,
+            kupnjaOpremaUsluge.Kolicina,
             kupnjaOpremaUsluge.Cijena
             );
     public static DbModels.KupnjaOpremaUsluge ToDbModel(this KupnjaOpremaUsluge kupnjaOpremaUsluge, int kupnjaId)
