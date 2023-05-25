@@ -14,8 +14,7 @@ namespace FuneralHome.DataAccess.SqlServer.Data.DbModels
         public int KupnjaId { get; set; }
         [Key]
         public int OpremaUslugaId { get; set; }
-        [Column(TypeName = "numeric(18, 2)")]
-        public decimal Kolicina { get; set; }
+        public int Kolicina { get; set; }
         [Column(TypeName = "numeric(18, 2)")]
         public decimal Cijena { get; set; }
 
