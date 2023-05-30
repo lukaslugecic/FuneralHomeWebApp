@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FuneralHome.Domain.Models.JedinicaMjere">
+    <Position X="9.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.Korisnik">
+    <Position X="9.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.Kupnja">
+    <Position X="14.75" Y="2.75" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.KupnjaOpremaUsluge">
+    <Position X="11.25" Y="10.5" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.OpremaUsluga">
+    <Position X="16.25" Y="7.25" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.Osiguranje">
+    <Position X="13.25" Y="10.75" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.PaketOsiguranja">
+    <Position X="11.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.Pogreb">
+    <Position X="9.75" Y="2.75" Width="3" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.PogrebOpremaUsluge">
+    <Position X="12.75" Y="7.25" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.PogrebSmrtniSlucaj">
+    <Position X="12.75" Y="2.75" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.SmrtniSlucaj">
+    <Position X="14.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="FuneralHome.Domain.Models.VrstaOpremeUsluge">
+    <Position X="15" Y="11.25" Width="2" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="10" />
+</ClassDiagram>

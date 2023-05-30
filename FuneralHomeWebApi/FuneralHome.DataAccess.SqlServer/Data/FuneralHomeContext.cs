@@ -57,13 +57,11 @@ namespace FuneralHome.DataAccess.SqlServer.Data
                 entity.HasOne(d => d.Kupnja)
                     .WithMany(p => p.KupnjaOpremaUsluge)
                     .HasForeignKey(d => d.KupnjaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_KupnjaOpremaUsluge_Kupnja");
 
                 entity.HasOne(d => d.OpremaUsluga)
                     .WithMany(p => p.KupnjaOpremaUsluge)
                     .HasForeignKey(d => d.OpremaUslugaId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_KupnjaOpremaUsluge_OpremaUsluga");
             });
 

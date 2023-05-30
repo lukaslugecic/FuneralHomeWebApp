@@ -6,6 +6,12 @@ mat-toolbar {
     justify-content: space-between;
     background-color: $main-color;
     color: $secondary-color;
+    h1 {
+        font-size: larger;
+      }
+      button {
+        font-size: medium;
+      }
 }
 
 button {

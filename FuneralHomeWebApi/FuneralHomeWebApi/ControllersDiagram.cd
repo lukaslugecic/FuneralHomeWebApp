@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="FuneralHome.Controllers.JedinicaMjereController">
+    <Position X="0.5" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAwAQAAAABAAAAQBAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\JedinicaMjereContoller.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.KorisnikController">
+    <Position X="0.5" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAgAAAAAAAAAAAAAIAABAAAAAEAAISAAQAAQA=</HashCode>
+      <FileName>Controllers\KorisnikController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.KupnjaController">
+    <Position X="5.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAABAAFAAAAAAARAAAAAAQoAAAAABACAQABCCAA=</HashCode>
+      <FileName>Controllers\KupnjaController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.OpremaUslugaController">
+    <Position X="0.5" Y="7" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQEAAAABAAgQAQAAAAAACiAAAAAAACAAAAAA=</HashCode>
+      <FileName>Controllers\OpremaUslugaController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.OsiguranjeController">
+    <Position X="5.75" Y="8.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAFQAAAAAAAAgAAAAAAAAAAAAEEEAAAAA=</HashCode>
+      <FileName>Controllers\OsiguranjeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.PaketOsiguranjaController">
+    <Position X="2.75" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAgAAAAAAAEAAAAAAAAAAACAAAAAAACA=</HashCode>
+      <FileName>Controllers\PaketOsiguranjaController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.PogrebController">
+    <Position X="2.75" Y="3.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>JQAEAAQAAABAAAAAggRAIEAAAAAAQABgAACAEgAAAAA=</HashCode>
+      <FileName>Controllers\PogrebController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.SmrtniSlucajController">
+    <Position X="5.5" Y="5.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEEAAAEAAAAIAAAAAAAAAAEgAAAAAgAAAIAACA=</HashCode>
+      <FileName>Controllers\SmrtniSlucajController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FuneralHome.Controllers.VrstaOpremeUslugeController">
+    <Position X="2.75" Y="8.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAIBABAAAAIAAAAABAAAAAAAAAQAAAAAAQAAAIAAAA=</HashCode>
+      <FileName>Controllers\VrstaOpremeUslugeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="10" />
+</ClassDiagram>

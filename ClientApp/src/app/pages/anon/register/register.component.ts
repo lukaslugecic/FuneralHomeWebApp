@@ -53,14 +53,14 @@ export class RegisterComponent implements OnDestroy {
       this.form.get('password')?.value !==
       this.form.get('repeatedPassword')?.value
     ) {
-      this.snackBar.open('Lozinke se moraju podudarati', 'Zatvori', {
+      this.snackBar.open('Lozinke se moraju podudarati!', 'Zatvori', {
         duration: 2000,
       });
       return;
     }
 
     if(this.form.value.dateOfBirth > new Date()){
-      this.snackBar.open('Datum rođenja ne može biti u budućnosti', 'Zatvori', {
+      this.snackBar.open('Datum rođenja ne može biti u budućnosti!', 'Zatvori', {
         duration: 2000,
       });
       return;
@@ -84,7 +84,7 @@ export class RegisterComponent implements OnDestroy {
         .register(data)
         .pipe(
           catchError(() => {
-            this.snackBar.open('Unesite sve potrbene podatke', 'Zatvori', {
+            this.snackBar.open('Unesite sve potrbene podatke!', 'Zatvori', {
               duration: 2000,
             });
             return EMPTY;
@@ -96,12 +96,12 @@ export class RegisterComponent implements OnDestroy {
       this.subscription.add(registerSubscription);
     } else {
       if(this.form.value.password.length < 8){
-        this.snackBar.open('Lozinka mora imati minimalno 8 znakova', 'Zatvori', {
+        this.snackBar.open('Lozinka mora imati minimalno 8 znakova!', 'Zatvori', {
           duration: 2000,
         });
         return;
       } else {
-        this.snackBar.open('Unesite sve potrbene podatke', 'Zatvori', {
+        this.snackBar.open('Unesite sve potrebne podatke!', 'Zatvori', {
           duration: 2000,
         });
         return;

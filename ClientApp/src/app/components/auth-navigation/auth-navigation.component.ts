@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AuthNavigationComponent {
   public links = [
-    { title: 'Oprema', path: '/equipment-catalog' },
+    { title: 'Ponuda oprema', path: '/equipment-catalog' },
     //{ title: 'Usluge', path: '/services-catalog' },
     { title: 'Prijava smrtnog slučaja', path: '/report-death/info' },
     { title: 'Organizacija pogreba', path: '/organize-funeral' },

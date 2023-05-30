@@ -32,7 +32,7 @@ export class LoginComponent implements OnDestroy {
 
   public onFormSubmit(): void {
     if (this.form.invalid) {
-      this.snackbar.open('Pogrešni podaci', 'Zatvori', { duration: 2000 });
+      this.snackbar.open('Neispravno korisničko ime ili lozinka!', 'Zatvori', { duration: 2000 });
       return;
     }
 
@@ -46,7 +46,7 @@ export class LoginComponent implements OnDestroy {
       .login(data)
       .pipe(
         catchError(() => {
-          this.snackbar.open('Pogrešni podaci', 'Zatvori', { duration: 2000 });
+          this.snackbar.open('Neispravno korisničko ime ili lozinka!', 'Zatvori', { duration: 2000 });
           return EMPTY;
         })
       )

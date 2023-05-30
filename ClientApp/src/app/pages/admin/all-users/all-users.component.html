@@ -43,7 +43,7 @@
 
           <ng-container matColumnDef="datumRodenja">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Datum rođenja </th>
-            <td mat-cell *matCellDef="let row"> {{row.datumRodenja | date}}</td>
+            <td mat-cell *matCellDef="let row"> {{row.datumRodenja | date: "dd.MM.yyyy"}}</td>
           </ng-container>
   
           <ng-container matColumnDef="adresa">
