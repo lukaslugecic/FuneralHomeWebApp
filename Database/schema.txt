@@ -1,0 +1,274 @@
+USE [FuneralHome]
+GO
+/****** Object:  Table [dbo].[JedinicaMjere]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[JedinicaMjere](
+	[IdJednicaMjere] [int] IDENTITY(1,1) NOT NULL,
+	[Naziv] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_JedinicaMjere] PRIMARY KEY CLUSTERED 
+(
+	[IdJednicaMjere] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Korisnik]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Korisnik](
+	[IdKorisnik] [int] IDENTITY(1,1) NOT NULL,
+	[Ime] [nvarchar](50) NOT NULL,
+	[Prezime] [nvarchar](50) NOT NULL,
+	[DatumRodenja] [date] NOT NULL,
+	[Adresa] [nvarchar](50) NOT NULL,
+	[OIB] [char](11) NOT NULL,
+	[Mail] [nvarchar](50) NOT NULL,
+	[Lozinka] [nvarchar](100) NOT NULL,
+	[VrstaKorisnika] [char](1) NOT NULL,
+ CONSTRAINT [PK_Korisnik] PRIMARY KEY CLUSTERED 
+(
+	[IdKorisnik] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [IX_Korisnik] UNIQUE NONCLUSTERED 
+(
+	[Mail] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [IX_Korisnik_1] UNIQUE NONCLUSTERED 
+(
+	[Mail] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [IX_Korisnik_OIB] UNIQUE NONCLUSTERED 
+(
+	[OIB] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Kupnja]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Kupnja](
+	[IdKupnja] [int] IDENTITY(1,1) NOT NULL,
+	[KorisnikId] [int] NOT NULL,
+	[DatumKupovine] [date] NOT NULL,
+	[UkupnaCijena] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_Kupnja] PRIMARY KEY CLUSTERED 
+(
+	[IdKupnja] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[KupnjaOpremaUsluge]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[KupnjaOpremaUsluge](
+	[KupnjaId] [int] NOT NULL,
+	[OpremaUslugaId] [int] NOT NULL,
+	[Kolicina] [int] NOT NULL,
+	[Cijena] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_KupnjaOpremaUsluge_1] PRIMARY KEY CLUSTERED 
+(
+	[KupnjaId] ASC,
+	[OpremaUslugaId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[OpremaUsluga]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[OpremaUsluga](
+	[IdOpremaUsluga] [int] IDENTITY(1,1) NOT NULL,
+	[VrstaOpremeUslugeId] [int] NOT NULL,
+	[Naziv] [nvarchar](50) NOT NULL,
+	[Slika] [varbinary](max) NULL,
+	[Zaliha] [int] NULL,
+	[Opis] [nvarchar](200) NULL,
+	[Cijena] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_Oprema] PRIMARY KEY CLUSTERED 
+(
+	[IdOpremaUsluga] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Osiguranje]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Osiguranje](
+	[IdOsiguranje] [int] IDENTITY(1,1) NOT NULL,
+	[KorisnikId] [int] NOT NULL,
+	[DatumUgovaranja] [date] NOT NULL,
+	[PlacanjeNaRate] [bit] NOT NULL,
+	[BrojRata] [int] NOT NULL,
+	[PaketOsiguranjaId] [int] NOT NULL,
+ CONSTRAINT [PK_Osiguranje] PRIMARY KEY CLUSTERED 
+(
+	[IdOsiguranje] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PaketOsiguranja]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PaketOsiguranja](
+	[IdPaketOsiguranja] [int] IDENTITY(1,1) NOT NULL,
+	[Naziv] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_PaketOsiguranja] PRIMARY KEY CLUSTERED 
+(
+	[IdPaketOsiguranja] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Pogreb]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Pogreb](
+	[IdPogreb] [int] IDENTITY(1,1) NOT NULL,
+	[SmrtniSlucajId] [int] NOT NULL,
+	[DatumPogreba] [date] NOT NULL,
+	[Kremacija] [bit] NOT NULL,
+	[DatumUgovaranja] [date] NOT NULL,
+	[UkupnaCijena] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_Pogreb] PRIMARY KEY CLUSTERED 
+(
+	[IdPogreb] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PogrebOpremaUsluge]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PogrebOpremaUsluge](
+	[PogrebId] [int] NOT NULL,
+	[OpremaUslugaId] [int] NOT NULL,
+	[Kolicina] [int] NOT NULL,
+	[Cijena] [numeric](18, 2) NOT NULL,
+ CONSTRAINT [PK_PogrebOprema] PRIMARY KEY CLUSTERED 
+(
+	[PogrebId] ASC,
+	[OpremaUslugaId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SmrtniSlucaj]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SmrtniSlucaj](
+	[IdSmrtniSlucaj] [int] IDENTITY(1,1) NOT NULL,
+	[KorisnikId] [int] NOT NULL,
+	[ImePok] [nvarchar](50) NOT NULL,
+	[PrezimePok] [nvarchar](50) NOT NULL,
+	[OIBPok] [char](11) NOT NULL,
+	[DatumRodenjaPok] [date] NOT NULL,
+	[DatumSmrtiPok] [date] NOT NULL,
+ CONSTRAINT [PK_SmrtniSlucaj] PRIMARY KEY CLUSTERED 
+(
+	[IdSmrtniSlucaj] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [IX_PrijavaSmrtnogSlucaja_OIB] UNIQUE NONCLUSTERED 
+(
+	[OIBPok] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[VrstaOpremeUsluge]    Script Date: 30.5.2023. 19:58:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[VrstaOpremeUsluge](
+	[IdVrstaOpremeUsluge] [int] IDENTITY(1,1) NOT NULL,
+	[Naziv] [nvarchar](50) NOT NULL,
+	[JeOprema] [bit] NOT NULL,
+	[JedinicaMjereId] [int] NULL,
+ CONSTRAINT [PK_VrstaOpreme] PRIMARY KEY CLUSTERED 
+(
+	[IdVrstaOpremeUsluge] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Kupnja]  WITH CHECK ADD  CONSTRAINT [FK_Kupnja_Korisnik] FOREIGN KEY([KorisnikId])
+REFERENCES [dbo].[Korisnik] ([IdKorisnik])
+GO
+ALTER TABLE [dbo].[Kupnja] CHECK CONSTRAINT [FK_Kupnja_Korisnik]
+GO
+ALTER TABLE [dbo].[KupnjaOpremaUsluge]  WITH CHECK ADD  CONSTRAINT [FK_KupnjaOpremaUsluge_Kupnja] FOREIGN KEY([KupnjaId])
+REFERENCES [dbo].[Kupnja] ([IdKupnja])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[KupnjaOpremaUsluge] CHECK CONSTRAINT [FK_KupnjaOpremaUsluge_Kupnja]
+GO
+ALTER TABLE [dbo].[KupnjaOpremaUsluge]  WITH CHECK ADD  CONSTRAINT [FK_KupnjaOpremaUsluge_OpremaUsluga] FOREIGN KEY([OpremaUslugaId])
+REFERENCES [dbo].[OpremaUsluga] ([IdOpremaUsluga])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[KupnjaOpremaUsluge] CHECK CONSTRAINT [FK_KupnjaOpremaUsluge_OpremaUsluga]
+GO
+ALTER TABLE [dbo].[OpremaUsluga]  WITH CHECK ADD  CONSTRAINT [FK_Oprema_VrstaOpreme] FOREIGN KEY([VrstaOpremeUslugeId])
+REFERENCES [dbo].[VrstaOpremeUsluge] ([IdVrstaOpremeUsluge])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[OpremaUsluga] CHECK CONSTRAINT [FK_Oprema_VrstaOpreme]
+GO
+ALTER TABLE [dbo].[Osiguranje]  WITH CHECK ADD  CONSTRAINT [FK_Osiguranje_Korisnik] FOREIGN KEY([KorisnikId])
+REFERENCES [dbo].[Korisnik] ([IdKorisnik])
+GO
+ALTER TABLE [dbo].[Osiguranje] CHECK CONSTRAINT [FK_Osiguranje_Korisnik]
+GO
+ALTER TABLE [dbo].[Osiguranje]  WITH CHECK ADD  CONSTRAINT [FK_Osiguranje_PaketOsiguranja1] FOREIGN KEY([PaketOsiguranjaId])
+REFERENCES [dbo].[PaketOsiguranja] ([IdPaketOsiguranja])
+GO
+ALTER TABLE [dbo].[Osiguranje] CHECK CONSTRAINT [FK_Osiguranje_PaketOsiguranja1]
+GO
+ALTER TABLE [dbo].[Pogreb]  WITH CHECK ADD  CONSTRAINT [FK_Pogreb_SmrtniSlucaj] FOREIGN KEY([SmrtniSlucajId])
+REFERENCES [dbo].[SmrtniSlucaj] ([IdSmrtniSlucaj])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[Pogreb] CHECK CONSTRAINT [FK_Pogreb_SmrtniSlucaj]
+GO
+ALTER TABLE [dbo].[PogrebOpremaUsluge]  WITH CHECK ADD  CONSTRAINT [FK_PogrebOprema_Oprema] FOREIGN KEY([OpremaUslugaId])
+REFERENCES [dbo].[OpremaUsluga] ([IdOpremaUsluga])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[PogrebOpremaUsluge] CHECK CONSTRAINT [FK_PogrebOprema_Oprema]
+GO
+ALTER TABLE [dbo].[PogrebOpremaUsluge]  WITH CHECK ADD  CONSTRAINT [FK_PogrebOprema_Pogreb] FOREIGN KEY([PogrebId])
+REFERENCES [dbo].[Pogreb] ([IdPogreb])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[PogrebOpremaUsluge] CHECK CONSTRAINT [FK_PogrebOprema_Pogreb]
+GO
+ALTER TABLE [dbo].[SmrtniSlucaj]  WITH CHECK ADD  CONSTRAINT [FK_SmrtniSlucaj_Korisnik] FOREIGN KEY([KorisnikId])
+REFERENCES [dbo].[Korisnik] ([IdKorisnik])
+GO
+ALTER TABLE [dbo].[SmrtniSlucaj] CHECK CONSTRAINT [FK_SmrtniSlucaj_Korisnik]
+GO
+ALTER TABLE [dbo].[VrstaOpremeUsluge]  WITH CHECK ADD  CONSTRAINT [FK_VrstaOpremeUsluge_JedinicaMjere] FOREIGN KEY([JedinicaMjereId])
+REFERENCES [dbo].[JedinicaMjere] ([IdJednicaMjere])
+GO
+ALTER TABLE [dbo].[VrstaOpremeUsluge] CHECK CONSTRAINT [FK_VrstaOpremeUsluge_JedinicaMjere]
+GO
